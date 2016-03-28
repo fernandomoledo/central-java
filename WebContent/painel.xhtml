@@ -1,0 +1,142 @@
+<ui:composition  template="template.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+<ui:define name="conteudo">
+ <!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título -->
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Painel de Chamados</h1>
+        </div>
+      </div>
+      <div class="push2"></div>
+      <!-- Classificação por períodos -->
+  
+      <div class="row text-center">
+        <h4>#{portalMB.p.lotacao.nome}</h4>
+      </div>
+       <div class="push2"></div>
+       <div class="row">
+		<div class="alert alert-info">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
+		  <strong>Aviso:</strong> Você deve estar logado na Central de Chamados antes de clicar no chamado desejado!
+		</div>
+		</div>
+      <div class="push2"></div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-9 separator">
+            <div class="col-md-4 text-center" id="chamados-todo">        
+            	<h:form id="c_todo">
+            	   <h3>A Fazer <h:outputText value="(#{painelMB.qtdeToDo})" rendered="#{painelMB.qtdeToDo gt 0}" /></h3>
+            		<ui:repeat var="todo" value="#{painelMB.getChamadosToDo(portalMB.p.lotacao.id)}">
+            			<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
+	            			<f:param name="acao" value="editarChamado" />
+	            			<f:param name="idChamado" value="#{todo.chamado.id}" />
+            			<div class="alert #{fn:containsIgnoreCase(todo.chamado.lotacaoSolicitante.nome,'GABINETE') || fn:containsIgnoreCase(todo.chamado.lotacaoSolicitante.nome,'PRESIDÊNCIA')? 'alert-danger' : 'alert-warning'}">
+			                <strong>
+			                	#{todo.chamado.numero}/<h:outputText value="#{todo.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
+			                </strong>
+			                <div class="push05"></div>
+			                 <strong>#{todo.chamado.lotacaoSolicitante.nome}</strong>
+			                <div class="push05"></div>
+			                 #{fn:substring(todo.texto,0,100)}...
+			                <div class="push05"></div>
+			            </div>	
+			            </h:outputLink>		     	
+            		</ui:repeat>
+            		  <p:poll interval="60" update=":c_todo" />
+            	</h:form>
+            </div>
+            <div class="col-md-4 text-center" id="chamados-doing">            
+            	<h:form id="c_doing">
+            	 <h3>Em Andamento <h:outputText value="(#{painelMB.qtdeDoing})" rendered="#{painelMB.qtdeDoing gt 0}" /></h3>
+            		<ui:repeat var="doing" value="#{painelMB.getChamadosDoing(portalMB.p.lotacao.id)}">
+            		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
+	            			<f:param name="acao" value="editarChamado" />
+	            			<f:param name="idChamado" value="#{doing.chamado.id}" />
+            			<div class="alert alert-success">
+			                <strong>
+			                	#{doing.chamado.numero}/<h:outputText value="#{doing.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
+			                </strong>
+			                <div class="push05"></div>
+			                 <strong>#{doing.chamado.lotacaoSolicitante.nome}</strong>
+			                <div class="push05"></div>
+			                 #{fn:substring(doing.texto,0,100)}...
+			                <div class="push05"></div>
+			            </div>	
+			            </h:outputLink>		     	
+            		</ui:repeat>
+            		  <p:poll interval="60" update=":c_doing" />
+            	</h:form>
+            
+            </div>
+            <div class="col-md-4 text-center" id="chamados-done">
+            	<h:form id="c_done">
+            	<h3>Concluídos <h:outputText value="(#{painelMB.qtdeDone})" rendered="#{painelMB.qtdeDone gt 0}" /></h3>
+            		<ui:repeat var="done" value="#{painelMB.getChamadosDone(portalMB.p.lotacao.id)}">
+            		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
+	            			<f:param name="acao" value="editarChamado" />
+	            			<f:param name="idChamado" value="#{done.chamado.id}" />
+            			<div class="alert alert-info">
+			                <strong>
+			                	#{done.chamado.numero}/<h:outputText value="#{done.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
+			                </strong>
+			                <div class="push05"></div>
+			                 <strong>#{done.chamado.lotacaoSolicitante.nome}</strong>
+			                <div class="push05"></div>
+			                 #{fn:substring(done.texto,0,100)}...
+			                <div class="push05"></div>
+			            </div>	
+			            </h:outputLink>		     	
+            		</ui:repeat>     
+            		  <p:poll interval="60" update=":c_done" />       		
+            	</h:form>
+            </div>
+          
+          </div>
+          <div class="col-md-3">
+          <h:form id="form1">
+            <div class="text-center"><h3>Avisos</h3></div>
+            <div class="text-center">
+            	<h:link outcome="detalhe_chat" target="_blank">Ver avisos anteriores</h:link>
+            </div>
+            <div id="avisos_chat">
+            <ui:repeat var="chat" value="#{painelMB.lastChats}">
+            	<div class="alert alert-warning  fade in">
+	              <strong>
+	              	<h:outputText value="#{chat.dataChat}">
+	              		<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+	              	</h:outputText> - #{chat.usuarioChat}
+	              </strong>
+	              <br />
+	              <p>#{chat.textoChat}</p>
+	            </div>
+	        </ui:repeat>
+            </div>
+            </h:form>
+           <h:form id="form2">
+            <h:inputTextarea class="form-control" pt:placeholder="Digite o texto do aviso e tecle Enter..." 
+            id="txt_aviso" rows="2" cols="20" value="#{painelMB.chat.textoChat}" 
+            onkeypress="if (event.keyCode == 13) { document.getElementById('form2:btn-aviso').click(); return false; }" />
+            
+            <div class="push1"></div>
+            <div class="text-center">
+              <p:commandButton class="btn btn-success" id="btn-aviso" value="Avisar"
+               actionListener="#{painelMB.salvar()}" oncomplete="document.getElementById('form2:txt_aviso').value='';" />
+            </div>
+            <p:poll interval="1" update=":form1" />
+         </h:form>
+        </div>
+      </div>
+    </div>
+    </div>
+</ui:define>
+</ui:composition>

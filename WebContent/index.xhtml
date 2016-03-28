@@ -1,0 +1,43 @@
+<ui:composition  template="template_2.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"> 
+<ui:define name="conteudo">
+<!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título -->
+      <div class="row">
+      <div class="push3"></div>
+        <div class="col-md-12 text-center">
+          <h1>Central de Chamados - CAU</h1>
+        </div>
+      </div>
+      <div class="push3"></div>
+      <div class="row">
+      <h:form>      
+        <div class="col-md-12 text-center">
+          <div class="col-md-3"></div>
+          <div class="col-md-6">
+          <p:messages id="msgs" autoUpdate="true" closable="true" />
+            <div class="input-group">
+              <span class="input-group-addon" id="sizing-addon2">Usuário:</span>
+              <h:inputText id="txt_usuario" value="#{portalMB.username}" class="form-control" pt:placeholder="Informe seu usuário da extranet..." aria-describedby="sizing-addon2" />
+            </div>
+            <div class="push2"></div> 
+            <div class="text-right">
+                <h:commandButton class="btn btn-primary" value="Entrar" action="#{portalMB.logar()}" onclick="mostra_box();"/>
+            </div>
+            <div style="text-align:center;"><h:graphicImage library="img" styleClass="ibox" name="carregando.gif"/></div>
+          <div class="col-md-3"></div>
+          
+        </div>
+      </div> 
+      </h:form>          
+    </div>
+    </div>
+    <!-- Fim Conteúdo da página -->
+</ui:define>
+</ui:composition>

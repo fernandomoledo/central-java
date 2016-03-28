@@ -1,0 +1,161 @@
+<ui:composition  template="template.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+<ui:define name="conteudo">
+	
+	<!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título da Página -->
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Base de Conhecimento</h1>
+        </div>
+      </div>
+      <!-- Pula 30px -->
+      <div class="push3"></div>
+      <div class="row">
+        <!-- Container dos painéis -->
+        <div class="col-md-12">
+          <!-- Painel de busca e categorias -->
+          <div class="col-md-3 separator">       
+            <div class="push3"></div>
+           	
+			
+            <div class="push1"></div>
+            <h4>Navegue pelas categorias:</h4>
+           <h:form id="arvore">
+
+	<p:tree value="#{baseDeConhecimentoMB.root}" var="node" selection="#{baseDeConhecimentoMB.select}" 
+	selectionMode="single" animate="true">
+	<p:ajax event="select" listener="#{baseDeConhecimentoMB.getSelecao()}" update=":texto :detalhe" onstart="mostra_box();" oncomplete="esconde_box();"  />
+		 <p:treeNode>
+            <p:commandLink value="#{node}" ajax="true" /> 
+        </p:treeNode>
+	</p:tree>
+</h:form>
+            <div class="push1"></div>
+             
+          </div>
+          <!-- Fim Painel de busca e categorias -->
+            <div class="col-md-4 separator">       
+            <div class="push3"></div>
+           	
+			<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
+            <div class="push1"></div>
+      		<h:form id="texto">
+           <p:dataTable var="chamado" value="#{baseDeConhecimentoMB.chamados}"  widgetVar="textoTable" rendered="#{baseDeConhecimentoMB.mostra}"
+           emptyMessage="Não foram encontrados chamados com os parâmetros informados..." rows="10" 
+            paginator="true"
+           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+           rowsPerPageTemplate="5,10,15"
+           selectionMode="single"
+           selection="#{baseDeConhecimentoMB.selecionado}"
+           rowKey="#{chamado.id}"
+           
+           >
+           <p:ajax event="rowSelect" listener="#{baseDeConhecimentoMB.getDetalhe()}" update=":detalhe" />
+          
+				<p:column headerText="Chamados encontrados para #{baseDeConhecimentoMB.select}/#{baseDeConhecimentoMB.termoBusca}#{baseDeConhecimentoMB.select.parent}:" >
+				
+					<b>#{chamado.numero}</b><br />
+					#{chamado.lotacaoSolicitante.nome}
+					
+				</p:column>
+			</p:dataTable> 
+</h:form>
+            <div class="push1"></div>
+            
+          </div>
+          <!-- Fim Painel de busca e categorias -->
+
+          <!-- Painel de chamados -->
+          <div class="col-md-5" id="tbl">
+         <h:form id="detalhe">
+         <p:panelGrid rendered="#{baseDeConhecimentoMB.mostraDetalhe}">
+            	<h3>Chamado 
+	            	#{baseDeConhecimentoMB.chamadoDetalhe.chamado.numero}/<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.dtAndamento}">
+	            		<f:convertDateTime dateStyle="date" pattern="yyyy" />
+	            	</h:outputText>
+            	</h3><div class="push1"></div>
+            <h4>Data de Abertura</h4>
+            <p>
+            <h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.dtAndamento}">
+	            		<f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy HH:mm" />
+	            </h:outputText>
+            </p>
+            <div class="push05"></div>
+            <h4>Lotação</h4>
+            <p>#{baseDeConhecimentoMB.chamadoDetalhe.chamado.lotacaoSolicitante.nome}</p>
+            <div class="push05"></div>
+            <h4>Problema relatado</h4>
+            <p>
+            	#{baseDeConhecimentoMB.chamadoDetalhe.texto}
+            </p>
+            <div class="push05"></div>
+            <h4>Equipamentos</h4>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Nº Tombo</th><th>Nº Série</th><th>Garantia</th><th>Descrição</th>
+                </tr>
+              </thead>
+              <tbody>
+              <ui:repeat var="tombo" value="#{baseDeConhecimentoMB.tombosDetalhe}">
+                <tr>
+                  <td>#{tombo.nroTombo}</td>
+                  <td>#{tombo.serie}</td>
+                  <td>
+                  	<h:outputText value="#{tombo.dtGarantia}">
+                  		<f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy" />
+                  	</h:outputText>
+                  </td>
+                  <td>#{tombo.descricao}</td>
+                </tr>
+              </ui:repeat>  
+                                            
+              </tbody>
+            </table>
+            <h4>Último atendimento</h4>
+            <p>
+            <h:outputText value="#{baseDeConhecimentoMB.ultimoAndamento.dtAndamento}">
+                  <f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy HH:mm" />
+            </h:outputText> - #{baseDeConhecimentoMB.ultimoAndamento.usuario.nome}</p><div class="push05"></div>
+            <h4>Andamentos do Chamado</h4>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Data/Hora</th><th>Status</th><th>Andamento por</th><th>Descrição</th>
+                </tr>
+              </thead>
+              <tbody>
+              <ui:repeat var="andamento" value="#{baseDeConhecimentoMB.andamentosDetalhe}">
+                <tr>
+                 <td>
+                  	<h:outputText value="#{andamento.dtAndamento}">
+		                  <f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy HH:mm" />
+		            </h:outputText>
+           		</td>
+           		<td>#{andamento.classificacao}</td>
+           		<td>#{andamento.usuario.nome}</td>
+           		<td>#{andamento.texto}</td>
+                </tr>
+               </ui:repeat>                           
+              </tbody>
+            </table>
+   </p:panelGrid>
+            </h:form>
+          </div>
+          <!-- Fim Painel de chamados -->
+        </div>
+        <!-- Fim Container dos painéis -->
+    </div>
+</div>
+    <!-- Fim Conteúdo da página -->
+</ui:define>
+</ui:composition>

@@ -1,0 +1,41 @@
+<ui:composition  template="template.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+<ui:define name="conteudo">
+ <!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título -->
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Histórico de avisos</h1>
+        </div>
+      </div>
+      <div class="push2"></div>
+     
+      <div class="row">
+       <h:dataTable class="table table-striped" id="example" var="chat" value="#{painelMB.chats}">
+	       <h:column>
+	       	<f:facet name="header">Data/hora</f:facet>
+		       	<h:outputText value="#{chat.dataChat}">
+		       		<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+		       	</h:outputText>
+	       </h:column>
+	        <h:column>
+	       	<f:facet name="header">Usuário</f:facet>
+	       	#{chat.usuarioChat}
+	       </h:column>
+	        <h:column>
+	       	<f:facet name="header">Texto</f:facet>
+	       	#{chat.textoChat}
+	       </h:column>
+       </h:dataTable>        
+      </div>
+    </div>
+</ui:define>
+</ui:composition>
