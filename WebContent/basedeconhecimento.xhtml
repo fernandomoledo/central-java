@@ -23,9 +23,7 @@
         <!-- Container dos painéis -->
         <div class="col-md-12">
           <!-- Painel de busca e categorias -->
-          <div class="col-md-3 separator">       
-            <div class="push3"></div>
-           	
+          <div class="col-md-4 separator">             	
 			
             <div class="push1"></div>
             <h4>Navegue pelas categorias:</h4>
@@ -40,20 +38,15 @@
 	</p:tree>
 </h:form>
             <div class="push1"></div>
-             
-          </div>
-          <!-- Fim Painel de busca e categorias -->
-            <div class="col-md-4 separator">       
-            <div class="push3"></div>
-           	
-			<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
+            <h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
             <div class="push1"></div>
       		<h:form id="texto">
            <p:dataTable var="chamado" value="#{baseDeConhecimentoMB.chamados}"  widgetVar="textoTable" rendered="#{baseDeConhecimentoMB.mostra}"
-           emptyMessage="Não foram encontrados chamados com os parâmetros informados..." rows="10" 
+           emptyMessage="Não foram encontrados chamados com os parâmetros informados..." rows="5" 
             paginator="true"
-           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-           rowsPerPageTemplate="5,10,15"
+            paginatorPosition="bottom"
+           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
+           rowsPerPageTemplate="5,10,20"
            selectionMode="single"
            selection="#{baseDeConhecimentoMB.selecionado}"
            rowKey="#{chamado.id}"
@@ -69,20 +62,23 @@
 				</p:column>
 			</p:dataTable> 
 </h:form>
-            <div class="push1"></div>
-            
+             
           </div>
-          <!-- Fim Painel de busca e categorias -->
+          
 
           <!-- Painel de chamados -->
-          <div class="col-md-5" id="tbl">
+          <div class="col-md-8" id="tbl">
          <h:form id="detalhe">
          <p:panelGrid rendered="#{baseDeConhecimentoMB.mostraDetalhe}">
             	<h3>Chamado 
 	            	#{baseDeConhecimentoMB.chamadoDetalhe.chamado.numero}/<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.dtAndamento}">
 	            		<f:convertDateTime dateStyle="date" pattern="yyyy" />
 	            	</h:outputText>
-            	</h3><div class="push1"></div>
+            	</h3>
+            	<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique aqui para abrir o chamado na Central">
+	            			<f:param name="acao" value="editarChamado" />
+	            			<f:param name="idChamado" value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.id}" />Ver na central de chamados</h:outputLink>
+            	<div class="push1"></div>
             <h4>Data de Abertura</h4>
             <p>
             <h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.dtAndamento}">
@@ -94,8 +90,8 @@
             <p>#{baseDeConhecimentoMB.chamadoDetalhe.chamado.lotacaoSolicitante.nome}</p>
             <div class="push05"></div>
             <h4>Problema relatado</h4>
-            <p>
-            	#{baseDeConhecimentoMB.chamadoDetalhe.texto}
+            <p style="text-align:justify;">
+            	<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" />
             </p>
             <div class="push05"></div>
             <h4>Equipamentos</h4>
@@ -143,7 +139,7 @@
            		</td>
            		<td>#{andamento.classificacao}</td>
            		<td>#{andamento.usuario.nome}</td>
-           		<td>#{andamento.texto}</td>
+           		<td><h:outputText value="#{andamento.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" /></td>
                 </tr>
                </ui:repeat>                           
               </tbody>

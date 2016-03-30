@@ -73,12 +73,12 @@ private String sql;
 		return andamentos;
 	}
 	
-	public List<Andamento> getDone(int secao) throws ClassNotFoundException, SQLException{
-		sql = "SELECT CH.ID, CH.NUMERO, CH.LOTACAODESTINO, to_char(an.dt_andamento,'YYYY') as ano, AST.DESCRICAO, AN.TEXTO, SV.NOME, CH.STATUS, LT.NOME, CH.LOTACAOSOLICITANTE FROM CHAMADOS CH, ASSUNTOS AST, ANDAMENTOS AN, PORTAL PT, SERVIDORES SV, LOTACAO LT WHERE CH.ASSUNTO = AST.ID AND LT.ID = CH.LOTACAOSOLICITANTE AND CH.ID = AN.CHAMADO AND AN.CLASSIFICACAO = 'CON' AND trunc(AN.DT_ANDAMENTO) = TRUNC(sysdate) and PT.ID(+) = CH.RESPONSAVEL AND SV.CODISERV(+) = SUBSTR(PT.CODIGO, 1, LENGTH(PT.CODIGO) - 2) AND CH.STATUS = 'CO' AND CH.LOTACAODESTINO = ? ORDER BY CH.ID, CH.LOTACAODESTINO, SV.NOME, AN.DT_ANDAMENTO";
-		List<Andamento> andamentos = new ArrayList<Andamento>();	
-		
+	public List<Andamento> getDone(int secao, int periodo) throws ClassNotFoundException, SQLException{
+		sql = "SELECT CH.ID, CH.NUMERO, CH.LOTACAODESTINO, an.dt_andamento, AST.DESCRICAO, AN.TEXTO, SV.NOME, CH.STATUS, LT.NOME, CH.LOTACAOSOLICITANTE FROM CHAMADOS CH, ASSUNTOS AST, ANDAMENTOS AN, PORTAL PT, SERVIDORES SV, LOTACAO LT WHERE CH.ASSUNTO = AST.ID AND LT.ID = CH.LOTACAOSOLICITANTE AND CH.ID = AN.CHAMADO AND AN.CLASSIFICACAO = 'CON' AND trunc(AN.DT_ANDAMENTO) >= TRUNC(sysdate - ?) and PT.ID(+) = CH.RESPONSAVEL AND SV.CODISERV(+) = SUBSTR(PT.CODIGO, 1, LENGTH(PT.CODIGO) - 2) AND CH.STATUS = 'CO' AND CH.LOTACAODESTINO = ? ORDER BY CH.ID, CH.LOTACAODESTINO, SV.NOME, AN.DT_ANDAMENTO";
+		List<Andamento> andamentos = new ArrayList<Andamento>();			
 			PreparedStatement ps = ConexaoOracle.abreConexao().prepareStatement(sql);
-			ps.setInt(1, secao);
+			ps.setInt(1, periodo);
+			ps.setInt(2, secao);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				Andamento a = new Andamento();
@@ -151,7 +151,7 @@ private String sql;
 	
 	
 	public Andamento getInfoChamado(long id) throws SQLException, ClassNotFoundException{		
-		sql = " SELECT c.numero, to_char(a.dt_andamento,'YYYY') as ano, a.dt_andamento, l.nome, to_char(a.texto) as texto "+
+		sql = " SELECT c.id, c.numero, to_char(a.dt_andamento,'YYYY') as ano, a.dt_andamento, l.nome, to_char(a.texto) as texto "+
 			" FROM chamados c, andamentos a, lotacao l WHERE c.id = a.chamado AND a.classificacao='ABE' AND c.lotacaosolicitante = l.id AND c.id = ?";
 		PreparedStatement ps = ConexaoOracle.abreConexao().prepareStatement(sql);
 		ps.setLong(1, id);
@@ -161,6 +161,7 @@ private String sql;
 			
 			Chamado c = new Chamado();
 			c.setNumero(rs.getInt("numero"));
+			c.setId(rs.getLong("id"));
 			Lotacao l = new Lotacao();
 			l.setNome(rs.getString("nome"));
 			c.setLotacaoSolicitante(l);

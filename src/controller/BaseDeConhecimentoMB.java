@@ -41,6 +41,8 @@ public class BaseDeConhecimentoMB {
 	private Andamento ultimoAndamento = new Andamento();
 	private Chamado selecionado;
 	private String termoBusca = "";
+	private String termoDestaque = "";
+	private String termoTroca = "";
 	
 	
 	public BaseDeConhecimentoMB(){
@@ -48,6 +50,8 @@ public class BaseDeConhecimentoMB {
 		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
 		if(!params.isEmpty()){
 			this.termoBusca = params.get("termo");
+			this.termoDestaque = this.termoBusca.toUpperCase();
+			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
 			buscar();
 		}
 		System.out.println(params.toString());
@@ -96,17 +100,21 @@ public class BaseDeConhecimentoMB {
 		if(this.select.getParent().toString().equals("Software") || this.select.getParent().getParent().equals("Software") ||
 				this.select.getParent().getParent().getParent().equals("Software")){
 			termo = this.select.toString();
+			this.termoDestaque = termo;
 			c = cDao.getCategoriaByName(termo);
 			termo = c.getTermoCategoria().equals("") ? c.getNomeCategoria() : c.getTermoCategoria();
 			this.chamados = dao.getChamadosSemTombo(termo);
+			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
 		}else{
 			termo = this.select.getParent().toString();
 			equipamento = this.select.toString();
+			this.termoDestaque = termo;
 			c = cDao.getCategoriaByName(termo);
 			termo = c.getTermoCategoria().equals("") ? c.getNomeCategoria() : c.getTermoCategoria();
 			c = cDao.getCategoriaByName(equipamento);
 			equipamento = c.getTermoCategoria().equals("") ? c.getNomeCategoria() : c.getTermoCategoria();
 			this.chamados = dao.getChamadosComTombo(termo, equipamento);
+			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
 		}
 		
 		if(this.chamados.size() > 0) this.mostra = true;
@@ -241,6 +249,22 @@ public class BaseDeConhecimentoMB {
 
 	public void setTermoBusca(String termoBusca) {
 		this.termoBusca = termoBusca;
+	}
+
+	public String getTermoDestaque() {
+		return termoDestaque;
+	}
+
+	public void setTermoDestaque(String termoDestaque) {
+		this.termoDestaque = termoDestaque;
+	}
+
+	public String getTermoTroca() {
+		return termoTroca;
+	}
+
+	public void setTermoTroca(String termoTroca) {
+		this.termoTroca = termoTroca;
 	}
 
 	

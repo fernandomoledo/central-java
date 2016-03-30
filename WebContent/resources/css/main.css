@@ -24,4 +24,16 @@
 .tbl_chamados tr td{
 	padding: 1em;
 }
+
+mark{
+	background-color:#FFFF00 !important;
+	font-weight: bold;
+}
  
+table tr td{
+	text-align: justify;
+}
+
+.ui-tree{
+	width:100% !important;
+}

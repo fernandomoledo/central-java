@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+
 import util.ConexaoMySQL;
 import model.Categoria;
 import model.CategoriaPai;
@@ -13,32 +17,39 @@ import model.CategoriaPai;
 public class CategoriaDAO {
 	private String sql;
 	
+	ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+	HttpSession session = (HttpSession) ec.getSession(false);
+	String user = session.getAttribute("usuarioLogado").toString();
+	
 	public boolean salvar(Categoria c)  throws ClassNotFoundException, SQLException{
-		sql = "INSERT INTO categoria(nome_categoria,termo_categoria) VALUES(?,?)";
+		sql = "INSERT INTO categoria(nome_categoria,termo_categoria, usuario) VALUES(?,?,?)";
 		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
 		ps.setString(1, c.getNomeCategoria());
 		ps.setString(2, c.getTermoCategoria());
+		ps.setString(3, user);
 		ps.execute();
 		ConexaoMySQL.fechaConexao();
 		return true;
 	}
 	
 	public boolean atualizar(Categoria c)  throws ClassNotFoundException, SQLException{
-		sql = "UPDATE categoria SET nome_categoria = ? , termo_categoria = ? WHERE id_categoria = ?";
+		sql = "UPDATE categoria SET nome_categoria = ? , termo_categoria = ?, usuario = ? WHERE id_categoria = ?";
 		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
 		ps.setString(1, c.getNomeCategoria());
 		ps.setString(2, c.getTermoCategoria());
-		ps.setInt(3, c.getIdCategoria());
+		ps.setString(3, user);
+		ps.setInt(4, c.getIdCategoria());
 		ps.executeUpdate();
 		ConexaoMySQL.fechaConexao();
 		return true;
 	}
 	
 	public boolean inserirAmarracao(CategoriaPai cp) throws ClassNotFoundException, SQLException{
-		sql = "INSERT INTO categoria_pai VALUES(?,?) ";
+		sql = "INSERT INTO categoria_pai VALUES(?,?,?) ";
 		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
 		ps.setInt(1, cp.getPai().getIdCategoria());
 		ps.setInt(2, cp.getFilha().getIdCategoria());
+		ps.setString(3, user);
 		ps.execute();
 		ConexaoMySQL.fechaConexao();
 		return true;
@@ -133,7 +144,7 @@ public class CategoriaDAO {
 		
 		ConexaoMySQL.fechaConexao();
 		
-		sql = "SELECT c.id_categoria as id_pai, c.nome_categoria as nome_pai, c.termo_categoria as termo_pai, c1.id_categoria, c1.nome_categoria, c1.termo_categoria FROM categoria c, categoria c1, categoria_pai cp WHERE c.id_categoria = cp.pai AND c1.id_categoria = cp.filha";
+		sql = "SELECT c.id_categoria as id_pai, c.nome_categoria as nome_pai, c.termo_categoria as termo_pai, c1.id_categoria, c1.nome_categoria, c1.termo_categoria FROM categoria c, categoria c1, categoria_pai cp WHERE c.id_categoria = cp.pai AND c1.id_categoria = cp.filha ";
 		ps = ConexaoMySQL.abreConexao().prepareStatement(sql);		
 		rs = ps.executeQuery();
 		while(rs.next()){
@@ -160,7 +171,7 @@ public class CategoriaDAO {
 		if(pai == 0)
 			sql = "SELECT c.* FROM categoria c WHERE c.id_categoria NOT IN (SELECT filha FROM categoria_pai) ORDER BY c.nome_categoria";
 		else
-			sql = "SELECT c.id_categoria as id_pai, c.nome_categoria as nome_pai, c.termo_categoria as termo_pai, c1.id_categoria, c1.nome_categoria, c1.termo_categoria FROM categoria c, categoria c1, categoria_pai cp WHERE c.id_categoria = cp.pai AND c1.id_categoria = cp.filha and cp.pai = ?";
+			sql = "SELECT c.id_categoria as id_pai, c.nome_categoria as nome_pai, c.termo_categoria as termo_pai, c1.id_categoria, c1.nome_categoria, c1.termo_categoria FROM categoria c, categoria c1, categoria_pai cp WHERE c.id_categoria = cp.pai AND c1.id_categoria = cp.filha and cp.pai = ? ORDER BY c1.nome_categoria";
 		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);	
 		if(pai > 0)
 			ps.setInt(1, pai);

@@ -56,8 +56,9 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li><h:link outcome="categorias" value="Categorias"><span class="sr-only">(current)</span></h:link></li>
-            <li><h:link outcome="basedeconhecimento" value="Base de Conhecimento" /></li>
+          	<li><h:link outcome="admin" value="Administração" rendered="#{painelMB.verificaLotacao(portalMB.original.nome)}" /></li>
+          	<li><h:link outcome="basedeconhecimento" value="Base de Conhecimento" /></li>
+            <li><h:link outcome="categorias" value="Categorias"><span class="sr-only">(current)</span></h:link></li>       
             <li><h:link outcome="painel" value="Painel" /></li>
           </ul>
          <h:form class="navbar-form navbar-left" role="search">

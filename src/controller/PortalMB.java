@@ -9,7 +9,9 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import util.Mensagens;
+import model.Lotacao;
 import model.Portal;
+import dao.LotacaoDAO;
 import dao.PortalDAO;
 
 @ManagedBean
@@ -18,6 +20,7 @@ public class PortalMB {
 	private String username;
 	private String termo;
 	private Portal p;
+	private Lotacao original = new Lotacao();
 	public String logar(){
 		PortalDAO portalDAO = new PortalDAO();
 		p = null;
@@ -27,6 +30,7 @@ public class PortalMB {
 				ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 				HttpSession session = (HttpSession) ec.getSession(false);
 				session.setAttribute("usuarioLogado", p.getLogin());
+				this.setOriginal(p.getLotacao());
 				return "/painel.xhtml?faces-redirect=true";
 			}else{
 				System.out.println("Usuário ou senha inválidos...");
@@ -38,6 +42,16 @@ public class PortalMB {
 		}
 		return null;
 		
+	}
+	
+	public void mudaLotacao(String lotacao) throws ClassNotFoundException, SQLException{
+		System.out.println("Nova lotação: "+lotacao);
+		LotacaoDAO dao = new LotacaoDAO();
+		Lotacao l = new Lotacao();
+		if(lotacao.length() > 5){	
+			l = dao.getLotacaoByName(lotacao);
+			this.p.setLotacao(l);
+		}
 	}
 	
 	public String logout(){
@@ -69,6 +83,14 @@ public class PortalMB {
 
 	public void setTermo(String termo) {
 		this.termo = termo;
+	}
+
+	public Lotacao getOriginal() {
+		return original;
+	}
+
+	public void setOriginal(Lotacao original) {
+		this.original = original;
 	}
 	
 	

@@ -31,7 +31,11 @@ function esconde_box(){
 }
 
 function montaurl(url){
-	window.location="basedeconhecimento.jsf?termo="+url;
+	if(url == ""){
+		alert("Informe um termo para a busca!");
+	}else{
+		window.location="basedeconhecimento.jsf?termo="+url;
+	}
 }
 
 $("#busca").keypress(function(e){

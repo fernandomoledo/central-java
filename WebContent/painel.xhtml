@@ -12,30 +12,57 @@
     <div class="container-fluid">
       <!-- Título -->
       <div class="row">
+		<div class="alert alert-info">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
+		  <strong>Aviso:</strong> Você deve estar logado na Central de Chamados antes de clicar no chamado desejado!
+		</div>
+		</div>
+      <div class="row">
         <div class="col-md-12 text-center">
           <h1>Painel de Chamados</h1>
         </div>
       </div>
       <div class="push2"></div>
       <!-- Classificação por períodos -->
-  
+  		
       <div class="row text-center">
-        <h4>#{portalMB.p.lotacao.nome}</h4>
+        <h4><h:form id="titulo"><h:outputText value="#{portalMB.p.lotacao.nome}" /></h:form></h4>
       </div>
        <div class="push2"></div>
-       <div class="row">
-		<div class="alert alert-info">
-		<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
-		  <strong>Aviso:</strong> Você deve estar logado na Central de Chamados antes de clicar no chamado desejado!
+		<!--  teste escolha perfil -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="col-md-3"></div>
+				<div class="col-md-6 text-center">
+				<h:form rendered="#{painelMB.verificaLotacao(portalMB.original.nome)}">
+					 <div class="input-group">
+		              <span class="input-group-addon" id="sizing-addon2">Alterar lotação:</span>
+		              		<h:selectOneMenu value="#{painelMB.lotacao.nome}" class="form-control" aria-describedby="sizing-addon2">
+		              		<p:ajax event="change" update=":c_todo :c_doing :c_done :titulo" 
+		              		listener="#{portalMB.mudaLotacao(painelMB.lotacao.nome)}" onstart="mostra_box();" oncomplete="esconde_box();"  />
+		              			<f:selectItem itemLabel="-- Escolha a lotação desejada --" itemValue="" />
+		              			<f:selectItem itemLabel="*** Minha lotação de origem ***" itemValue="#{portalMB.original.nome}" />
+			                 	<f:selectItems value="#{painelMB.getLotacoesAmarradasPorPai(portalMB.original.nome)}" noSelectionOption="true" var="lot" itemLabel="#{lot.filha.nome}" itemValue="#{lot.filha.nome}"  />
+			                 	
+			                 </h:selectOneMenu>
+		            </div>
+		            <div class="push1"></div>
+		            <div class="row text-center">
+		           		<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
+		            </div>
+				</h:form>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
 		</div>
-		</div>
+		<!--  fim de teste de escolha de perfil -->
       <div class="push2"></div>
       <div class="row">
         <div class="col-md-12">
           <div class="col-md-9 separator">
             <div class="col-md-4 text-center" id="chamados-todo">        
             	<h:form id="c_todo">
-            	   <h3>A Fazer <h:outputText value="(#{painelMB.qtdeToDo})" rendered="#{painelMB.qtdeToDo gt 0}" /></h3>
+            	   <h3>A Fazer </h3>
             		<ui:repeat var="todo" value="#{painelMB.getChamadosToDo(portalMB.p.lotacao.id)}">
             			<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
@@ -52,12 +79,12 @@
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>
-            		  <p:poll interval="60" update=":c_todo" />
+            		  <p:poll interval="300" update=":c_todo" />
             	</h:form>
             </div>
             <div class="col-md-4 text-center" id="chamados-doing">            
             	<h:form id="c_doing">
-            	 <h3>Em Andamento <h:outputText value="(#{painelMB.qtdeDoing})" rendered="#{painelMB.qtdeDoing gt 0}" /></h3>
+            	 <h3>Em Andamento </h3>
             		<ui:repeat var="doing" value="#{painelMB.getChamadosDoing(portalMB.p.lotacao.id)}">
             		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
@@ -74,13 +101,21 @@
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>
-            		  <p:poll interval="60" update=":c_doing" />
+            		  <p:poll interval="300" update=":c_doing" />
             	</h:form>
             
             </div>
             <div class="col-md-4 text-center" id="chamados-done">
             	<h:form id="c_done">
-            	<h3>Concluídos <h:outputText value="(#{painelMB.qtdeDone})" rendered="#{painelMB.qtdeDone gt 0}" /></h3>
+            	<h3>Concluídos </h3>
+            		<p:selectOneButton value="#{painelMB.periodo}">
+            		<p:ajax event="change" update="@form" onstart="mostra_box();" oncomplete="esconde_box();" />
+            			<f:selectItem itemLabel="Hoje" itemValue="0" />
+			            <f:selectItem itemLabel="Ontem" itemValue="1" />
+			            <f:selectItem itemLabel="7d" itemValue="7" />
+			            <f:selectItem itemLabel="30d" itemValue="30" />
+			        </p:selectOneButton>
+			        <div class="push1"></div>
             		<ui:repeat var="done" value="#{painelMB.getChamadosDone(portalMB.p.lotacao.id)}">
             		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
@@ -97,7 +132,7 @@
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>     
-            		  <p:poll interval="60" update=":c_done" />       		
+            		  <p:poll interval="300" update=":c_done" />       		
             	</h:form>
             </div>
           

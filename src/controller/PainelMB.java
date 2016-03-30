@@ -6,14 +6,20 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
 
 import util.Mensagens;
 import dao.ChamadoDAO;
 import dao.ChatDAO;
+import dao.LotacaoDAO;
 import model.Andamento;
 import model.Chat;
+import model.Lotacao;
+import model.LotacaoLotacao;
 
 @ManagedBean
 @ViewScoped
@@ -22,9 +28,12 @@ public class PainelMB {
 	private int qtdeDoing = 0;
 	private int qtdeDone = 0;
 	private Chat chat = new Chat();
+	private Lotacao lotacao = new Lotacao();
+	private int periodo;
 	
-	
-	private String usuario = "victorberti";
+	public boolean verificaLotacao(String nome) throws SQLException{
+		return new LotacaoDAO().verificaLotacao(nome);
+	}
 	
 	public List<Andamento> getChamadosToDo(int lotacao){
 		ChamadoDAO dao = new ChamadoDAO();
@@ -58,7 +67,7 @@ public class PainelMB {
 		ChamadoDAO dao = new ChamadoDAO();
 		List<Andamento> chamadosDone;
 		try {
-			chamadosDone = dao.getDone(lotacao);
+			chamadosDone = dao.getDone(lotacao, this.periodo);
 			this.qtdeDone = chamadosDone.size();
 			return chamadosDone;
 		} catch (ClassNotFoundException | SQLException e) {
@@ -81,6 +90,7 @@ public class PainelMB {
 		}
 	}
 	
+	
 	public List<Chat> getChats(){
 		ChatDAO dao = new ChatDAO();
 		List<Chat> chats;
@@ -95,12 +105,15 @@ public class PainelMB {
 	}
 	
 	public void salvar(){
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		HttpSession session = (HttpSession) ec.getSession(false);
+		String user = session.getAttribute("usuarioLogado").toString();
 		if(!this.chat.getTextoChat().equals("")){
-	 		this.chat.setUsuarioChat(this.usuario);
+	 		this.chat.setUsuarioChat(user);
 			ChatDAO dao = new ChatDAO();
 			try{
 				if(dao.salvar(this.chat)){
-					System.out.println("Usuário "+usuario+" says: "+this.chat.getTextoChat());
+					System.out.println("Usuário "+user+" says: "+this.chat.getTextoChat());
 				
 				}
 			}catch(ClassNotFoundException | SQLException e){
@@ -110,6 +123,17 @@ public class PainelMB {
 			}
 			
 			this.chat = new Chat();
+		}
+	}
+	
+	public List<LotacaoLotacao> getLotacoesAmarradasPorPai(String nome){
+		LotacaoDAO dao = new LotacaoDAO();
+		try {
+			return dao.getLotacoesAmarradasPorPai(nome);
+		} catch (SQLException e) {
+			Mensagens.setMessage(3, "Não foi possível obter a lista de lotações amarradas: "+e.getMessage());
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -143,5 +167,21 @@ public class PainelMB {
 
 	public void setChat(Chat chat) {
 		this.chat = chat;
+	}
+
+	public Lotacao getLotacao() {
+		return lotacao;
+	}
+
+	public void setLotacao(Lotacao lotacao) {
+		this.lotacao = lotacao;
+	}
+
+	public int getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(int periodo) {
+		this.periodo = periodo;
 	}
 }
