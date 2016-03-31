@@ -19,60 +19,56 @@
       <div class="push3"></div>
       <div class="row">
         <div class="col-md-12 text-center">
-          <div class="col-md-3"></div>
-          <div class="col-md-6">
-         <h:form id="fcad">
-         <p:messages autoUpdate="true" closable="true" id="mensagens"  />
+          <div class="col-md-2"></div>
+          <div class="col-md-8">
+        <p:messages autoUpdate="true" closable="true" id="mensagens"  />
          <h4>Definir amarração de lotações</h4>
-            <div class="row">
-		          <div class="input-group">
-	              <span class="input-group-addon" id="sizing-addon2">Lotação principal</span>
-	              		<h:selectOneMenu value="#{adminMB.lotacao.nome}" class="form-control" aria-describedby="sizing-addon2" required="true" requiredMessage=" - A lotação principal é obrigatória">
-	              			<f:selectItem itemLabel="-- Escolha a lotação --" itemValue="" />
-		                 	<f:selectItems value="#{adminMB.lotacoes}" var="lot" itemLabel="#{lot.nome}" itemValue="#{lot.nome}" />
-		                 </h:selectOneMenu>
-	            </div>
-            </div>  
-             <div class="push2"></div>
-            <div class="row">
-		          <div class="input-group">
-	              <span class="input-group-addon" id="sizing-addon2">Lotação secundária</span>
-	              		<h:selectOneMenu value="#{adminMB.secundaria.nome}" class="form-control" aria-describedby="sizing-addon2" required="true" requiredMessage=" - A lotação secundária é obrigatória">
-	              			<f:selectItem itemLabel="-- Escolha a lotação --" itemValue="" />
-		                 	<f:selectItems value="#{adminMB.lotacoes}" var="lot" itemLabel="#{lot.nome}" itemValue="#{lot.nome}" />
-		                 </h:selectOneMenu>
-	            </div>
-            </div>  
-            <div class="push2"></div> 
-            <div class="text-right">
-                <h:commandButton class="btn btn-primary" value="Salvar" actionListener="#{adminMB.salvar()}" update="@form" />
-            </div>
+          <h:form id="fcad">
+            
+		       
+		        <p:panelGrid columns="2" style="width:100%" styleClass="pequena,grande">
+				        <h:outputLabel value="Lotação principal:" />
+				        <p:autoComplete id="lotacaoPrin" value="#{adminMB.lotacao.nome}" placeholder="Digite ou escolha a lotação principal"
+				        dropdown="true" completeMethod="#{adminMB.completeLotacoes}" maxResults="10" required="true" requiredMessage="- A lotação principal é obrigatória"/>
+				       	
+				         <h:outputLabel value="Lotação Subordinada" for="lotacaoSec" />
+				        <p:autoComplete id="lotacaoSec" value="#{adminMB.secundaria.nome}" placeholder="Digite ou escolha a lotação subordinada"
+				         dropdown="true"  completeMethod="#{adminMB.completeLotacoes}" maxResults="10" required="true" requiredMessage="- A lotação subordinada é obrigatória" />
+				     	<h:outputLabel value="" />
+                <p:commandButton value="Salvar" actionListener="#{adminMB.salvar()}" update="@form :tabela" />
+                </p:panelGrid>
+             	
+           
            </h:form>
  
             
             
         
             <div class="push3"></div>     
-             <h:form>       
-            <h:dataTable class="table table-striped example2" id="example2" var="lotacao" value="#{adminMB.lotacoesAmarradas}">
-              	<h:column>
-			       	<f:facet name="header">Lotação Principal</f:facet>
-			       	#{lotacao.pai.nome}
-		       </h:column>
-		       <h:column>
-			       	<f:facet name="header">Lotação Secundária</f:facet>
-			       	#{lotacao.filha.nome}
-		       </h:column>
-		       <h:column>
-		       <p:commandButton icon="ui-icon-trash" actionListener="#{adminMB.excluir(lotacao.id)}" 
-		       title="Excluir a amrração entre #{lotacao.pai.nome} e #{lotacao.filha.nome}" 
-			       	update="@all" onclick="return confirm('Deseja realmente excluir a amrração entre #{lotacao.pai.nome} e #{lotacao.filha.nome}?');"/>
-		       </h:column>
-            </h:dataTable>    
+             <h:form id="tabela">       
+            <p:dataTable var="lotacao" value="#{adminMB.lotacoesAmarradas}" emptyMessage="Não existem lotações amarradas" rowHover="true"
+            rows="5" 
+            paginator="true"
+            paginatorPosition="bottom"
+           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
+           rowsPerPageTemplate="5,10,20"
+           >
+              	<p:column headerText="Lotação Principal" style="width:45%">
+              		<h:outputText value="#{lotacao.pai.nome}" />
+              	</p:column>
+			     <p:column headerText="Lotação Subordinada" style="width:45%">
+              		<h:outputText value="#{lotacao.filha.nome}" />
+              	</p:column>
+			  <p:column headerText="Opções" priority="3">
+			       <p:commandButton icon="ui-icon-trash" actionListener="#{adminMB.excluir(lotacao.id)}" 
+			       title="Excluir a amrração entre #{lotacao.pai.nome} e #{lotacao.filha.nome}" 
+				       	update="@form" onclick="return confirm('Deseja realmente excluir a amrração entre #{lotacao.pai.nome} e #{lotacao.filha.nome}?');"/>
+		      </p:column>
+            </p:dataTable>    
              </h:form>	                
           </div>
       	
-          <div class="col-md-3"></div>
+          <div class="col-md-2"></div>
         </div>
       </div>           
     </div>

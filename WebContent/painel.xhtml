@@ -79,6 +79,7 @@
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>
+            		<h:outputText value="Não existem chamados a fazer" rendered="#{painelMB.qtdeToDo == 0}" />
             		  <p:poll interval="300" update=":c_todo" />
             	</h:form>
             </div>
@@ -101,6 +102,7 @@
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>
+            		 <h:outputText value="Não existem chamados em andamento" rendered="#{painelMB.qtdeDoing == 0}" />
             		  <p:poll interval="300" update=":c_doing" />
             	</h:form>
             
@@ -116,6 +118,7 @@
 			            <f:selectItem itemLabel="30d" itemValue="30" />
 			        </p:selectOneButton>
 			        <div class="push1"></div>
+	
             		<ui:repeat var="done" value="#{painelMB.getChamadosDone(portalMB.p.lotacao.id)}">
             		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
@@ -132,6 +135,7 @@
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>     
+            		<h:outputText value="Não existem chamados finalizados no período" rendered="#{painelMB.qtdeDone == 0}"/>
             		  <p:poll interval="300" update=":c_done" />       		
             	</h:form>
             </div>

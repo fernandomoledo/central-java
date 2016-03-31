@@ -37,3 +37,20 @@ table tr td{
 .ui-tree{
 	width:100% !important;
 }
+
+.pequena{
+	width:20% !important;
+} 
+
+.grande{
+	width:80% !important;
+}
+
+.ui-autocomplete{
+	width:100% !important;
+	position: relative !important;
+}
+
+.ui-inputfield {
+	width:80% !important;
+}

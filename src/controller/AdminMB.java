@@ -20,10 +20,16 @@ public class AdminMB {
 
 	
 	
-	public List<Lotacao> getLotacoes(){
+	public List<String> completeLotacoes(String query){
 		LotacaoDAO dao = new LotacaoDAO();
+		List<String> lotacoes = new ArrayList<String>();
 		try {
-			return dao.getLotacoes();
+			for(Lotacao l : dao.getLotacoes()){
+				if(l.getNome().contains(query.toUpperCase())){
+					lotacoes.add(l.getNome());
+				}
+			}
+			return lotacoes;
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			Mensagens.setMessage(3, "Não foi possível obter a lista de lotações: "+e.getMessage());
@@ -34,18 +40,22 @@ public class AdminMB {
 	
 	public void salvar(){
 		LotacaoDAO dao = new LotacaoDAO();
-		try {
-			if(dao.salvar(this.lotacao.getNome(), this.secundaria.getNome())){
-				this.lotacao = new Lotacao();
-				this.secundaria = new Lotacao();
-				Mensagens.setMessage(1, "Lotações amarradas com sucesso.");
-				
-			}else{
-				Mensagens.setMessage(3, "Não foi possível amarrar de lotações.");
+		if(this.lotacao.getNome().equals(this.secundaria.getNome())){
+			Mensagens.setMessage(3, "A lotação principal não pode ser igual a lotação secundária");
+		}else{
+			try {
+				if(dao.salvar(this.lotacao.getNome(), this.secundaria.getNome())){
+					this.lotacao = new Lotacao();
+					this.secundaria = new Lotacao();
+					Mensagens.setMessage(1, "Lotações amarradas com sucesso.");
+					
+				}else{
+					Mensagens.setMessage(3, "Não foi possível amarrar de lotações.");
+				}
+			} catch (SQLException e) {
+				Mensagens.setMessage(3, "Não foi possível amarrar as lotações: "+e.getMessage());
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			Mensagens.setMessage(3, "Não foi possível amarrar as lotações: "+e.getMessage());
-			e.printStackTrace();
 		}
 	}
 	
