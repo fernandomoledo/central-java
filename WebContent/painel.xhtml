@@ -60,7 +60,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="col-md-9 separator">
-            <div class="col-md-4 text-center" id="chamados-todo">        
+            <div class="col-md-4 text-center" id="chamados-todo" style="height:768px; overflow:auto;">        
             	<h:form id="c_todo">
             	   <h3>A Fazer </h3>
             		<ui:repeat var="todo" value="#{painelMB.getChamadosToDo(portalMB.p.lotacao.id)}">
@@ -83,7 +83,7 @@
             		  <p:poll interval="300" update=":c_todo" />
             	</h:form>
             </div>
-            <div class="col-md-4 text-center" id="chamados-doing">            
+            <div class="col-md-4 text-center" id="chamados-doing" style="height:768px; overflow:auto;">            
             	<h:form id="c_doing">
             	 <h3>Em Andamento </h3>
             		<ui:repeat var="doing" value="#{painelMB.getChamadosDoing(portalMB.p.lotacao.id)}">
@@ -107,7 +107,7 @@
             	</h:form>
             
             </div>
-            <div class="col-md-4 text-center" id="chamados-done">
+            <div class="col-md-4 text-center" id="chamados-done" style="height:768px; overflow:auto;">
             	<h:form id="c_done">
             	<h3>Concluídos </h3>
             		<p:selectOneButton value="#{painelMB.periodo}">
