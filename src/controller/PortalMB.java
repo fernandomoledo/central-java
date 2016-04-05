@@ -20,7 +20,11 @@ public class PortalMB {
 	private String username;
 	private String termo;
 	private Portal p;
+	//armazena a lotação verdadeira do usuário, pois se ele for coordenador, pode alterar sua lotação para ver os chamados
 	private Lotacao original = new Lotacao();
+	/*
+	 * Este método é responsável por autenticar o login do usuário e criar a sessão, que será controlada pela classe filters.ControleDeAcesso.java
+	 */
 	public String logar(){
 		PortalDAO portalDAO = new PortalDAO();
 		p = null;
@@ -44,6 +48,9 @@ public class PortalMB {
 		
 	}
 	
+	/*
+	 * Este método serve para alterar a lotação de um usuário coordenador que deseje ver chamados de uma das suas seções
+	 */
 	public void mudaLotacao(String lotacao) throws ClassNotFoundException, SQLException{
 		System.out.println("Nova lotação: "+lotacao);
 		LotacaoDAO dao = new LotacaoDAO();
@@ -54,6 +61,9 @@ public class PortalMB {
 		}
 	}
 	
+	/*
+	 * Este método destrói a sessão e encerra a execução do sistema para o usuário
+	 */
 	public String logout(){
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		HttpSession session = (HttpSession) ec.getSession(false);
@@ -61,6 +71,9 @@ public class PortalMB {
 		return "/index.xhtml?faces-redirect=true";
 	}
 
+	/*
+	 * getters and setters
+	 */
 	public String getUsername() {
 		return username;
 	}

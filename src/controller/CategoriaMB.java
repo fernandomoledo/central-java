@@ -18,6 +18,9 @@ public class CategoriaMB {
 	private Categoria pai = new Categoria();
 	private Categoria filha = new Categoria();
 	
+	/*
+	 * Este método é responsável por salvar/alterar uma categoria no banco central do MySQL
+	 */
 	public void salvar(){
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
@@ -47,6 +50,9 @@ public class CategoriaMB {
 		}
 	}
 	
+	/*
+	 * Este método serve para carregar o objeto do tipo Categoria com os dados da categoria desejada para alteração
+	 */
 	public void editar(int id){
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
@@ -57,6 +63,9 @@ public class CategoriaMB {
 		}
 	}
 	
+	/*
+	 * Este método é responsável por excluir uma determinada categoria/amarração de categorias cadastrada
+	 */
 	public void excluir(int pai, int filha){
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
@@ -71,6 +80,9 @@ public class CategoriaMB {
 		}
 	}
 	
+	/*
+	 * Este método é responsável por amarrar as categorias pai e filha
+	 */
 	public void amarrar(){
 		if(this.pai.getIdCategoria() == this.filha.getIdCategoria()){
 			Mensagens.setMessage(3, "A categoria filha não pode ser igual a categoria pai");
@@ -97,6 +109,9 @@ public class CategoriaMB {
 	}
 	
 	
+	/*
+	 * Este método lista todas as categorias amarradas do banco central MySQL
+	 */
 	public List<CategoriaPai> getCategoriasCompleto(){
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
@@ -108,6 +123,9 @@ public class CategoriaMB {
 		}
 	}
 	
+	/*
+	 * Este método lista todas as categorias do banco central MySQL
+	 */	
 	public List<Categoria> getCategorias(){
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
@@ -118,6 +136,10 @@ public class CategoriaMB {
 			return null;
 		}
 	}
+	
+	/*
+	 * getters and setters
+	 */
 
 	public Categoria getCategoria() {
 		return categoria;

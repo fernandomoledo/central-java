@@ -28,23 +28,25 @@ import model.Tombo;
 @ManagedBean
 @ViewScoped
 public class BaseDeConhecimentoMB {
-	private TreeNode root;
-	private TreeNode select;
-	private boolean mostra = false;
-	private boolean mostraDetalhe = false;
-	private String chamado = "";
+	private TreeNode root; //armazena os nós do menu árvore
+	private TreeNode select; //armazena um nó do menu árvore selecionado
+	private boolean mostra = false; //flag para mostrar ou não a tabela listando os chamados encontrados
+	private boolean mostraDetalhe = false; //flag para mostrar ou não o detalhe de um chamado selecionado
 	private List<Chamado> chamados = new ArrayList<Chamado>();
 	private List<Chamado> chamadosFiltrados;
 	private Andamento chamadoDetalhe = new Andamento();
 	private List<Tombo> tombosDetalhe = new ArrayList<Tombo>();
 	private List<Andamento> andamentosDetalhe = new ArrayList<Andamento>();
 	private Andamento ultimoAndamento = new Andamento();
-	private Chamado selecionado;
-	private String termoBusca = "";
-	private String termoDestaque = "";
-	private String termoTroca = "";
+	private Chamado selecionado; //armazena o chamado selecionado
+	private String termoBusca = ""; //armazena o termo de busca digitado na busca geral
+	private String termoDestaque = ""; //armazena o termo de busca com a marcação <mark></mark>
+	private String termoTroca = ""; //armazena o termo que substituirá a busca, caso haja termo adicional cadastrado no banco
 	
 	
+	/*
+	 * O método construtor inicializa a árvore e verifica se há termo de busca para disparar a pesquisa
+	 */
 	public BaseDeConhecimentoMB(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
@@ -61,6 +63,9 @@ public class BaseDeConhecimentoMB {
 		 
 	}
 	
+	/*
+	 * Este método recursivo constrói o menu árvore
+	 */
 	public TreeNode montaNode(int pai, TreeNode noPai){
 		List<CategoriaPai> cp = new ArrayList<CategoriaPai>();
 		TreeNode node = null;
@@ -79,6 +84,9 @@ public class BaseDeConhecimentoMB {
 		 return node;
 	}
 
+	/*
+	 * Este método captura o nó da árvore selecionado e verifica se ele é pai ou não. Caso não seja, dispara a busca de chamados
+	 */
 	public void getSelecao() throws ClassNotFoundException, SQLException{
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Filhos do nó: "+this.select.getChildCount(),null));
 		chamados = new ArrayList<Chamado>();
@@ -92,6 +100,9 @@ public class BaseDeConhecimentoMB {
 		}
 	}
 	
+	/*
+	 * Este método retorna uma lista de todos os chamados encontrados com base na categoria selecionada na árvore
+	 */
 	public void getListaChamados() throws ClassNotFoundException, SQLException{
 		String termo, equipamento;
 		ChamadoDAO dao = new ChamadoDAO();
@@ -120,6 +131,9 @@ public class BaseDeConhecimentoMB {
 		if(this.chamados.size() > 0) this.mostra = true;
 	}
 	
+	/*
+	 * Este método carrega todas as informações do chamado selecionado para exibí-lo na tela
+	 */
 	public void getDetalhe(){
 		long id = this.selecionado.getId();
 		ChamadoDAO cDao = new ChamadoDAO();
@@ -136,6 +150,10 @@ public class BaseDeConhecimentoMB {
 			e.printStackTrace();
 		} 
 	}
+	
+	/*
+	 * Este método é responsável por buscar de forma completa no banco UNA o termo digitado na busca geral do site
+	 */
 	
 	public void buscar(){
 		ChamadoDAO dao = new ChamadoDAO();
@@ -161,14 +179,6 @@ public class BaseDeConhecimentoMB {
 
 	public void setSelect(TreeNode select) {
 		this.select = select;
-	}
-
-	public String getChamado() {
-		return chamado;
-	}
-
-	public void setChamado(String chamado) {
-		this.chamado = chamado;
 	}
 
 	public List<Chamado> getChamados() {

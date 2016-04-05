@@ -19,7 +19,9 @@ public class AdminMB {
 	private Lotacao secundaria = new Lotacao();
 
 	
-	
+	/*
+	 * Este método é utilizado para carregar todas as lotações existentes na tabela lotacoes do UNA para os campos autocomplete da tela admin.jsf
+	 */
 	public List<String> completeLotacoes(String query){
 		LotacaoDAO dao = new LotacaoDAO();
 		List<String> lotacoes = new ArrayList<String>();
@@ -38,6 +40,9 @@ public class AdminMB {
 		
 	}
 	
+	/*
+	 * Este método é responsável por salvar a vinculação (amarração) entre uma categoria principal e outra secundária da tela admin.jsf
+	 */
 	public void salvar(){
 		LotacaoDAO dao = new LotacaoDAO();
 		if(this.lotacao.getNome().equals(this.secundaria.getNome())){
@@ -59,6 +64,9 @@ public class AdminMB {
 		}
 	}
 	
+	/*
+	 * Este método é responsável por excluir uma determinada amarração entre lotações através de seu id
+	 */
 	public void excluir(int id){
 		LotacaoDAO dao = new LotacaoDAO();
 		try {
@@ -73,6 +81,11 @@ public class AdminMB {
 			e.printStackTrace();
 		}
 	}
+	
+	/*
+	 * Este  método é responsável por listar todas as lotações amarradas na tabela lotacao_lotacao do MySQL
+	 * 
+	 */
 	public List<LotacaoLotacao> getLotacoesAmarradas(){
 		LotacaoDAO dao = new LotacaoDAO();
 		try {
@@ -85,7 +98,10 @@ public class AdminMB {
 	}
 	 
 
-
+	/*
+	 * getters and setters
+	 */
+	
 	public Lotacao getLotacao() {
 		return lotacao;
 	}

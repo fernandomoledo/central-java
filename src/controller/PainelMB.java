@@ -31,10 +31,16 @@ public class PainelMB {
 	private Lotacao lotacao = new Lotacao();
 	private int periodo;
 	
+	/*
+	 * Este método verifica a lotação em que o usuário encontra-se lotado
+	 */
 	public boolean verificaLotacao(String nome) throws SQLException{
 		return new LotacaoDAO().verificaLotacao(nome);
 	}
 	
+	/*
+	 * Este método lista todos os chamados a fazer da lotação do usuário
+	 */
 	public List<Andamento> getChamadosToDo(int lotacao){
 		ChamadoDAO dao = new ChamadoDAO();
 		List<Andamento> chamadosToDo;
@@ -49,6 +55,9 @@ public class PainelMB {
 		}
 	}
 	
+	/*
+	 * Este método lista todos os chamados em andamento da lotação do usuário
+	 */
 	public List<Andamento> getChamadosDoing(int lotacao){
 		ChamadoDAO dao = new ChamadoDAO();
 		List<Andamento> chamadosDoing;
@@ -62,7 +71,10 @@ public class PainelMB {
 			return null;
 		}
 	}
-
+	
+	/*
+	 * Este método lista todos os chamados concluídos - em um determinado período - da lotação do usuário
+	 */
 	public List<Andamento> getChamadosDone(int lotacao){
 		ChamadoDAO dao = new ChamadoDAO();
 		List<Andamento> chamadosDone;
@@ -77,6 +89,9 @@ public class PainelMB {
 		}
 	}
 	
+	/*
+	 * Este método retorna as últimas 5 interações do chat
+	 */
 	public List<Chat> getLastChats(){
 		ChatDAO dao = new ChatDAO();
 		List<Chat> chats;
@@ -91,6 +106,9 @@ public class PainelMB {
 	}
 	
 	
+	/*
+	 * Este método retorna todo o histórico do chat
+	 */
 	public List<Chat> getChats(){
 		ChatDAO dao = new ChatDAO();
 		List<Chat> chats;
@@ -103,7 +121,10 @@ public class PainelMB {
 			return null;
 		}
 	}
-	
+
+	/*
+	 * Este método é responsável por salvar a mensagem digitada no chat no banco de dados central MySQL
+	 */
 	public void salvar(){
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		HttpSession session = (HttpSession) ec.getSession(false);
@@ -126,6 +147,9 @@ public class PainelMB {
 		}
 	}
 	
+	/*
+	 * Este método retorna as lotações amarradas por pai do banco central MySQL, caso o usuário seja administrador
+	 */
 	public List<LotacaoLotacao> getLotacoesAmarradasPorPai(String nome){
 		LotacaoDAO dao = new LotacaoDAO();
 		try {
@@ -137,6 +161,9 @@ public class PainelMB {
 		}
 	}
 
+	/*
+	 * getters and setters
+	 */
 	public int getQtdeToDo() {
 		return qtdeToDo;
 	}
