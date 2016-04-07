@@ -4,31 +4,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
 public class ConexaoMySQL {
-	private static final String URL = "jdbc:mysql://localhost:3306/central";
-	private static final String USER = "central";
-	private static final String PASS = "trt15";
-	private static Connection con;
 	
-	public static Connection abreConexao(){
+private static Connection con = null;
+	
+	public static Connection abreConexao() throws ClassNotFoundException, SQLException, NamingException{
+		InitialContext context = new InitialContext();
+		DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/central2");
 		try{
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection(URL, USER, PASS);
-			System.out.println("Conectado MySQL");
+			con = ds.getConnection();
 		}catch(SQLException e){
-			System.out.println("Erro ao conectar ao MySQL: "+e.getMessage());
-		}catch (ClassNotFoundException cnfe) {
-			cnfe.getMessage();
+			e.printStackTrace();
 		}
 		return con;
-	}
-	
-	public static void fechaConexao(){
-		try{
-			con.close();
-			System.out.println("Fechando conexão com MySQL");
-		}catch(SQLException ex){
-			System.out.println("Erro ao fechar conexão com o MySQL: "+ex.getMessage());
-		}
+		
 	}
 }

@@ -1,10 +1,13 @@
 package dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.naming.NamingException;
 
 import model.Lotacao;
 import model.LotacaoLotacao;
@@ -14,12 +17,12 @@ import util.ConexaoOracle;
 public class LotacaoDAO {
 	private String sql;
 	
-	public Lotacao getLotacaoById(int id) throws ClassNotFoundException, SQLException{
+	public Lotacao getLotacaoById(int id) throws ClassNotFoundException, SQLException, NamingException{
 		sql = "SELECT ID, to_char(NOME) as NOME FROM lotacao WHERE id = ?";
 		Lotacao l = new Lotacao();
-		
-		
-			PreparedStatement ps = ConexaoOracle.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoOracle.abreConexao();
+		PreparedStatement ps = con.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
@@ -27,17 +30,19 @@ public class LotacaoDAO {
 				l.setNome(rs.getString("NOME"));
 			}
 			System.out.println("CONSULTA getLotacaoByID()");
-			ConexaoOracle.fechaConexao();
+			con.close();
 			
 		return l;
 	}
 	
-	public Lotacao getLotacaoByName(String nome) throws ClassNotFoundException, SQLException{
+	public Lotacao getLotacaoByName(String nome) throws ClassNotFoundException, SQLException, NamingException{
 		sql = "SELECT ID, to_char(NOME) as NOME FROM lotacao WHERE NOME = ?";
 		Lotacao l = new Lotacao();
 		
 		
-			PreparedStatement ps = ConexaoOracle.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoOracle.abreConexao();
+		PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, nome);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
@@ -45,14 +50,16 @@ public class LotacaoDAO {
 				l.setNome(rs.getString("NOME"));
 			}
 			System.out.println("CONSULTA getLotacaoByID()");
-			ConexaoOracle.fechaConexao();
+			con.close();
 			
 		return l;
 	}
 	
-	public List<Lotacao> getLotacoes() throws SQLException, ClassNotFoundException{
+	public List<Lotacao> getLotacoes() throws SQLException, ClassNotFoundException, NamingException{
 		sql = "SELECT id, nome FROM lotacao ORDER BY nome";
-		PreparedStatement ps = ConexaoOracle.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoOracle.abreConexao();
+		PreparedStatement ps = con.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
 		List<Lotacao> lotacoes = new ArrayList<Lotacao>();
 		while(rs.next()){
@@ -61,38 +68,44 @@ public class LotacaoDAO {
 			l.setNome(rs.getString("nome"));
 			lotacoes.add(l);
 		}
-		ConexaoOracle.fechaConexao();
+		con.close();
 		return lotacoes;
 		
 	}
 	
-	public boolean verificaLotacao(String nome) throws SQLException{
+	public boolean verificaLotacao(String nome) throws SQLException, ClassNotFoundException, NamingException{
 		sql = "select * from lotacao_lotacao where pai = ?";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);
 		ps.setString(1, nome);
 		ResultSet rs = ps.executeQuery();
 		int qtde = 0;
 		while(rs.next()){
 			qtde++;
 		}
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		if(qtde >0) return true; return false;
 	}
 	
-	public boolean salvar(String lprin, String lsec) throws SQLException{
+	public boolean salvar(String lprin, String lsec) throws SQLException, ClassNotFoundException, NamingException{
 		sql = "INSERT INTO lotacao_lotacao(pai,filha) VALUES(?,?)";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);
 		ps.setString(1, lprin);
 		ps.setString(2, lsec);
 		ps.execute();
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return true;
 	}
 	
-	public List<LotacaoLotacao> getLotacoesAmarradas() throws SQLException{
+	public List<LotacaoLotacao> getLotacoesAmarradas() throws SQLException, ClassNotFoundException, NamingException{
 		List<LotacaoLotacao> lotacoes = new ArrayList<LotacaoLotacao>();
 		sql = "select id, pai, filha from lotacao_lotacao order by pai, filha";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()){
 			LotacaoLotacao ll = new LotacaoLotacao();
@@ -105,14 +118,16 @@ public class LotacaoDAO {
 			ll.setFilha(l1);
 			lotacoes.add(ll);
 		}
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return lotacoes;
 	}
 	
-	public List<LotacaoLotacao> getLotacoesAmarradasPorPai(String nome) throws SQLException{
+	public List<LotacaoLotacao> getLotacoesAmarradasPorPai(String nome) throws SQLException, ClassNotFoundException, NamingException{
 		List<LotacaoLotacao> lotacoes = new ArrayList<LotacaoLotacao>();
 		sql = "select id, pai, filha from lotacao_lotacao where pai = ? order by pai, filha";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);
 		ps.setString(1, nome);
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()){
@@ -126,15 +141,17 @@ public class LotacaoDAO {
 			ll.setFilha(l1);
 			lotacoes.add(ll);
 		}
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return lotacoes;
 	}
-	public boolean excluir(int id) throws SQLException{
+	public boolean excluir(int id) throws SQLException, ClassNotFoundException, NamingException{
 		sql = "DELETE FROM lotacao_lotacao WHERE id = ?";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);
 		ps.setInt(1, id);
 		ps.execute();
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return true;
 	}
 }

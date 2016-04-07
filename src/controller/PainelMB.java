@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
@@ -34,14 +35,14 @@ public class PainelMB {
 	/*
 	 * Este método verifica a lotação em que o usuário encontra-se lotado
 	 */
-	public boolean verificaLotacao(String nome) throws SQLException{
+	public boolean verificaLotacao(String nome) throws SQLException, ClassNotFoundException, NamingException{
 		return new LotacaoDAO().verificaLotacao(nome);
 	}
 	
 	/*
 	 * Este método lista todos os chamados a fazer da lotação do usuário
 	 */
-	public List<Andamento> getChamadosToDo(int lotacao){
+	public List<Andamento> getChamadosToDo(int lotacao) throws NamingException{
 		ChamadoDAO dao = new ChamadoDAO();
 		List<Andamento> chamadosToDo;
 		try {
@@ -58,7 +59,7 @@ public class PainelMB {
 	/*
 	 * Este método lista todos os chamados em andamento da lotação do usuário
 	 */
-	public List<Andamento> getChamadosDoing(int lotacao){
+	public List<Andamento> getChamadosDoing(int lotacao) throws NamingException{
 		ChamadoDAO dao = new ChamadoDAO();
 		List<Andamento> chamadosDoing;
 		try {
@@ -75,7 +76,7 @@ public class PainelMB {
 	/*
 	 * Este método lista todos os chamados concluídos - em um determinado período - da lotação do usuário
 	 */
-	public List<Andamento> getChamadosDone(int lotacao){
+	public List<Andamento> getChamadosDone(int lotacao) throws NamingException{
 		ChamadoDAO dao = new ChamadoDAO();
 		List<Andamento> chamadosDone;
 		try {
@@ -92,7 +93,7 @@ public class PainelMB {
 	/*
 	 * Este método retorna as últimas 5 interações do chat
 	 */
-	public List<Chat> getLastChats(){
+	public List<Chat> getLastChats() throws NamingException{
 		ChatDAO dao = new ChatDAO();
 		List<Chat> chats;
 		try{
@@ -109,7 +110,7 @@ public class PainelMB {
 	/*
 	 * Este método retorna todo o histórico do chat
 	 */
-	public List<Chat> getChats(){
+	public List<Chat> getChats() throws NamingException{
 		ChatDAO dao = new ChatDAO();
 		List<Chat> chats;
 		try{
@@ -125,7 +126,7 @@ public class PainelMB {
 	/*
 	 * Este método é responsável por salvar a mensagem digitada no chat no banco de dados central MySQL
 	 */
-	public void salvar(){
+	public void salvar() throws NamingException{
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		HttpSession session = (HttpSession) ec.getSession(false);
 		String user = session.getAttribute("usuarioLogado").toString();
@@ -150,7 +151,7 @@ public class PainelMB {
 	/*
 	 * Este método retorna as lotações amarradas por pai do banco central MySQL, caso o usuário seja administrador
 	 */
-	public List<LotacaoLotacao> getLotacoesAmarradasPorPai(String nome){
+	public List<LotacaoLotacao> getLotacoesAmarradasPorPai(String nome) throws ClassNotFoundException, NamingException{
 		LotacaoDAO dao = new LotacaoDAO();
 		try {
 			return dao.getLotacoesAmarradasPorPai(nome);

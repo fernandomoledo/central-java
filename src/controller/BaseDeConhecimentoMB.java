@@ -9,6 +9,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.naming.NamingException;
 
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -43,11 +44,12 @@ public class BaseDeConhecimentoMB {
 	private String termoDestaque = ""; //armazena o termo de busca com a marcação <mark></mark>
 	private String termoTroca = ""; //armazena o termo que substituirá a busca, caso haja termo adicional cadastrado no banco
 	
+	private String[] termos;
 	
 	/*
 	 * O método construtor inicializa a árvore e verifica se há termo de busca para disparar a pesquisa
 	 */
-	public BaseDeConhecimentoMB(){
+	public BaseDeConhecimentoMB() throws NamingException{
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
 		if(!params.isEmpty()){
@@ -66,7 +68,7 @@ public class BaseDeConhecimentoMB {
 	/*
 	 * Este método recursivo constrói o menu árvore
 	 */
-	public TreeNode montaNode(int pai, TreeNode noPai){
+	public TreeNode montaNode(int pai, TreeNode noPai) throws NamingException{
 		List<CategoriaPai> cp = new ArrayList<CategoriaPai>();
 		TreeNode node = null;
 		 CategoriaDAO dao = new CategoriaDAO();
@@ -87,7 +89,7 @@ public class BaseDeConhecimentoMB {
 	/*
 	 * Este método captura o nó da árvore selecionado e verifica se ele é pai ou não. Caso não seja, dispara a busca de chamados
 	 */
-	public void getSelecao() throws ClassNotFoundException, SQLException{
+	public void getSelecao() throws ClassNotFoundException, SQLException, NamingException{
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Filhos do nó: "+this.select.getChildCount(),null));
 		chamados = new ArrayList<Chamado>();
 		chamadosFiltrados = null;
@@ -103,7 +105,7 @@ public class BaseDeConhecimentoMB {
 	/*
 	 * Este método retorna uma lista de todos os chamados encontrados com base na categoria selecionada na árvore
 	 */
-	public void getListaChamados() throws ClassNotFoundException, SQLException{
+	public void getListaChamados() throws ClassNotFoundException, SQLException, NamingException{
 		String termo, equipamento;
 		ChamadoDAO dao = new ChamadoDAO();
 		CategoriaDAO cDao = new CategoriaDAO();
@@ -116,6 +118,10 @@ public class BaseDeConhecimentoMB {
 			termo = c.getTermoCategoria().equals("") ? c.getNomeCategoria() : c.getTermoCategoria();
 			this.chamados = dao.getChamadosSemTombo(termo);
 			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
+			termos = termo.split("\\|");
+			for(int i = 0; i < termos.length; i++){
+				termos[i] = "<mark>"+termos[i]+"</mark>";
+			}
 		}else{
 			termo = this.select.getParent().toString();
 			equipamento = this.select.toString();
@@ -134,7 +140,7 @@ public class BaseDeConhecimentoMB {
 	/*
 	 * Este método carrega todas as informações do chamado selecionado para exibí-lo na tela
 	 */
-	public void getDetalhe(){
+	public void getDetalhe() throws NamingException{
 		long id = this.selecionado.getId();
 		ChamadoDAO cDao = new ChamadoDAO();
 		TomboDAO tDao = new TomboDAO();
@@ -155,7 +161,7 @@ public class BaseDeConhecimentoMB {
 	 * Este método é responsável por buscar de forma completa no banco UNA o termo digitado na busca geral do site
 	 */
 	
-	public void buscar(){
+	public void buscar() throws NamingException{
 		ChamadoDAO dao = new ChamadoDAO();
 		try {
 			this.chamados = dao.getChamadosBuscaGeral(this.termoBusca);
@@ -275,6 +281,14 @@ public class BaseDeConhecimentoMB {
 
 	public void setTermoTroca(String termoTroca) {
 		this.termoTroca = termoTroca;
+	}
+
+	public String[] getTermos() {
+		return termos;
+	}
+
+	public void setTermos(String[] termos) {
+		this.termos = termos;
 	}
 
 	

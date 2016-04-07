@@ -15,7 +15,11 @@
           <h1>Base de Conhecimento - CAU</h1>
         </div>
       </div>
-      <div class="push3"></div>
+      <div class="push1"></div>
+       	<div class="col-md-12 text-center">
+     	 	<h4>Primeiro acesso? Cadastre sua senha!</h4>
+     	 </div>
+       <div class="push3"></div>
       <div class="row">
       <h:form>      
         <div class="col-md-12 text-center">
@@ -24,24 +28,29 @@
           <p:messages id="msgs" autoUpdate="true" closable="true" />
             <div class="input-group">
               <span class="input-group-addon" id="sizing-addon2">Usuário:</span>
-              <h:inputText id="txt_usuario" value="#{portalMB.username}" class="form-control" pt:placeholder="Informe seu usuário da extranet..." aria-describedby="sizing-addon2" />
+              <h:inputText id="txt_usuario" value="#{portalMB.username}" class="form-control" pt:placeholder="Informe seu usuário da extranet..." aria-describedby="sizing-addon2"
+              required="true" requiredMessage="- Informe o login da Extranet" />
             </div>
             <div class="push2"></div> 
               <div class="input-group">
               <span class="input-group-addon" id="sizing-addon2">Senha:</span>
-              <h:inputSecret id="txt_senha" value="#{portalMB.senha}" class="form-control" pt:placeholder="Informe sua senha..." aria-describedby="sizing-addon2" />
+              <h:inputSecret id="txt_senha" value="#{portalMB.senha}" class="form-control" pt:placeholder="Informe sua senha..." aria-describedby="sizing-addon2"
+              required="true" requiredMessage="- A senha é obrigatória" />
+            </div>
+             <div class="push2"></div> 
+              <div class="input-group">
+              <span class="input-group-addon" id="sizing-addon2" style="color:#EEE">Senha:</span>
+              <h:inputSecret id="txt_senha2" value="#{portalMB.confSenha}" class="form-control" pt:placeholder="Confirme a senha..." aria-describedby="sizing-addon2" 
+              required="true" requiredMessage="- A confirmação de senha é obrigatória"/>
             </div>
             <div class="push2"></div> 
             <div class="text-right">
-                <h:commandButton class="btn btn-primary" value="Entrar" action="#{portalMB.logar()}" onclick="mostra_box();"/>
+                <h:commandButton class="btn btn-primary" value="Entrar" action="#{portalMB.primeiroAcesso}" update="msgs"/>
             </div>
-               <div class="push2"></div> 
-            <div style="text-align:center;"><h:graphicImage library="img" styleClass="ibox" name="carregando.gif"/></div>
-              <div class="push2"></div> 
+            <div class="push3"></div>
             <div class="row">
-            	 <b>Primeiro acesso? </b><h:link outcome="primeiroacesso" value="Clique aqui" />
+            	 <h:link outcome="index.jsf" value="Retornar para a tela de login" />
             </div>
-           
           <div class="col-md-4"></div>
           
         </div>

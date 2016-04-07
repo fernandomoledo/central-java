@@ -31,6 +31,7 @@ public class ControleDeAcesso implements Filter {
 		
 		if(session.getAttribute("usuarioLogado") == null && 
 				!req.getRequestURI().endsWith("/index.jsf") &&
+				!req.getRequestURI().endsWith("/primeiroacesso.jsf") &&
 				!req.getRequestURI().contains("/javax.faces.resource/")){
 					res.sendRedirect(req.getContextPath()+"/index.jsf");
 		}else if((session.getAttribute("usuarioLogado") != null &&

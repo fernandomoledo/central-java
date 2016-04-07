@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.naming.NamingException;
 
 import util.Mensagens;
 import dao.CategoriaDAO;
@@ -21,7 +22,7 @@ public class CategoriaMB {
 	/*
 	 * Este método é responsável por salvar/alterar uma categoria no banco central do MySQL
 	 */
-	public void salvar(){
+	public void salvar() throws NamingException{
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
 			if(this.categoria.getIdCategoria() > 0){
@@ -53,7 +54,7 @@ public class CategoriaMB {
 	/*
 	 * Este método serve para carregar o objeto do tipo Categoria com os dados da categoria desejada para alteração
 	 */
-	public void editar(int id){
+	public void editar(int id) throws NamingException{
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
 			this.categoria = dao.getCategoriaByID(id);
@@ -66,7 +67,7 @@ public class CategoriaMB {
 	/*
 	 * Este método é responsável por excluir uma determinada categoria/amarração de categorias cadastrada
 	 */
-	public void excluir(int pai, int filha){
+	public void excluir(int pai, int filha) throws NamingException{
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
 			if(dao.excluir(pai, filha)){
@@ -83,7 +84,7 @@ public class CategoriaMB {
 	/*
 	 * Este método é responsável por amarrar as categorias pai e filha
 	 */
-	public void amarrar(){
+	public void amarrar() throws NamingException{
 		if(this.pai.getIdCategoria() == this.filha.getIdCategoria()){
 			Mensagens.setMessage(3, "A categoria filha não pode ser igual a categoria pai");
 		}else{
@@ -112,7 +113,7 @@ public class CategoriaMB {
 	/*
 	 * Este método lista todas as categorias amarradas do banco central MySQL
 	 */
-	public List<CategoriaPai> getCategoriasCompleto(){
+	public List<CategoriaPai> getCategoriasCompleto() throws NamingException{
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
 			return dao.listarCompleto();
@@ -126,7 +127,7 @@ public class CategoriaMB {
 	/*
 	 * Este método lista todas as categorias do banco central MySQL
 	 */	
-	public List<Categoria> getCategorias(){
+	public List<Categoria> getCategorias() throws NamingException{
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
 			return dao.listar();

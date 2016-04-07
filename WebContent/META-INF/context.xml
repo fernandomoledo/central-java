@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/PoolConexao">
+    <Resource auth="Container"
+    driverClassName="oracle.jdbc.driver.OracleDriver"
+    maxActive="20" maxldle="1"
+     name = "jdbc/central"
+     type="javax.sql.DataSource"
+     url="jdbc:oracle:thin:@unanova:1521:orac"
+     username="luizmoledo_cntatd"
+     password="frinfofrinfo" />
+     
+      <Resource auth="Container"
+    driverClassName="com.mysql.jdbc.Driver"
+    maxActive="20" maxldle="1"
+     name = "jdbc/central2"
+     type="javax.sql.DataSource"
+     url="jdbc:mysql://localhost:3306/central"
+     username="central"
+     password="trt15" />
+     
+</Context>

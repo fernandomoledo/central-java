@@ -5,28 +5,25 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import javax.faces.bean.ManagedBean;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 
 public class ConexaoOracle {
-	private static final String URL = "jdbc:oracle:thin:@unanova:1521:orac";
-	private static final String USER = "luizmoledo_cntatd";
-	private static final String PASS = "frinfofrinfo";
-	private static Connection con;
+	private static Connection con = null;
 	
-	public static Connection abreConexao() throws ClassNotFoundException, SQLException{
-		Class.forName("oracle.jdbc.driver.OracleDriver");
-		con = DriverManager.getConnection(URL, USER, PASS);
-		System.out.println("Conectado Oracle");
-		
-		return con;
-	}
-	
-	public static void fechaConexao(){
+	public static Connection abreConexao() throws ClassNotFoundException, SQLException, NamingException{
+		InitialContext context = new InitialContext();
+		DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/central");
 		try{
-			con.close();
-			System.out.println("Fechando conexão com Oracle");
-		}catch(SQLException ex){
-			System.out.println("Erro ao fechar conexão com o Oracle: "+ex.getMessage());
+			con = ds.getConnection();
+		}catch(SQLException e){
+			e.printStackTrace();
 		}
+		return con;
+		
 	}
+	
+	
 }

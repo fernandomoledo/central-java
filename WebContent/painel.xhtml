@@ -60,9 +60,10 @@
       <div class="row">
         <div class="col-md-12">
           <div class="col-md-9 separator">
-            <div class="col-md-4 text-center" id="chamados-todo" style="height:768px; overflow:auto;">        
+            <div class="col-md-4 text-center" id="chamados-todo">        
             	<h:form id="c_todo">
             	   <h3>A Fazer </h3>
+            	   <div style="max-height:768px; overflow:auto;">
             		<ui:repeat var="todo" value="#{painelMB.getChamadosToDo(portalMB.p.lotacao.id)}">
             			<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
@@ -79,13 +80,15 @@
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>
+            		</div>
             		<h:outputText value="Não existem chamados a fazer" rendered="#{painelMB.qtdeToDo == 0}" />
             		  <p:poll interval="300" update=":c_todo" />
             	</h:form>
             </div>
-            <div class="col-md-4 text-center" id="chamados-doing" style="height:768px; overflow:auto;">            
+            <div class="col-md-4 text-center" id="chamados-doing">            
             	<h:form id="c_doing">
             	 <h3>Em Andamento </h3>
+            	    <div style="max-height:768px; overflow:auto;">
             		<ui:repeat var="doing" value="#{painelMB.getChamadosDoing(portalMB.p.lotacao.id)}">
             		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
@@ -102,12 +105,13 @@
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>
+            		</div>
             		 <h:outputText value="Não existem chamados em andamento" rendered="#{painelMB.qtdeDoing == 0}" />
             		  <p:poll interval="300" update=":c_doing" />
             	</h:form>
             
             </div>
-            <div class="col-md-4 text-center" id="chamados-done" style="height:768px; overflow:auto;">
+            <div class="col-md-4 text-center" id="chamados-done">
             	<h:form id="c_done">
             	<h3>Concluídos </h3>
             		<p:selectOneButton value="#{painelMB.periodo}">
@@ -118,7 +122,7 @@
 			            <f:selectItem itemLabel="30d" itemValue="30" />
 			        </p:selectOneButton>
 			        <div class="push1"></div>
-	
+					   <div style="max-height:768px; overflow:auto;">
             		<ui:repeat var="done" value="#{painelMB.getChamadosDone(portalMB.p.lotacao.id)}">
             		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
@@ -134,7 +138,8 @@
 			                <div class="push05"></div>
 			            </div>	
 			            </h:outputLink>		     	
-            		</ui:repeat>     
+            		</ui:repeat>   
+            		  </div>  
             		<h:outputText value="Não existem chamados finalizados no período" rendered="#{painelMB.qtdeDone == 0}"/>
             		  <p:poll interval="300" update=":c_done" />       		
             	</h:form>

@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpSession;
 
 import util.ConexaoMySQL;
@@ -21,62 +23,76 @@ public class CategoriaDAO {
 	HttpSession session = (HttpSession) ec.getSession(false);
 	String user = session.getAttribute("usuarioLogado").toString();
 	
-	public boolean salvar(Categoria c)  throws ClassNotFoundException, SQLException{
+	public boolean salvar(Categoria c)  throws ClassNotFoundException, SQLException, NamingException{
 		sql = "INSERT INTO categoria(nome_categoria,termo_categoria, usuario) VALUES(?,?,?)";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql); 
 		ps.setString(1, c.getNomeCategoria());
 		ps.setString(2, c.getTermoCategoria());
 		ps.setString(3, user);
 		ps.execute();
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return true;
 	}
 	
-	public boolean atualizar(Categoria c)  throws ClassNotFoundException, SQLException{
+	public boolean atualizar(Categoria c)  throws ClassNotFoundException, SQLException, NamingException{
 		sql = "UPDATE categoria SET nome_categoria = ? , termo_categoria = ?, usuario = ? WHERE id_categoria = ?";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql); 
 		ps.setString(1, c.getNomeCategoria());
 		ps.setString(2, c.getTermoCategoria());
 		ps.setString(3, user);
 		ps.setInt(4, c.getIdCategoria());
 		ps.executeUpdate();
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return true;
 	}
 	
-	public boolean inserirAmarracao(CategoriaPai cp) throws ClassNotFoundException, SQLException{
+	public boolean inserirAmarracao(CategoriaPai cp) throws ClassNotFoundException, SQLException, NamingException{
 		sql = "INSERT INTO categoria_pai VALUES(?,?,?) ";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql); 
 		ps.setInt(1, cp.getPai().getIdCategoria());
 		ps.setInt(2, cp.getFilha().getIdCategoria());
 		ps.setString(3, user);
 		ps.execute();
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return true;
 	}
 	
-	public boolean excluir(int pai, int filha)  throws ClassNotFoundException, SQLException{
+	public boolean excluir(int pai, int filha)  throws ClassNotFoundException, SQLException, NamingException{
+		System.out.println("PAI: " + pai + " / Filha: " + filha);
 		PreparedStatement ps = null;
 		if(pai > 0){
 			sql = "DELETE FROM categoria_pai WHERE pai = ? and filha = ?";
-			ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+			Connection con = null;
+			con = ConexaoMySQL.abreConexao();
+			 ps =con.prepareStatement(sql);
 			ps.setInt(1, pai);
 			ps.setInt(2, filha);
 			ps.execute();
-			ConexaoMySQL.fechaConexao();
+			con.close();
 			
+		}else{
+			sql = "DELETE FROM categoria WHERE id_categoria = ?";
+			Connection con = null;
+			con = ConexaoMySQL.abreConexao();
+			ps =con.prepareStatement(sql);
+			ps.setInt(1, filha);
+			ps.execute();
+			con.close();
 		}
-		sql = "DELETE FROM categoria WHERE id_categoria = ?";
-		ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
-		ps.setInt(1, filha);
-		ps.execute();
-		ConexaoMySQL.fechaConexao();
 		return true;
 	}
 	
-	public Categoria getCategoriaByID(int id) throws ClassNotFoundException, SQLException{
+	public Categoria getCategoriaByID(int id) throws ClassNotFoundException, SQLException, NamingException{
 		sql = "SELECT * FROM categoria WHERE id_categoria = ?";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);
 		ps.setInt(1, id);
 		Categoria c = new Categoria();
 		
@@ -87,13 +103,15 @@ public class CategoriaDAO {
 			c.setTermoCategoria(rs.getString("termo_categoria"));
 		}
 		System.out.println("CONSULTA getCategoriaByID()");
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return c;
 	}
 	
-	public Categoria getCategoriaByName(String nome) throws ClassNotFoundException, SQLException{
+	public Categoria getCategoriaByName(String nome) throws ClassNotFoundException, SQLException, NamingException{
 		sql = "SELECT * FROM categoria WHERE nome_categoria = ?";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);
 		ps.setString(1, nome);
 		System.out.println("Query: "+ps.toString());
 		Categoria c = new Categoria();
@@ -106,13 +124,15 @@ public class CategoriaDAO {
 			
 		}
 		System.out.println("CONSULTA getCategoriasVisitadas()");
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return c;
 	}
 	
-	public List<Categoria> listar() throws ClassNotFoundException, SQLException{
+	public List<Categoria> listar() throws ClassNotFoundException, SQLException, NamingException{
 		sql = "SELECT * FROM categoria ORDER BY nome_categoria";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);
 		List<Categoria> categorias = new ArrayList<Categoria>();
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()){
@@ -123,14 +143,16 @@ public class CategoriaDAO {
 			categorias.add(c);
 		}
 		System.out.println("CONSULTA listar() em CategoriaDAO");
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return categorias;
 	}
 	
-	public List<CategoriaPai> listarCompleto() throws ClassNotFoundException, SQLException{
+	public List<CategoriaPai> listarCompleto() throws ClassNotFoundException, SQLException, NamingException{
 		List<CategoriaPai> categorias = new ArrayList<CategoriaPai>();
 		sql = "SELECT c.* FROM categoria c WHERE c.id_categoria NOT IN (SELECT filha FROM categoria_pai) ORDER BY c.nome_categoria";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);		
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);		
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()){
 			CategoriaPai cp = new CategoriaPai();
@@ -142,10 +164,12 @@ public class CategoriaDAO {
 			categorias.add(cp);
 		}
 		
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		
 		sql = "SELECT c.id_categoria as id_pai, c.nome_categoria as nome_pai, c.termo_categoria as termo_pai, c1.id_categoria, c1.nome_categoria, c1.termo_categoria FROM categoria c, categoria c1, categoria_pai cp WHERE c.id_categoria = cp.pai AND c1.id_categoria = cp.filha ";
-		ps = ConexaoMySQL.abreConexao().prepareStatement(sql);		
+		con = null;
+		con = ConexaoMySQL.abreConexao();
+		ps = con.prepareStatement(sql);	
 		rs = ps.executeQuery();
 		while(rs.next()){
 			CategoriaPai cp = new CategoriaPai();
@@ -162,17 +186,19 @@ public class CategoriaDAO {
 			categorias.add(cp);
 		}
 		System.out.println("CONSULTA listarCompleto()");
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return categorias;
 	}
 	
-	public List<CategoriaPai> listarCategorias(int pai) throws ClassNotFoundException, SQLException{
+	public List<CategoriaPai> listarCategorias(int pai) throws ClassNotFoundException, SQLException, NamingException{
 		List<CategoriaPai> categorias = new ArrayList<CategoriaPai>();
 		if(pai == 0)
 			sql = "SELECT c.* FROM categoria c WHERE c.id_categoria NOT IN (SELECT filha FROM categoria_pai) ORDER BY c.nome_categoria";
 		else
 			sql = "SELECT c.id_categoria as id_pai, c.nome_categoria as nome_pai, c.termo_categoria as termo_pai, c1.id_categoria, c1.nome_categoria, c1.termo_categoria FROM categoria c, categoria c1, categoria_pai cp WHERE c.id_categoria = cp.pai AND c1.id_categoria = cp.filha and cp.pai = ? ORDER BY c1.nome_categoria";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);	
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);	
 		if(pai > 0)
 			ps.setInt(1, pai);
 		ResultSet rs = ps.executeQuery();
@@ -195,13 +221,15 @@ public class CategoriaDAO {
 			categorias.add(cp);
 		}
 		System.out.println("CONSULTA listarCategorias()");
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		return categorias;
 	}
 	
-	public boolean ehPai(int id) throws SQLException{
+	public boolean ehPai(int id) throws SQLException, ClassNotFoundException, NamingException{
 		sql = "SELECT c.* FROM categoria c, categoria_pai cp WHERE c.id_categoria  = cp.filha and cp.pai = ? ORDER BY c.nome_categoria";
-		PreparedStatement ps = ConexaoMySQL.abreConexao().prepareStatement(sql);
+		Connection con = null;
+		con = ConexaoMySQL.abreConexao();
+		PreparedStatement ps =con.prepareStatement(sql);
 		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
 		int contador = 0;
@@ -209,7 +237,7 @@ public class CategoriaDAO {
 			contador++;
 		}
 		System.out.println("CONSULTA ehPai()");
-		ConexaoMySQL.fechaConexao();
+		con.close();
 		if(contador > 0) return true;
 		return false;
 		

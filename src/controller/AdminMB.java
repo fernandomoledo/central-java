@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.naming.NamingException;
 
 import util.Mensagens;
 import dao.LotacaoDAO;
@@ -22,7 +23,7 @@ public class AdminMB {
 	/*
 	 * Este método é utilizado para carregar todas as lotações existentes na tabela lotacoes do UNA para os campos autocomplete da tela admin.jsf
 	 */
-	public List<String> completeLotacoes(String query){
+	public List<String> completeLotacoes(String query) throws NamingException{
 		LotacaoDAO dao = new LotacaoDAO();
 		List<String> lotacoes = new ArrayList<String>();
 		try {
@@ -43,7 +44,7 @@ public class AdminMB {
 	/*
 	 * Este método é responsável por salvar a vinculação (amarração) entre uma categoria principal e outra secundária da tela admin.jsf
 	 */
-	public void salvar(){
+	public void salvar() throws ClassNotFoundException, NamingException{
 		LotacaoDAO dao = new LotacaoDAO();
 		if(this.lotacao.getNome().equals(this.secundaria.getNome())){
 			Mensagens.setMessage(3, "A lotação principal não pode ser igual a lotação secundária");
@@ -67,7 +68,7 @@ public class AdminMB {
 	/*
 	 * Este método é responsável por excluir uma determinada amarração entre lotações através de seu id
 	 */
-	public void excluir(int id){
+	public void excluir(int id) throws ClassNotFoundException, NamingException{
 		LotacaoDAO dao = new LotacaoDAO();
 		try {
 			if(dao.excluir(id)){
@@ -86,7 +87,7 @@ public class AdminMB {
 	 * Este  método é responsável por listar todas as lotações amarradas na tabela lotacao_lotacao do MySQL
 	 * 
 	 */
-	public List<LotacaoLotacao> getLotacoesAmarradas(){
+	public List<LotacaoLotacao> getLotacoesAmarradas() throws ClassNotFoundException, NamingException{
 		LotacaoDAO dao = new LotacaoDAO();
 		try {
 			return dao.getLotacoesAmarradas();
