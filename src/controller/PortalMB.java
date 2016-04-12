@@ -101,13 +101,13 @@ public class PortalMB {
 				
 			}else{
 				Mensagens.setMessage(3, "Usuário inexistente na Extranet");
+				return null;
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			Mensagens.setMessage(3, "Erro no banco de dados. "+e.getMessage());
 			return "index.jsf";
 		}
-		return "index.jsf?faces-redirect=true";
 	}
 	
 	public void alterarDados(){

@@ -30,11 +30,12 @@ function esconde_box(){
 	$(".ibox").hide();
 }
 
-function montaurl(url){
+function montaurl(url, filtro){
+	//alert(url + " - " +  filtro);
 	if(url == ""){
 		alert("Informe um termo para a busca!");
 	}else{
-		window.location="basedeconhecimento.jsf?termo="+url;
+		window.location="basedeconhecimento.jsf?termo="+url+"&filtro="+filtro;
 	}
 }
 

@@ -9,6 +9,7 @@
   	<meta charset="utf-8" /> 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="http://portal.trt15.jus.br/trt15-intranet-theme/images/favicon.ico" rel="Shortcut Icon" />
 
     <title>Central de Chamados - CAU</title>
 
@@ -56,7 +57,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-          	<li><h:link outcome="admin" value="Administração" rendered="#{painelMB.verificaLotacao(portalMB.original.nome)}" /></li>
+          	<li><h:link outcome="admin" value="Administração" rendered="#{portalMB.original.nome.startsWith('COORDENADORIA')}" /></li>
           	<li><h:link outcome="basedeconhecimento" value="Base de Conhecimento" /></li>
             <li><h:link outcome="categorias" value="Categorias"><span class="sr-only">(current)</span></h:link></li>       
             <li><h:link outcome="painel" value="Painel" /></li>
@@ -64,9 +65,16 @@
          <h:form class="navbar-form navbar-left" role="search">
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Buscar..." id="txt_busca" required="required"  />
+              <select id="slc_opcao">
+               	<option value="E"  selected="selected" title="Busca a ocorrência de todos os termos no mesmo chamado">E</option>
+              	<option value="OU" title="Busca a ocorrência de pelo menos um ou de ambos os termos digitados">OU</option>
+             	<option value="Q" title="Criar consulta personalizada usando || (E) ou | (OU) para separar vários termos">Query</option>
+              </select>
+         
+         <span class="glyphicon glyphicon-question-sign" style="cursor:help; background-color:#FFF;" title="E - busca todos os termos digitados no mesmo chamado / OU - busca um ou ambos os termos digitados no mesmo chamado / QUERY - consulta personalizada utilizando os operadores || (E) ou | (OU) para expressões múltiplas ou frases"></span>
             </div>
             &nbsp;
-             <button type="button" class="btn btn-default" id="btn-busca" onclick="javascript:montaurl(txt_busca.value);">Buscar</button>
+             <button type="button" class="btn btn-default" id="btn-busca" onclick="javascript:montaurl(txt_busca.value,slc_opcao.value);">Buscar</button>
           </h:form>
           <h:form>
            <ul class="nav navbar-nav navbar-right">
@@ -92,8 +100,14 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <h:outputScript library="js" name="jquery.js" />
     <h:outputScript library="js" name="datatables.js" />
+    <h:outputScript library="js" name="enscroll-0.6.2.min.js" />
     <script type="text/javascript">
-
+	    $('.scr').enscroll({
+	        showOnHover: true,
+	        verticalTrackClass: 'track3',
+	        verticalHandleClass: 'handle3'
+	    });
+    
 	    $('.tabelachamados').DataTable({
 	   	 "pagingType": "simple",
 	   	 "paging": true,
@@ -121,11 +135,12 @@
         
         $("#termo_helper").css("display", "none");
       });      
+      
+    
     </script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <h:outputScript library="js" name="bootstrap.min.js" />
  	<h:outputScript library="js" name="jquery-ui.min.js" />
-
     <h:outputScript library="js" name="main.js" />
 
   </body>

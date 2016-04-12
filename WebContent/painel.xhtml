@@ -20,15 +20,10 @@
       <div class="row">
         <div class="col-md-12 text-center">
           <h1>Painel de Chamados</h1>
+          <h4>#{portalMB.p.lotacao.nome}</h4>
         </div>
       </div>
-      <div class="push2"></div>
-      <!-- Classificação por períodos -->
-  		
-      <div class="row text-center">
-        <h4><h:form id="titulo"><h:outputText value="#{portalMB.p.lotacao.nome}" /></h:form></h4>
-      </div>
-       <div class="push2"></div>
+
 		<!--  teste escolha perfil -->
 		<div class="row">
 			<div class="col-md-12">
@@ -63,20 +58,29 @@
             <div class="col-md-4 text-center" id="chamados-todo">        
             	<h:form id="c_todo">
             	   <h3>A Fazer </h3>
-            	   <div style="max-height:768px; overflow:auto;">
+            	   <div class="scr">
             		<ui:repeat var="todo" value="#{painelMB.getChamadosToDo(portalMB.p.lotacao.id)}">
             			<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
 	            			<f:param name="idChamado" value="#{todo.chamado.id}" />
             			<div class="alert #{fn:containsIgnoreCase(todo.chamado.lotacaoSolicitante.nome,'GABINETE') || fn:containsIgnoreCase(todo.chamado.lotacaoSolicitante.nome,'PRESIDÊNCIA')? 'alert-danger' : 'alert-warning'}">
+            				<h4>
 			                <strong>
 			                	#{todo.chamado.numero}/<h:outputText value="#{todo.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
 			                </strong>
+			                </h4>
+			     
+			               <h:outputText value="#{todo.dtAndamento}" style="font-size:.8em;" >
+				                  <f:convertDateTime  pattern="dd/MM/yyyy HH:mm" />
+				            </h:outputText>
+				             -
+				          	<h:outputText value="(#{painelMB.retornaStatus(todo.chamado.status)})" style="font-size:.8em" />
 			                <div class="push05"></div>
 			                 <strong>#{todo.chamado.lotacaoSolicitante.nome}</strong>
 			                <div class="push05"></div>
 			                 #{fn:substring(todo.texto,0,100)}...
 			                <div class="push05"></div>
+			              
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>
@@ -88,20 +92,29 @@
             <div class="col-md-4 text-center" id="chamados-doing">            
             	<h:form id="c_doing">
             	 <h3>Em Andamento </h3>
-            	    <div style="max-height:768px; overflow:auto;">
+            	    <div class="scr">
             		<ui:repeat var="doing" value="#{painelMB.getChamadosDoing(portalMB.p.lotacao.id)}">
             		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
 	            			<f:param name="idChamado" value="#{doing.chamado.id}" />
             			<div class="alert alert-success">
+            				<h4>
 			                <strong>
 			                	#{doing.chamado.numero}/<h:outputText value="#{doing.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
 			                </strong>
+			                </h4>
+			       
+			               <h:outputText value="#{doing.dtAndamento}" style="font-size:.8em;">
+				                  <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+				            </h:outputText>
+				            -
+				           <h:outputText value="(#{painelMB.retornaStatus(doing.chamado.status)})" style="font-size:.8em" />
 			                <div class="push05"></div>
 			                 <strong>#{doing.chamado.lotacaoSolicitante.nome}</strong>
 			                <div class="push05"></div>
 			                 #{fn:substring(doing.texto,0,100)}...
 			                <div class="push05"></div>
+			         
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>
@@ -122,20 +135,29 @@
 			            <f:selectItem itemLabel="30d" itemValue="30" />
 			        </p:selectOneButton>
 			        <div class="push1"></div>
-					   <div style="max-height:768px; overflow:auto;">
+					   <div class="scr">
             		<ui:repeat var="done" value="#{painelMB.getChamadosDone(portalMB.p.lotacao.id)}">
             		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
 	            			<f:param name="idChamado" value="#{done.chamado.id}" />
             			<div class="alert alert-info">
+            				<h4>
 			                <strong>
 			                	#{done.chamado.numero}/<h:outputText value="#{done.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
 			                </strong>
+			                </h4>
+			               <h:outputText value="#{done.dtAndamento}" style="font-size:.8em">
+				                  <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+				            </h:outputText>
+				               -
+				           <h:outputText value="(#{painelMB.retornaStatus(done.chamado.status)})" style="font-size:.8em" />
+				    
 			                <div class="push05"></div>
 			                 <strong>#{done.chamado.lotacaoSolicitante.nome}</strong>
 			                <div class="push05"></div>
 			                 #{fn:substring(done.texto,0,100)}...
 			                <div class="push05"></div>
+			                 
 			            </div>	
 			            </h:outputLink>		     	
             		</ui:repeat>   
@@ -153,7 +175,7 @@
             	<h:link outcome="detalhe_chat" target="_blank">Ver avisos anteriores</h:link>
             </div>
             <div id="avisos_chat">
-            <ui:repeat var="chat" value="#{painelMB.lastChats}">
+            <ui:repeat var="chat" value="#{painelMB.lastChats}" >
             	<div class="alert alert-warning  fade in">
 	              <strong>
 	              	<h:outputText value="#{chat.dataChat}">
@@ -182,5 +204,8 @@
       </div>
     </div>
     </div>
+    <script type="text/javascript">
+  
+    </script>
 </ui:define>
 </ui:composition>

@@ -43,7 +43,7 @@ public class BaseDeConhecimentoMB {
 	private String termoBusca = ""; //armazena o termo de busca digitado na busca geral
 	private String termoDestaque = ""; //armazena o termo de busca com a marcação <mark></mark>
 	private String termoTroca = ""; //armazena o termo que substituirá a busca, caso haja termo adicional cadastrado no banco
-	
+	private String termo="";
 	private String[] termos;
 	
 	/*
@@ -53,7 +53,14 @@ public class BaseDeConhecimentoMB {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
 		if(!params.isEmpty()){
-			this.termoBusca = params.get("termo");
+			if(params.get("filtro").equals("OU")){
+				this.termoBusca = params.get("termo").replace(" ", " | ");
+			}else if(params.get("filtro").equals("E")){
+				this.termoBusca = params.get("termo").replace(" ", " & ");
+			}else{
+				this.termoBusca = params.get("termo").replace("||", " & ");
+			}
+			this.termo = this.termoBusca;
 			this.termoDestaque = this.termoBusca.toUpperCase();
 			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
 			buscar();
@@ -106,22 +113,20 @@ public class BaseDeConhecimentoMB {
 	 * Este método retorna uma lista de todos os chamados encontrados com base na categoria selecionada na árvore
 	 */
 	public void getListaChamados() throws ClassNotFoundException, SQLException, NamingException{
-		String termo, equipamento;
+		String equipamento;
 		ChamadoDAO dao = new ChamadoDAO();
 		CategoriaDAO cDao = new CategoriaDAO();
 		Categoria c = new Categoria();
-		if(this.select.getParent().toString().equals("Software") || this.select.getParent().getParent().equals("Software") ||
-				this.select.getParent().getParent().getParent().equals("Software")){
+		System.out.println(this.select.getParent() + " - " + this.select.getParent().getParent() + " - " + this.select.getParent().getParent().getParent());
+		if(this.select.getParent().toString().equals("Software") || this.select.getParent().getParent().toString().equals("Software") ||
+				this.select.getParent().getParent().getParent().toString().equals("Software")){
 			termo = this.select.toString();
 			this.termoDestaque = termo;
 			c = cDao.getCategoriaByName(termo);
 			termo = c.getTermoCategoria().equals("") ? c.getNomeCategoria() : c.getTermoCategoria();
 			this.chamados = dao.getChamadosSemTombo(termo);
 			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
-			termos = termo.split("\\|");
-			for(int i = 0; i < termos.length; i++){
-				termos[i] = "<mark>"+termos[i]+"</mark>";
-			}
+			System.out.println(termo + " - " + termoTroca + this.chamados.size());
 		}else{
 			termo = this.select.getParent().toString();
 			equipamento = this.select.toString();
@@ -147,8 +152,34 @@ public class BaseDeConhecimentoMB {
 		AndamentoDAO aDao = new AndamentoDAO();
 		try {
 			this.chamadoDetalhe = cDao.getInfoChamado(id);
+			termos = termo.split("(\\|)|(\\&)");
+			for(int i = 0; i < termos.length; i++){
+				System.out.println("Termo "+(i+1)+": "+termos[i].trim());
+				chamadoDetalhe.setTexto(chamadoDetalhe.getTexto().toUpperCase().replace(termos[i].toUpperCase().trim(), "<mark>"+termos[i].toUpperCase().trim()+"</mark>"));
+				chamadoDetalhe.getChamado().getLotacaoSolicitante().setNome(chamadoDetalhe.getChamado().getLotacaoSolicitante().getNome().toUpperCase().replace(termos[i].toUpperCase().trim(), "<mark>"+termos[i].toUpperCase().trim()+"</mark>"));
+			}
+			chamadoDetalhe.setTexto(chamadoDetalhe.getTexto().toUpperCase().replace(this.termoDestaque.toUpperCase().trim(), "<mark>"+this.termoDestaque.toUpperCase().trim()+"</mark>"));
+			chamadoDetalhe.getChamado().getLotacaoSolicitante().setNome(chamadoDetalhe.getChamado().getLotacaoSolicitante().getNome().toUpperCase().replace(this.termoDestaque.toUpperCase().trim(), "<mark>"+this.termoDestaque.toUpperCase().trim()+"</mark>"));
+			
 			this.tombosDetalhe = tDao.getTombosPorChamado(id);
+			for(int i = 0; i < tombosDetalhe.size(); i++){
+				for(int j = 0; j<termos.length; j++){
+					tombosDetalhe.get(i).setDescricao(tombosDetalhe.get(i).getDescricao().toUpperCase().replace(termos[j].toUpperCase().trim(), "<mark>"+termos[j].toUpperCase().trim()+"</mark>"));
+				
+				}
+				tombosDetalhe.get(i).setDescricao(tombosDetalhe.get(i).getDescricao().toUpperCase().replace(termoDestaque.toUpperCase().trim(), "<mark>"+termoDestaque.toUpperCase().trim()+"</mark>"));
+			}
+			
 			this.andamentosDetalhe = aDao.getAndamentosPorChamado(id);
+			for(int i = 0; i < andamentosDetalhe.size(); i++){
+				for(int j = 0; j < termos.length; j++){
+					andamentosDetalhe.get(i).setTexto(andamentosDetalhe.get(i).getTexto().toUpperCase().replace(termos[j].toUpperCase().trim(), "<mark>"+termos[j].toUpperCase().trim()+"</mark>"));
+					andamentosDetalhe.get(i).getUsuario().setNome(andamentosDetalhe.get(i).getUsuario().getNome().toUpperCase().replace(termos[j].toUpperCase().trim(), "<mark>"+termos[j].toUpperCase().trim()+"</mark>"));
+				
+				}
+				andamentosDetalhe.get(i).setTexto(andamentosDetalhe.get(i).getTexto().toUpperCase().replace(termoDestaque.toUpperCase().trim(), "<mark>"+termoDestaque.toUpperCase().trim()+"</mark>"));
+				andamentosDetalhe.get(i).getUsuario().setNome(andamentosDetalhe.get(i).getUsuario().getNome().toUpperCase().replace(termoDestaque.toUpperCase().trim(), "<mark>"+termoDestaque.toUpperCase().trim()+"</mark>"));
+			}
 			this.ultimoAndamento = this.andamentosDetalhe.get(this.andamentosDetalhe.size()-1);
 			this.mostraDetalhe = true;
 		} catch (ClassNotFoundException | SQLException e) {

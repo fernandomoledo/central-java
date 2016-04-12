@@ -36,7 +36,7 @@ public class ChatDAO {
 				chats.add(c);
 		}
 		
-		Collections.reverse(chats);
+		//Collections.reverse(chats);
 		con.close();
 		
 		return chats;

@@ -74,7 +74,10 @@ public class LotacaoDAO {
 	}
 	
 	public boolean verificaLotacao(String nome) throws SQLException, ClassNotFoundException, NamingException{
-		sql = "select * from lotacao_lotacao where pai = ?";
+		if(nome.equals("SEÇÃO DE ATENDIMENTO"))
+			sql = "select * from lotacao_lotacao where pai = (select pai from lotacao_lotacao where filha = ?)";
+		else
+			sql = "select * from lotacao_lotacao where pai = ?";
 		Connection con = null;
 		con = ConexaoMySQL.abreConexao();
 		PreparedStatement ps =con.prepareStatement(sql);
@@ -124,11 +127,18 @@ public class LotacaoDAO {
 	
 	public List<LotacaoLotacao> getLotacoesAmarradasPorPai(String nome) throws SQLException, ClassNotFoundException, NamingException{
 		List<LotacaoLotacao> lotacoes = new ArrayList<LotacaoLotacao>();
-		sql = "select id, pai, filha from lotacao_lotacao where pai = ? order by pai, filha";
+		if(nome.equals("SEÇÃO DE ATENDIMENTO"))
+			sql = "select id, pai, filha from lotacao_lotacao where pai = (select pai from lotacao_lotacao where filha= ?) and filha = ? union select id, pai , pai AS filha from lotacao_lotacao where filha = ? order by pai, filha";
+		else
+			sql = "select id, pai, filha from lotacao_lotacao where pai = ? order by pai, filha";
 		Connection con = null;
 		con = ConexaoMySQL.abreConexao();
 		PreparedStatement ps =con.prepareStatement(sql);
 		ps.setString(1, nome);
+		if(nome.equals("SEÇÃO DE ATENDIMENTO")){
+				ps.setString(2, nome);
+				ps.setString(3, nome);
+		}
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()){
 			LotacaoLotacao ll = new LotacaoLotacao();

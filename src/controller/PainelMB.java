@@ -165,6 +165,21 @@ public class PainelMB {
 	/*
 	 * getters and setters
 	 */
+	
+	public String retornaStatus(String s){
+		switch(s){
+			case "AF": return "A fazer";
+			case "AN": return "Em andamento";
+			case "CA": return "Cancelado";
+			case "CO": return "Concluído";
+			case "EX": return "Ch. externo";
+			case "PR": return "Projeto";
+			case "RE": return "Reaberto";
+			case "US": return "Ag. usuário";
+		}
+		return s;
+	}
+	
 	public int getQtdeToDo() {
 		return qtdeToDo;
 	}

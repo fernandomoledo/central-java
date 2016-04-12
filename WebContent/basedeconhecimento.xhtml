@@ -23,7 +23,7 @@
         <!-- Container dos painéis -->
         <div class="col-md-12">
           <!-- Painel de busca e categorias -->
-          <div class="col-md-4 separator" style="height:768px; overflow:auto;">             	
+          <div class="col-md-5 separator scr">             	
 			
             <div class="push1"></div>
             <h4>Navegue pelas categorias:</h4>
@@ -47,6 +47,7 @@
             paginator="true"
             paginatorPosition="bottom"
            paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
+           currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
            rowsPerPageTemplate="5,10,20"
            selectionMode="single"
            selection="#{baseDeConhecimentoMB.selecionado}"
@@ -68,7 +69,7 @@
           
 
           <!-- Painel de chamados -->
-          <div class="col-md-8" id="tbl" style="height:768px; overflow:auto;">
+          <div class="col-md-7 scr" id="tbl">
          <h:form id="detalhe">
          <p:panelGrid rendered="#{baseDeConhecimentoMB.mostraDetalhe}">
             	<h3>Chamado 
@@ -88,7 +89,7 @@
             </p>
             <div class="push05"></div>
             <h4>Lotação</h4>
-            <p>#{baseDeConhecimentoMB.chamadoDetalhe.chamado.lotacaoSolicitante.nome}</p>
+            <p><h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.lotacaoSolicitante.nome}" escape="false" /></p>
             <div class="push05"></div>
             <h4>Problema relatado</h4>
             <p style="text-align:justify;">
@@ -112,7 +113,8 @@
                   		<f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy" />
                   	</h:outputText>
                   </td>
-                  <td>#{tombo.descricao}</td>
+                  <td><h:outputText value="#{tombo.descricao}" escape="false" /></td>
+                  
                 </tr>
               </ui:repeat>  
                                             
@@ -122,7 +124,7 @@
             <p>
             <h:outputText value="#{baseDeConhecimentoMB.ultimoAndamento.dtAndamento}">
                   <f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy HH:mm" />
-            </h:outputText> - #{baseDeConhecimentoMB.ultimoAndamento.usuario.nome}</p><div class="push05"></div>
+            </h:outputText> - <h:outputText value="#{baseDeConhecimentoMB.ultimoAndamento.usuario.nome}" escape="false" /></p><div class="push05"></div>
             <h4>Andamentos do Chamado</h4>
             <table class="table table-striped">
               <thead>
@@ -139,7 +141,7 @@
 		            </h:outputText>
            		</td>
            		<td>#{andamento.classificacao}</td>
-           		<td>#{andamento.usuario.nome}</td>
+           		<td><h:outputText value="#{andamento.usuario.nome}" escape="false" /></td>
            		<td><h:outputText value="#{andamento.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" /></td>
                 </tr>
                </ui:repeat>                           
