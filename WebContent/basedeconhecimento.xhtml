@@ -23,7 +23,7 @@
         <!-- Container dos painéis -->
         <div class="col-md-12">
           <!-- Painel de busca e categorias -->
-          <div class="col-md-5 separator scr">             	
+          <div class="col-md-5 separator" id="div-sidebar" style="max-height:600px; overflow:auto;">             	
 			
             <div class="push1"></div>
             <h4>Navegue pelas categorias:</h4>
@@ -67,10 +67,10 @@
 </h:form>
              
           </div>
-          
+          <button id="teste-btn" class="btn" value="e" title="Esconder a lista de chamados"> &lt;</button>
 
           <!-- Painel de chamados -->
-          <div class="col-md-7 scr" id="tbl">
+          <div class="col-md-7" id="tbl" style="max-height:768px; overflow:auto;">
          <h:form id="detalhe">
          <p:panelGrid rendered="#{baseDeConhecimentoMB.mostraDetalhe}">
             	<h3>Chamado 
@@ -143,7 +143,7 @@
            		</td>
            		<td>#{andamento.classificacao}</td>
            		<td><h:outputText value="#{andamento.usuario.nome}" escape="false" /></td>
-           		<td><h:outputText value="#{andamento.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" /></td>
+           		<td><h:outputText value="#{andamento.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" style="white-space:pre-wrap;" /></td>
                 </tr>
                </ui:repeat>                           
               </tbody>

@@ -1,5 +1,23 @@
 var baseUrl = "http://10.15.216.153/central/";
 
+$("#teste-btn").click(function(){
+	if($("#teste-btn").val() == "e"){
+		$("#div-sidebar").hide("slow");
+		$("#tbl").removeClass("col-md-7");
+		$("#tbl").addClass("col-md-12");
+		$("#teste-btn").html("&gt;");
+		$("#teste-btn").val("m");
+		$("#teste-btn").attr("title","Mostrar  a lista de chamados");
+	}else{
+		$("#div-sidebar").show("slow");
+		$("#tbl").removeClass("col-md-12");
+		$("#tbl").addClass("col-md-7");
+		$("#teste-btn").html("&lt;");
+		$("#teste-btn").val("e");
+		$("#teste-btn").attr("title","Esconder  a lista de chamados");
+	}
+});
+
 $("#txt_busca").keypress(function(e){
 	if(e.which == 13){
 		e.preventDefault();
@@ -43,7 +61,7 @@ function montaurl(url, filtro){
 	if(url == ""){
 		alert("Informe um termo para a busca!");
 	}else{
-		window.location="basedeconhecimento.jsf?termo="+url+"&filtro="+filtro;
+		window.location="basedeconhecimento.jsf?termo="+url.replace("&"," ").replace("%"," ").replace("?"," ").replace("="," ").replace("#"," ")+"&filtro="+filtro;
 	}
 }
 

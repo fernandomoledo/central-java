@@ -9,9 +9,11 @@
      username="app_faq_cau"
      password="#centralcau#" 
      validationQuery="select 1 from dual"
-    	idleTimeout = "60"
+    	idleTimeout = "30"
 	     maxWait="-1"
 	    minEvictableIdleTimeMillis="1000"
+	    removeAbandonedTimeout="30"
+	    removeAbandoned="true"
      />
      
       <Resource auth="Container"

@@ -23,6 +23,9 @@
 	          <h1>Painel de Chamados</h1>
 	          <h4>#{portalMB.p.lotacao.nome}</h4>
 	        </div>
+	       
+			
+			               	
         </h:form>
       </div>
 
@@ -42,12 +45,14 @@
 			                 	<f:selectItems value="#{painelMB.getLotacoesAmarradasPorPai(portalMB.original.nome)}" noSelectionOption="true" var="lot" itemLabel="#{lot.filha.nome}" itemValue="#{lot.filha.nome}"  />
 			                 	
 			                 </h:selectOneMenu>
-		            </div>
+		            </div>		  
 		            <div class="push1"></div>
 		            <div class="row text-center">
 		           		<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
 		            </div>
 				</h:form>
+					<div class="push1"></div>          	         
+	          		<span class="glyphicon glyphicon-pushpin"></span> Chamados sob minha responsabilidade
 				</div>
 				<div class="col-md-3"></div>
 			</div>
@@ -57,9 +62,9 @@
       <div class="row">
         <div class="col-md-12">
           <div class="col-md-9 separator">
-            <div class="col-md-4 text-center" id="chamados-todo">        
+            <div class="col-md-4 text-center" id="chamados-todo">    
+            	<h:form id="f-todo"><h3>A Fazer (<h:outputText value="#{painelMB.qtdeToDo}" />)</h3></h:form>    
             	<h:form id="c_todo">
-            	   <h3>A Fazer </h3>
             	   <div class="scr">
             		<ui:repeat var="todo" value="#{painelMB.getChamadosToDo(portalMB.p.lotacao.id)}">
             			<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
@@ -70,6 +75,9 @@
 			                <strong>
 			                	#{todo.chamado.numero}/<h:outputText value="#{todo.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
 			                </strong>
+			                 <c:if test="#{todo.chamado.responsavel.id == portalMB.p.id}">
+			               		 <span class="glyphicon glyphicon-pushpin" title="Eu sou o responsável por este chamado"></span>
+			               	</c:if>
 			                </h4>
 			     
 			               <h:outputText value="#{todo.dtAndamento}" style="font-size:.8em;" >
@@ -92,8 +100,8 @@
             	</h:form>
             </div>
             <div class="col-md-4 text-center" id="chamados-doing">            
+            <h:form id="f-doing"><h3>Em andamento (<h:outputText value="#{painelMB.qtdeDoing}" />)</h3></h:form> 
             	<h:form id="c_doing">
-            	 <h3>Em Andamento </h3>
             	    <div class="scr">
             		<ui:repeat var="doing" value="#{painelMB.getChamadosDoing(portalMB.p.lotacao.id)}">
             		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
@@ -104,6 +112,9 @@
 			                <strong>
 			                	#{doing.chamado.numero}/<h:outputText value="#{doing.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
 			                </strong>
+			               <h:panelGroup rendered="#{doing.chamado.responsavel.id eq portalMB.p.id}">
+			               		 <span class="glyphicon glyphicon-pushpin" title="Eu sou o responsável por este chamado"></span>
+			               	</h:panelGroup>
 			                </h4>
 			       
 			               <h:outputText value="#{doing.dtAndamento}" style="font-size:.8em;">
@@ -127,8 +138,8 @@
             
             </div>
             <div class="col-md-4 text-center" id="chamados-done">
+            <h:form id="f-done"><h3>Concluídos (<h:outputText value="#{painelMB.qtdeDone}" />)</h3></h:form> 
             	<h:form id="c_done">
-            	<h3>Concluídos </h3>
             		<p:selectOneButton value="#{painelMB.periodo}">
             		<p:ajax event="change" update="@form" onstart="mostra_box2();" oncomplete="esconde_box2();" />
             			<f:selectItem itemLabel="Hoje" itemValue="0"  />
@@ -150,6 +161,9 @@
 			                <strong>
 			                	#{done.chamado.numero}/<h:outputText value="#{done.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
 			                </strong>
+			                 <h:panelGroup rendered="#{done.chamado.responsavel.id eq portalMB.p.id}">
+			               		 <span class="glyphicon glyphicon-pushpin" title="Eu sou o responsável por este chamado"></span>
+			               	</h:panelGroup>
 			                </h4>
 			               <h:outputText value="#{done.dtAndamento}" style="font-size:.8em">
 				                  <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
@@ -203,7 +217,7 @@
               <p:commandButton class="btn btn-success" id="btn-aviso" value="Avisar"
                actionListener="#{painelMB.salvar()}" oncomplete="document.getElementById('form2:txt_aviso').value='';" />
             </div>
-            <p:poll interval="1" update=":form1" />
+            <p:poll interval="1" update=":form1 :f-todo :f-doing :f-done" />
          </h:form>
         </div>
       </div>

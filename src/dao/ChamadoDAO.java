@@ -21,7 +21,7 @@ public class ChamadoDAO {
 private String sql;
 	
 	public List<Andamento> getTodo(int secao) throws ClassNotFoundException, SQLException, NamingException{
-		sql = "SELECT CH.ID, CH.NUMERO, CH.LOTACAODESTINO, an.dt_andamento, AST.DESCRICAO, AN.TEXTO, SV.NOME, CH.STATUS, LT.NOME, CH.LOTACAOSOLICITANTE FROM CHAMADOS CH, ASSUNTOS AST, ANDAMENTOS AN, PORTAL PT, SERVIDORES SV, LOTACAO LT WHERE CH.ASSUNTO = AST.ID AND LT.ID = CH.LOTACAOSOLICITANTE AND CH.ID = AN.CHAMADO AND AN.CLASSIFICACAO = 'ABE' AND PT.ID(+) = CH.RESPONSAVEL AND SV.CODISERV(+) = SUBSTR(PT.CODIGO, 1, LENGTH(PT.CODIGO) - 2) AND CH.STATUS = 'AF' AND CH.LOTACAODESTINO = ? ORDER BY CH.ID, CH.LOTACAODESTINO, SV.NOME, AN.DT_ANDAMENTO";
+		sql = "SELECT CH.ID, CH.NUMERO, CH.LOTACAODESTINO, CH.RESPONSAVEL, an.dt_andamento, AST.DESCRICAO, AN.TEXTO, SV.NOME, CH.STATUS, LT.NOME, CH.LOTACAOSOLICITANTE FROM CHAMADOS CH, ASSUNTOS AST, ANDAMENTOS AN, PORTAL PT, SERVIDORES SV, LOTACAO LT WHERE CH.ASSUNTO = AST.ID AND LT.ID = CH.LOTACAOSOLICITANTE AND CH.ID = AN.CHAMADO AND AN.CLASSIFICACAO = 'ABE' AND PT.ID(+) = CH.RESPONSAVEL AND SV.CODISERV(+) = SUBSTR(PT.CODIGO, 1, LENGTH(PT.CODIGO) - 2) AND CH.STATUS = 'AF' AND CH.LOTACAODESTINO = ? ORDER BY CH.ID, CH.LOTACAODESTINO, SV.NOME, AN.DT_ANDAMENTO";
 		List<Andamento> andamentos = new ArrayList<Andamento>();	
 			Connection con = null;
 			con = ConexaoOracle.abreConexao();
@@ -36,6 +36,9 @@ private String sql;
 				c.setId(rs.getLong("ID"));
 				c.setStatus(rs.getString("STATUS"));
 				c.setNumero(rs.getInt("NUMERO"));
+				Portal p = new Portal();
+				p.setId(rs.getInt("RESPONSAVEL"));
+				c.setResponsavel(p);
 				Lotacao l = new Lotacao();
 				LotacaoDAO lotacaoDao = new LotacaoDAO();
 				l = lotacaoDao.getLotacaoById(rs.getInt("LOTACAOSOLICITANTE"));
@@ -50,7 +53,7 @@ private String sql;
 	}
 	
 	public List<Andamento> getDoing(int secao) throws ClassNotFoundException, SQLException, NamingException{
-		sql = "SELECT CH.ID, CH.NUMERO, CH.LOTACAODESTINO, an.dt_andamento, AST.DESCRICAO, AN.TEXTO, SV.NOME, CH.STATUS, LT.NOME, CH.LOTACAOSOLICITANTE FROM CHAMADOS CH, ASSUNTOS AST, ANDAMENTOS AN, PORTAL PT, SERVIDORES SV, LOTACAO LT WHERE CH.ASSUNTO = AST.ID AND LT.ID = CH.LOTACAOSOLICITANTE AND CH.ID = AN.CHAMADO AND AN.CLASSIFICACAO = 'ABE' AND PT.ID(+) = CH.RESPONSAVEL AND SV.CODISERV(+) = SUBSTR(PT.CODIGO, 1, LENGTH(PT.CODIGO) - 2) AND (CH.STATUS = 'AN' OR CH.Status='EX' OR ch.status = 'PR' or ch.status = 'US' or ch.status = 'RE') AND CH.LOTACAODESTINO = ? ORDER BY CH.ID, CH.LOTACAODESTINO, SV.NOME, AN.DT_ANDAMENTO";
+		sql = "SELECT CH.ID, CH.NUMERO, CH.LOTACAODESTINO, CH.RESPONSAVEL, an.dt_andamento, AST.DESCRICAO, AN.TEXTO, SV.NOME, CH.STATUS, LT.NOME, CH.LOTACAOSOLICITANTE FROM CHAMADOS CH, ASSUNTOS AST, ANDAMENTOS AN, PORTAL PT, SERVIDORES SV, LOTACAO LT WHERE CH.ASSUNTO = AST.ID AND LT.ID = CH.LOTACAOSOLICITANTE AND CH.ID = AN.CHAMADO AND AN.CLASSIFICACAO = 'ABE' AND PT.ID(+) = CH.RESPONSAVEL AND SV.CODISERV(+) = SUBSTR(PT.CODIGO, 1, LENGTH(PT.CODIGO) - 2) AND (CH.STATUS = 'AN' OR CH.Status='EX' OR ch.status = 'PR' or ch.status = 'US' or ch.status = 'RE') AND CH.LOTACAODESTINO = ? ORDER BY CH.ID, CH.LOTACAODESTINO, SV.NOME, AN.DT_ANDAMENTO";
 		List<Andamento> andamentos = new ArrayList<Andamento>();	
 		
 			Connection con = null;
@@ -66,6 +69,9 @@ private String sql;
 				c.setId(rs.getLong("ID"));
 				c.setStatus(rs.getString("STATUS"));
 				c.setNumero(rs.getInt("NUMERO"));
+				Portal p = new Portal();
+				p.setId(rs.getInt("RESPONSAVEL"));
+				c.setResponsavel(p);
 				Lotacao l = new Lotacao();
 				LotacaoDAO lotacaoDao = new LotacaoDAO();
 				l = lotacaoDao.getLotacaoById(rs.getInt("LOTACAOSOLICITANTE"));
@@ -80,7 +86,7 @@ private String sql;
 	}
 	
 	public List<Andamento> getDone(int secao, int periodo) throws ClassNotFoundException, SQLException, NamingException{
-		sql = "SELECT CH.ID, CH.NUMERO, CH.LOTACAODESTINO, an.dt_andamento, AST.DESCRICAO, AN.TEXTO, SV.NOME, CH.STATUS, LT.NOME, CH.LOTACAOSOLICITANTE FROM CHAMADOS CH, ASSUNTOS AST, ANDAMENTOS AN, PORTAL PT, SERVIDORES SV, LOTACAO LT WHERE CH.ID IN(SELECT distinct(CH.ID) FROM CHAMADOS CH, ASSUNTOS AST, ANDAMENTOS AN, PORTAL PT, SERVIDORES SV, LOTACAO LT WHERE CH.ASSUNTO = AST.ID AND LT.ID = CH.LOTACAOSOLICITANTE AND CH.ID = AN.CHAMADO AND trunc(AN.DT_ANDAMENTO) >= TRUNC(sysdate - ?) and PT.ID(+) = CH.RESPONSAVEL AND SV.CODISERV(+) = SUBSTR(PT.CODIGO, 1, LENGTH(PT.CODIGO) - 2) AND CH.STATUS = 'CO' AND CH.LOTACAODESTINO = ? ) AND an.classificacao='ABE' and CH.ASSUNTO = AST.ID AND LT.ID = CH.LOTACAOSOLICITANTE AND CH.ID = AN.CHAMADO and PT.ID(+) = CH.RESPONSAVEL AND SV.CODISERV(+) = SUBSTR(PT.CODIGO, 1, LENGTH(PT.CODIGO) - 2) ORDER BY CH.ID, CH.LOTACAODESTINO, SV.NOME, AN.DT_ANDAMENTO";
+		sql = "SELECT CH.ID, CH.NUMERO, CH.LOTACAODESTINO, CH.RESPONSAVEL, an.dt_andamento, AST.DESCRICAO, AN.TEXTO, SV.NOME, CH.STATUS, LT.NOME, CH.LOTACAOSOLICITANTE FROM CHAMADOS CH, ASSUNTOS AST, ANDAMENTOS AN, PORTAL PT, SERVIDORES SV, LOTACAO LT WHERE CH.ID IN(SELECT distinct(CH.ID) FROM CHAMADOS CH, ASSUNTOS AST, ANDAMENTOS AN, PORTAL PT, SERVIDORES SV, LOTACAO LT WHERE CH.ASSUNTO = AST.ID AND LT.ID = CH.LOTACAOSOLICITANTE AND CH.ID = AN.CHAMADO AND trunc(AN.DT_ANDAMENTO) >= TRUNC(sysdate - ?) and PT.ID(+) = CH.RESPONSAVEL AND SV.CODISERV(+) = SUBSTR(PT.CODIGO, 1, LENGTH(PT.CODIGO) - 2) AND CH.STATUS = 'CO' AND CH.LOTACAODESTINO = ? ) AND an.classificacao='ABE' and CH.ASSUNTO = AST.ID AND LT.ID = CH.LOTACAOSOLICITANTE AND CH.ID = AN.CHAMADO and PT.ID(+) = CH.RESPONSAVEL AND SV.CODISERV(+) = SUBSTR(PT.CODIGO, 1, LENGTH(PT.CODIGO) - 2) ORDER BY CH.ID, CH.LOTACAODESTINO, SV.NOME, AN.DT_ANDAMENTO";
 		List<Andamento> andamentos = new ArrayList<Andamento>();			
 		Connection con = null;
 		con = ConexaoOracle.abreConexao();
@@ -96,6 +102,9 @@ private String sql;
 				c.setId(rs.getLong("ID"));
 				c.setStatus(rs.getString("STATUS"));
 				c.setNumero(rs.getInt("NUMERO"));
+				Portal p = new Portal();
+				p.setId(rs.getInt("RESPONSAVEL"));
+				c.setResponsavel(p);
 				Lotacao l = new Lotacao();
 				LotacaoDAO lotacaoDao = new LotacaoDAO();
 				l = lotacaoDao.getLotacaoById(rs.getInt("LOTACAOSOLICITANTE"));
