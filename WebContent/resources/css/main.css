@@ -6,7 +6,7 @@
 	text-align: center;
 }
 
-.ibox{
+.ibox, .ibox2{
 	display: none;
 }
 
@@ -57,7 +57,7 @@ table tr td{
 
 .scr {
     overflow: auto;
-    max-height: 500px;
+    max-height: 768px;
 }
 
 .track3 {

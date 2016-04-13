@@ -30,6 +30,14 @@ function esconde_box(){
 	$(".ibox").hide();
 }
 
+function mostra_box2(){
+	$(".ibox2").show();
+}
+
+function esconde_box2(){
+	$(".ibox2").hide();
+}
+
 function montaurl(url, filtro){
 	//alert(url + " - " +  filtro);
 	if(url == ""){

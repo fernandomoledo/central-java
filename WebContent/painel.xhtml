@@ -18,10 +18,12 @@
 		</div>
 		</div>
       <div class="row">
-        <div class="col-md-12 text-center">
-          <h1>Painel de Chamados</h1>
-          <h4>#{portalMB.p.lotacao.nome}</h4>
-        </div>
+      	<h:form id="titulo">
+	        <div class="col-md-12 text-center">
+	          <h1>Painel de Chamados</h1>
+	          <h4>#{portalMB.p.lotacao.nome}</h4>
+	        </div>
+        </h:form>
       </div>
 
 		<!--  teste escolha perfil -->
@@ -36,7 +38,7 @@
 		              		<p:ajax event="change" update=":c_todo :c_doing :c_done :titulo" 
 		              		listener="#{portalMB.mudaLotacao(painelMB.lotacao.nome)}" onstart="mostra_box();" oncomplete="esconde_box();"  />
 		              			<f:selectItem itemLabel="-- Escolha a lotação desejada --" itemValue="" />
-		              			<f:selectItem itemLabel="*** Minha lotação de origem ***" itemValue="#{portalMB.original.nome}" />
+		              			<f:selectItem itemLabel="*** Minha lotação de origem ***" itemValue="#{portalMB.original.nome}"  />
 			                 	<f:selectItems value="#{painelMB.getLotacoesAmarradasPorPai(portalMB.original.nome)}" noSelectionOption="true" var="lot" itemLabel="#{lot.filha.nome}" itemValue="#{lot.filha.nome}"  />
 			                 	
 			                 </h:selectOneMenu>
@@ -128,14 +130,17 @@
             	<h:form id="c_done">
             	<h3>Concluídos </h3>
             		<p:selectOneButton value="#{painelMB.periodo}">
-            		<p:ajax event="change" update="@form" onstart="mostra_box();" oncomplete="esconde_box();" />
-            			<f:selectItem itemLabel="Hoje" itemValue="0" />
+            		<p:ajax event="change" update="@form" onstart="mostra_box2();" oncomplete="esconde_box2();" />
+            			<f:selectItem itemLabel="Hoje" itemValue="0"  />
 			            <f:selectItem itemLabel="Ontem" itemValue="1" />
 			            <f:selectItem itemLabel="7d" itemValue="7" />
 			            <f:selectItem itemLabel="30d" itemValue="30" />
 			        </p:selectOneButton>
 			        <div class="push1"></div>
 					   <div class="scr">
+					    <div class="row text-center">
+		           		<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox2" />
+		            </div>
             		<ui:repeat var="done" value="#{painelMB.getChamadosDone(portalMB.p.lotacao.id)}">
             		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />

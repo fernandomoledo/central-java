@@ -42,6 +42,7 @@
             <h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
             <div class="push1"></div>
       		<h:form id="texto">
+      		<h:outputText value="Não foram encontrados chamados para #{baseDeConhecimentoMB.select}/#{baseDeConhecimentoMB.termoBusca}#{baseDeConhecimentoMB.select.parent}" rendered="#{((baseDeConhecimentoMB.select.toString() == '' || baseDeConhecimentoMB.termoBusca != '') &amp;&amp; (not baseDeConhecimentoMB.mostra))}" />
            <p:dataTable var="chamado" value="#{baseDeConhecimentoMB.chamados}"  widgetVar="textoTable" rendered="#{baseDeConhecimentoMB.mostra}"
            emptyMessage="Não foram encontrados chamados com os parâmetros informados..." rows="5" 
             paginator="true"
