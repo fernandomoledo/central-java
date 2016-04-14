@@ -67,7 +67,7 @@
 </h:form>
              
           </div>
-          <button id="teste-btn" class="btn" value="e" title="Esconder a lista de chamados"> &lt;</button>
+          <button id="teste-btn" class="btn btn-primary" style="font-weight:bold;border:none;" value="e" title="Esconder a lista de chamados"> &lt;</button>
 
           <!-- Painel de chamados -->
           <div class="col-md-7" id="tbl" style="max-height:768px; overflow:auto;">
@@ -93,9 +93,9 @@
             <p><h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.lotacaoSolicitante.nome}" escape="false" /></p>
             <div class="push05"></div>
             <h4>Problema relatado</h4>
-            <p style="text-align:justify;">
-            	<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" />
-            </p>
+            
+            	<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" style="white-space:pre-wrap;" />
+           
             <div class="push05"></div>
             <h4>Equipamentos</h4>
             <table class="table table-striped">
@@ -114,7 +114,7 @@
                   		<f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy" />
                   	</h:outputText>
                   </td>
-                  <td><h:outputText value="#{tombo.descricao}" escape="false" /></td>
+                  <td><h:outputText value="#{tombo.descricao}" escape="false" style="white-space:pre-wrap;" /></td>
                   
                 </tr>
               </ui:repeat>  
@@ -142,7 +142,7 @@
 		            </h:outputText>
            		</td>
            		<td>#{andamento.classificacao}</td>
-           		<td><h:outputText value="#{andamento.usuario.nome}" escape="false" /></td>
+           		<td><h:outputText value="#{andamento.usuario.nome}" escape="false" style="white-space:pre-wrap;" /></td>
            		<td><h:outputText value="#{andamento.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" style="white-space:pre-wrap;" /></td>
                 </tr>
                </ui:repeat>                           
