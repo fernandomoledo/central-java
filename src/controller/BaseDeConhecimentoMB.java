@@ -1,5 +1,14 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +19,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import util.Mensagens;
 import dao.AndamentoDAO;
@@ -23,16 +43,18 @@ import model.Andamento;
 import model.Categoria;
 import model.CategoriaPai;
 import model.Chamado;
+import model.ResultadosWiki;
 import model.Tombo;
 
 
 @ManagedBean
 @ViewScoped
 public class BaseDeConhecimentoMB {
-	private TreeNode root; //armazena os nós do menu árvore
-	private TreeNode select; //armazena um nó do menu árvore selecionado
-	private boolean mostra = false; //flag para mostrar ou não a tabela listando os chamados encontrados
-	private boolean mostraDetalhe = false; //flag para mostrar ou não o detalhe de um chamado selecionado
+	private TreeNode root; //armazena os nÃ³s do menu Ã¡rvore
+	private TreeNode select; //armazena um nÃ³ do menu Ã¡rvore selecionado
+	private boolean mostra = false; //flag para mostrar ou nÃ£o a tabela listando os chamados encontrados
+	private boolean mostrawiki = false; //flag para mostrar ou nÃ£o a tabela listando os chamados encontrados
+	private boolean mostraDetalhe = false; //flag para mostrar ou nÃ£o o detalhe de um chamado selecionado
 	private List<Chamado> chamados = new ArrayList<Chamado>();
 	private List<Chamado> chamadosFiltrados;
 	private Andamento chamadoDetalhe = new Andamento();
@@ -41,24 +63,25 @@ public class BaseDeConhecimentoMB {
 	private Andamento ultimoAndamento = new Andamento();
 	private Chamado selecionado; //armazena o chamado selecionado
 	private String termoBusca = ""; //armazena o termo de busca digitado na busca geral
-	private String termoDestaque = ""; //armazena o termo de busca com a marcação <mark></mark>
-	private String termoTroca = ""; //armazena o termo que substituirá a busca, caso haja termo adicional cadastrado no banco
+	private String termoDestaque = ""; //armazena o termo de busca com a marcaÃ§Ã£o <mark></mark>
+	private String termoTroca = ""; //armazena o termo que substituirÃ¡ a busca, caso haja termo adicional cadastrado no banco
 	private String termo="";
 	private String[] termos;
+	private List<ResultadosWiki> wiki;
 	
 	/*
-	 * O método construtor inicializa a árvore e verifica se há termo de busca para disparar a pesquisa
+	 * O mÃ©todo construtor inicializa a Ã¡rvore e verifica se hÃ¡ termo de busca para disparar a pesquisa
 	 */
-	public BaseDeConhecimentoMB() throws NamingException{
+	public BaseDeConhecimentoMB() throws NamingException, IOException, ParseException, ParserConfigurationException, SAXException{
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
 		if(!params.isEmpty()){
 			if(params.get("filtro").equals("OU")){
-				this.termoBusca = params.get("termo").replace(" ", " | ");
+				this.termoBusca = params.get("termo").trim().replace(" ", " | ");
 			}else if(params.get("filtro").equals("E")){
-				this.termoBusca = params.get("termo").replace(" ", " & ");
+				this.termoBusca = params.get("termo").trim().replace(" ", " & ");
 			}else{
-				this.termoBusca = params.get("termo").replace("||", " & ");
+				this.termoBusca = params.get("termo").trim().replace("||", " & ");
 			}
 			this.termo = this.termoBusca;
 			this.termoDestaque = this.termoBusca.toUpperCase();
@@ -73,7 +96,7 @@ public class BaseDeConhecimentoMB {
 	}
 	
 	/*
-	 * Este método recursivo constrói o menu árvore
+	 * Este mÃ©todo recursivo constrÃ³i o menu Ã¡rvore
 	 */
 	public TreeNode montaNode(int pai, TreeNode noPai) throws NamingException{
 		List<CategoriaPai> cp = new ArrayList<CategoriaPai>();
@@ -94,10 +117,10 @@ public class BaseDeConhecimentoMB {
 	}
 
 	/*
-	 * Este método captura o nó da árvore selecionado e verifica se ele é pai ou não. Caso não seja, dispara a busca de chamados
+	 * Este mÃ©todo captura o nÃ³ da Ã¡rvore selecionado e verifica se ele Ã© pai ou nÃ£o. Caso nÃ£o seja, dispara a busca de chamados
 	 */
 	public void getSelecao() throws ClassNotFoundException, SQLException, NamingException{
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Filhos do nó: "+this.select.getChildCount(),null));
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Filhos do nï¿½: "+this.select.getChildCount(),null));
 		chamados = new ArrayList<Chamado>();
 		chamadosFiltrados = null;
 		selecionado = null;
@@ -110,7 +133,7 @@ public class BaseDeConhecimentoMB {
 	}
 	
 	/*
-	 * Este método retorna uma lista de todos os chamados encontrados com base na categoria selecionada na árvore
+	 * Este mÃ©todo retorna uma lista de todos os chamados encontrados com base na categoria selecionada na Ã¡rvore
 	 */
 	public void getListaChamados() throws ClassNotFoundException, SQLException, NamingException{
 		String equipamento;
@@ -143,7 +166,7 @@ public class BaseDeConhecimentoMB {
 	}
 	
 	/*
-	 * Este método carrega todas as informações do chamado selecionado para exibí-lo na tela
+	 * Este mÃ©todo carrega todas as informaÃ§Ãµes do chamado selecionado para exibÃ­-lo na tela
 	 */
 	public void getDetalhe() throws NamingException{
 		long id = this.selecionado.getId();
@@ -183,24 +206,139 @@ public class BaseDeConhecimentoMB {
 			this.ultimoAndamento = this.andamentosDetalhe.get(this.andamentosDetalhe.size()-1);
 			this.mostraDetalhe = true;
 		} catch (ClassNotFoundException | SQLException e) {
-			Mensagens.setMessage(3, "Não foi possível obter o detalhe do chamado. "+e.getMessage());
+			Mensagens.setMessage(3, "NÃ£o foi possÃ­vel obter o detalhe do chamado. "+e.getMessage());
 			e.printStackTrace();
 		} 
 	}
 	
 	/*
-	 * Este método é responsável por buscar de forma completa no banco UNA o termo digitado na busca geral do site
+	 * Este mÃ©todo Ã© responsÃ¡vel por buscar de forma completa no banco UNA o termo digitado na busca geral do site
 	 */
 	
-	public void buscar() throws NamingException{
+	public void buscar() throws NamingException, IOException, ParseException, ParserConfigurationException, SAXException{
 		ChamadoDAO dao = new ChamadoDAO();
 		try {
 			this.chamados = dao.getChamadosBuscaGeral(this.termoBusca);
+			
+			//Wiki
+	
+			PrintWriter pw = new PrintWriter("/tmp/retorno.txt");
+			pw.print(Charset.defaultCharset().name());
+			pw.close();
+			String buscawiki = this.termo.replace("&", "+").replace("|", "+").replace(" ", "+");
+			wiki = new ArrayList<ResultadosWiki>();
+			Runtime rt = Runtime.getRuntime();
+			String s = "";
+			String command = "";
+			String token = "";
+			Process p = null;
+	
+			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+				command = "C:\\curl\\curl\\bin\\curl.exe -c C:\\curl\\cookies.txt -d " + '"'+"lgname=cau_conhecimento&lgpassword=centralcau&action=login&format=xml" + '"'+ " http://smau-server/mediawiki/api.php ";
+			else
+				command = "curl -c /tmp/cookies.txt -d lgname=cau_conhecimento&lgpassword=centralcau&action=login&format=xml http://smau-server/mediawiki/api.php";
+			p = rt.exec(command);
+			String xml = "";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			while((s = reader.readLine()) != null){
+				System.out.println(s);
+				xml += s;
+			}
+			
+			System.out.println(xml);
+			 DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			    InputSource is = new InputSource();
+			    is.setCharacterStream(new StringReader(xml));
+			
+			    System.out.println(is.getEncoding());
+			    Document doc = db.parse(is);
+			    NodeList nodes = doc.getElementsByTagName("login");
+			  		    
+			    for (int i = 0; i < nodes.getLength(); i++) {
+			      Element element = (Element) nodes.item(i);
+			      
+			    
+			      System.out.println(element.getAttribute("token"));
+			      token = element.getAttribute("token");
+			    }
+
+			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -d " + '"'+"lgname=cau_conhecimento&lgpassword=centralcau&action=login&lgtoken="+ 
+				token+"&format=xml" + '"'+ " http://smau-server/mediawiki/api.php ";
+			else
+				command = "curl -b /tmp/cookies.txt -d lgname=cau_conhecimento&lgpassword=centralcau&action=login&lgtoken="+token+"&format=xml http://smau-server/mediawiki/api.php";
+			p = rt.exec(command);
+			System.out.println(command);
+			reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			
+			
+			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -X POST http://smau-server/mediawiki/api.php?action=query&generator=search&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml";
+			else
+				command = "curl -b /tmp/cookies.txt -d action=query&generator=search&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml http://smau-server/mediawiki/api.php";
+			p = rt.exec(command);
+			
+			/*
+			System.out.println(command);
+			reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			xml = "";
+			while((s = reader.readLine()) != null)
+				xml += s;
+			System.out.println(xml);
+			*/
+			 db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			    // is = new InputSource();
+			   //  is.setCharacterStream(new StringReader(p.getInputStream().toString()));
+
+			     doc = db.parse(p.getInputStream());
+			     nodes = doc.getElementsByTagName("page");
+			  		    
+			    for (int i = 0; i < nodes.getLength(); i++) {
+			      Element element = (Element) nodes.item(i);
+			      ResultadosWiki rw = new ResultadosWiki();
+			    
+			      System.out.println(element.getAttribute("title"));
+			      rw.setTitulo(element.getAttribute("title"));
+			      rw.setUrl(element.getAttribute("fullurl"));
+			      rw.setEncontradoEm("CorrespondÃªncia com o tÃ­tulo da pÃ¡gina");
+			      wiki.add(rw);
+			    }
+			
+			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -X POST http://smau-server/mediawiki/api.php?action=query&generator=search&gsrwhat=text&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml";
+			else
+				command = "curl -b /tmp/cookies.txt -d action=query&generator=search&gsrwhat=text&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml http://smau-server/mediawiki/api.php";
+			p = rt.exec(command);
+			/*
+			System.out.println(command);
+			reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			xml = "";
+			while((s = reader.readLine()) != null)
+				xml += s;
+			System.out.println(xml);
+			*/
+			 db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			    // is = new InputSource();
+			   //  is.setCharacterStream(new StringReader(p.getInputStream().toString()));
+
+			     doc = db.parse(p.getInputStream());
+			     nodes = doc.getElementsByTagName("page");
+			  		    
+			    for (int i = 0; i < nodes.getLength(); i++) {
+			      Element element = (Element) nodes.item(i);
+			      ResultadosWiki rw = new ResultadosWiki();
+			      rw.setTitulo(element.getAttribute("title"));
+			      rw.setUrl(element.getAttribute("fullurl"));
+			      rw.setEncontradoEm("CorrespondÃªncia com o texto da pÃ¡gina");
+			      wiki.add(rw);
+			    }
+			    
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 		
 		if(this.chamados.size() > 0) this.mostra = true;
+		if(this.wiki.size() > 0) this.setMostrawiki(true);
 		for(Chamado c : this.chamados){
 			System.out.println("Chamado "+c.getNumero());
 		}
@@ -322,6 +460,22 @@ public class BaseDeConhecimentoMB {
 		this.termos = termos;
 	}
 
+	public boolean isMostrawiki() {
+		return mostrawiki;
+	}
+
+	public void setMostrawiki(boolean mostrawiki) {
+		this.mostrawiki = mostrawiki;
+	}
+
+	public List<ResultadosWiki> getWiki() {
+		return wiki;
+	}
+
+	public void setWiki(List<ResultadosWiki> wiki) {
+		this.wiki = wiki;
+	}
+
 	
 	
 	/*
@@ -346,7 +500,7 @@ public class BaseDeConhecimentoMB {
 			this.andamentosDetalhe = aDao.getAndamentosPorChamado(id);
 			this.ultimoAndamento = this.andamentosDetalhe.get(this.andamentosDetalhe.size()-1);
 		} catch (ClassNotFoundException | SQLException e) {
-			Mensagens.setMessage(3, "Não foi possível obter o detalhe do chamado. "+e.getMessage());
+			Mensagens.setMessage(3, "Nï¿½o foi possï¿½vel obter o detalhe do chamado. "+e.getMessage());
 			e.printStackTrace();
 		} 
 	}

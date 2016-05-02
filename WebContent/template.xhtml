@@ -6,12 +6,11 @@
         xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 <h:head>
-  	<meta charset="utf-8" /> 
+  	<meta charset="UTF-8" /> 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="http://portal.trt15.jus.br/trt15-intranet-theme/images/favicon.ico" rel="Shortcut Icon" />
-
-    <title>Central de Chamados - CAU</title>
+    <title>Base de Conhecimento</title>
 
     <!-- Bootstrap -->
     <h:outputStylesheet library="css" name="bootstrap.min.css" />
@@ -51,15 +50,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.jsf">Base de Conhecimento - CAU</a>
+          <a class="navbar-brand" href="index.jsf">Base de Conhecimento</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-          	<li><h:link outcome="admin" value="Administração" rendered="#{portalMB.original.nome.startsWith('COORDENADORIA')}" /></li>
-          	<li><h:link outcome="basedeconhecimento" value="Base de Conhecimento" /></li>
-            <li><h:link outcome="categorias" value="Categorias"><span class="sr-only">(current)</span></h:link></li>       
+          	<li><h:link outcome="admin" value="Administração" rendered="#{portalMB.original.nome.startsWith('COORDENADORIA') or portalMB.original.nome == 'SEÇÃO DE ATENDIMENTO ESPECIALIZADO'}" /></li>
+          	<li><h:link outcome="arvore" value="Árvore do conhecimento" /></li>
+            <li><h:link outcome="categorias" value="Categorias" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}"><span class="sr-only">(current)</span></h:link></li>       
             <li><h:link outcome="painel" value="Painel" /></li>
           </ul>
          <h:form class="navbar-form navbar-left" role="search">

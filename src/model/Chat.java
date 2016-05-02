@@ -8,6 +8,7 @@ public class Chat {
 	private String textoChat;
 	private String usuarioChat;
 	private Timestamp dataChat;
+	private String secao;
 	
 	public int getIdChat() {
 		return idChat;
@@ -32,6 +33,12 @@ public class Chat {
 	}
 	public void setDataChat(Timestamp dataChat) {
 		this.dataChat = dataChat;
+	}
+	public String getSecao() {
+		return secao;
+	}
+	public void setSecao(String secao) {
+		this.secao = secao;
 	}
 	
 	

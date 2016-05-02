@@ -23,8 +23,11 @@
 	          <h1>Painel de Chamados</h1>
 	          <h4>#{portalMB.p.lotacao.nome}</h4>
 	        </div>
-	       
-			
+	        <div class="col-md-12 text-center">
+	          <a href="https://www.trt15.jus.br/centralChamados/chamado.do?acao=editarChamado" target="_blank">Abrir novo chamado</a>|
+	          <a href="https://www.trt15.jus.br/centralChamados/" target="_blank">Ver meus chamados</a>|
+	           <a href="https://www.trt15.jus.br/centralChamados/consulta.do?acao=listarConsulta" target="_blank">Consultas Central</a>
+	        </div>	
 			               	
         </h:form>
       </div>
@@ -63,7 +66,7 @@
         <div class="col-md-12">
           <div class="col-md-9 separator">
             <div class="col-md-4 text-center" id="chamados-todo">    
-            	<h:form id="f-todo"><h3>A Fazer (<h:outputText value="#{painelMB.qtdeToDo}" />)</h3></h:form>    
+            	<h:form id="f-todo"><h3 id="counter">A Fazer (<h:outputText value="#{painelMB.qtdeToDo}" />)</h3></h:form>    
             	<h:form id="c_todo">
             	   <div class="scr">
             		<ui:repeat var="todo" value="#{painelMB.getChamadosToDo(portalMB.p.lotacao.id)}">
@@ -188,7 +191,7 @@
           
           </div>
           <div class="col-md-3">
-          <h:form id="form1">
+          <h:form id="form1" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}">
             <div class="text-center"><h3>Avisos</h3></div>
             <div class="text-center">
             	<h:link outcome="detalhe_chat" target="_blank">Ver avisos anteriores</h:link>
@@ -207,24 +210,30 @@
 	        </ui:repeat>
             </div>
             </h:form>
-           <h:form id="form2">
+           <h:form id="form2" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}">
             <h:inputTextarea class="form-control" pt:placeholder="Digite o texto do aviso e tecle Enter..." 
             id="txt_aviso" rows="2" cols="20" value="#{painelMB.chat.textoChat}" 
             onkeypress="if (event.keyCode == 13) { document.getElementById('form2:btn-aviso').click(); return false; }" />
             
             <div class="push1"></div>
             <div class="text-center">
+            	<h:selectBooleanCheckbox title="Esta mensagem será vista apenas pela minha lotação" value="#{painelMB.minhaLotacao}" /> Só para a minha lotação <br />
               <p:commandButton class="btn btn-success" id="btn-aviso" value="Avisar"
                actionListener="#{painelMB.salvar()}" oncomplete="document.getElementById('form2:txt_aviso').value='';" />
+               
             </div>
-            <p:poll interval="1" update=":form1 :f-todo :f-doing :f-done" />
+            
+         </h:form>
+         <h:form>
+         	<p:poll interval="1" update=":form1 :f-todo :f-doing :f-done" />
          </h:form>
         </div>
       </div>
     </div>
     </div>
     <script type="text/javascript">
-  
+    	
+  		setInterval(function(){ document.title= $("#counter").html() + " - Base de Conhecimento"; }, 1000);
     </script>
 </ui:define>
 </ui:composition>

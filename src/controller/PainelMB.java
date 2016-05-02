@@ -31,16 +31,17 @@ public class PainelMB {
 	private Chat chat = new Chat();
 	private Lotacao lotacao = new Lotacao();
 	private int periodo;
+	private boolean minhaLotacao = false;
 	
 	/*
-	 * Este mÈtodo verifica a lotaÁ„o em que o usu·rio encontra-se lotado
+	 * Este m√©todo verifica a lota√ß√£o em que o usu√°rio encontra-se lotado
 	 */
 	public boolean verificaLotacao(String nome) throws SQLException, ClassNotFoundException, NamingException{
 		return new LotacaoDAO().verificaLotacao(nome);
 	}
 	
 	/*
-	 * Este mÈtodo lista todos os chamados a fazer da lotaÁ„o do usu·rio
+	 * Este m√©todo lista todos os chamados a fazer da lota√ß√£o do usu√°rio
 	 */
 	public List<Andamento> getChamadosToDo(int lotacao) throws NamingException{
 		ChamadoDAO dao = new ChamadoDAO();
@@ -50,14 +51,14 @@ public class PainelMB {
 			this.qtdeToDo = chamadosToDo.size();
 			return chamadosToDo;
 		} catch (ClassNotFoundException | SQLException e) {
-			Mensagens.setMessage(3, "N„o foi possÌvel obter a lista de chamados a fazer...");
+			Mensagens.setMessage(3, "N√£o foi poss√≠vel obter a lista de chamados a fazer...");
 			e.printStackTrace();
 			return null;
 		}
 	}
 	
 	/*
-	 * Este mÈtodo lista todos os chamados em andamento da lotaÁ„o do usu·rio
+	 * Este m√©todo lista todos os chamados em andamento da lota√ß√£o do usu√°rio
 	 */
 	public List<Andamento> getChamadosDoing(int lotacao) throws NamingException{
 		ChamadoDAO dao = new ChamadoDAO();
@@ -67,14 +68,14 @@ public class PainelMB {
 			this.qtdeDoing = chamadosDoing.size();
 			return chamadosDoing;
 		} catch (ClassNotFoundException | SQLException e) {
-			Mensagens.setMessage(3, "N„o foi possÌvel obter a lista de chamados em andamento...");
+			Mensagens.setMessage(3, "N√£o foi poss√≠vel obter a lista de chamados em andamento...");
 			e.printStackTrace();
 			return null;
 		}
 	}
 	
 	/*
-	 * Este mÈtodo lista todos os chamados concluÌdos - em um determinado perÌodo - da lotaÁ„o do usu·rio
+	 * Este m√©todo lista todos os chamados conclu√≠dos - em um determinado per√≠odo - da lota√ß√£o do usu√°rio
 	 */
 	public List<Andamento> getChamadosDone(int lotacao) throws NamingException{
 		ChamadoDAO dao = new ChamadoDAO();
@@ -84,14 +85,14 @@ public class PainelMB {
 			this.qtdeDone = chamadosDone.size();
 			return chamadosDone;
 		} catch (ClassNotFoundException | SQLException e) {
-			Mensagens.setMessage(3, "N„o foi possÌvel obter a lista de chamados concluÌdos...");
+			Mensagens.setMessage(3, "N√£o foi poss√≠vel obter a lista de chamados conclu√≠dos...");
 			e.printStackTrace();
 			return null;
 		}
 	}
 	
 	/*
-	 * Este mÈtodo retorna as ˙ltimas 5 interaÁıes do chat
+	 * Este m√©todo retorna as √∫ltimas 5 intera√ß√µes do chat
 	 */
 	public List<Chat> getLastChats() throws NamingException{
 		ChatDAO dao = new ChatDAO();
@@ -100,7 +101,7 @@ public class PainelMB {
 			chats = dao.getLastChats();
 			return chats;
 		}catch(ClassNotFoundException | SQLException e){
-			Mensagens.setMessage(3, "N„o foi possÌvel obter as conversas do chat");
+			Mensagens.setMessage(3, "N√£o foi poss√≠vel obter os avisos do chat...");
 			e.printStackTrace();
 			return null;
 		}
@@ -108,7 +109,7 @@ public class PainelMB {
 	
 	
 	/*
-	 * Este mÈtodo retorna todo o histÛrico do chat
+	 * Este m√©todo retorna todo o hist√≥rico do chat
 	 */
 	public List<Chat> getChats() throws NamingException{
 		ChatDAO dao = new ChatDAO();
@@ -117,29 +118,33 @@ public class PainelMB {
 			chats = dao.getChats();
 			return chats;
 		}catch(ClassNotFoundException | SQLException e){
-			Mensagens.setMessage(3, "N„o foi possÌvel obter as conversas do chat");
+			Mensagens.setMessage(3, "N√£o foi poss√≠vel obter os avisos do chat...");
 			e.printStackTrace();
 			return null;
 		}
 	}
 
 	/*
-	 * Este mÈtodo È respons·vel por salvar a mensagem digitada no chat no banco de dados central MySQL
+	 * Este m√©todo √© respons√°vel por salvar a mensagem digitada no chat no banco de dados central MySQL
 	 */
 	public void salvar() throws NamingException{
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		HttpSession session = (HttpSession) ec.getSession(false);
 		String user = session.getAttribute("usuarioLogado").toString();
+		String secao = session.getAttribute("secao").toString();
+		System.out.println("Se√ß√£o: "+secao);
 		if(!this.chat.getTextoChat().equals("")){
 	 		this.chat.setUsuarioChat(user);
+	 		if(this.minhaLotacao)
+	 			this.chat.setSecao(secao);
 			ChatDAO dao = new ChatDAO();
 			try{
 				if(dao.salvar(this.chat)){
-					System.out.println("Usu·rio "+user+" says: "+this.chat.getTextoChat());
+					System.out.println("Usu√°rio "+user+" says: "+this.chat.getTextoChat());
 				
 				}
 			}catch(ClassNotFoundException | SQLException e){
-				Mensagens.setMessage(3, "N„o foi possÌvel enviar a conversa do chat");
+				Mensagens.setMessage(3, "N√£o foi poss√≠vel enviar o aviso ao chat...");
 				e.printStackTrace();
 			
 			}
@@ -149,14 +154,14 @@ public class PainelMB {
 	}
 	
 	/*
-	 * Este mÈtodo retorna as lotaÁıes amarradas por pai do banco central MySQL, caso o usu·rio seja administrador
+	 * Este m√©todo retorna as lota√ß√µes amarradas por pai do banco central MySQL, caso o usu√°rio seja administrador
 	 */
 	public List<LotacaoLotacao> getLotacoesAmarradasPorPai(String nome) throws ClassNotFoundException, NamingException{
 		LotacaoDAO dao = new LotacaoDAO();
 		try {
 			return dao.getLotacoesAmarradasPorPai(nome);
 		} catch (SQLException e) {
-			Mensagens.setMessage(3, "N„o foi possÌvel obter a lista de lotaÁıes amarradas: "+e.getMessage());
+			Mensagens.setMessage(3, "N√£o foi poss√≠vel obter a lista de lota√ß√µes amarradas por pai: "+e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
@@ -171,11 +176,11 @@ public class PainelMB {
 			case "AF": return "A fazer";
 			case "AN": return "Em andamento";
 			case "CA": return "Cancelado";
-			case "CO": return "ConcluÌdo";
+			case "CO": return "Conclu√≠do";
 			case "EX": return "Ch. externo";
 			case "PR": return "Projeto";
 			case "RE": return "Reaberto";
-			case "US": return "Ag. usu·rio";
+			case "US": return "Ag. usu√°rio";
 		}
 		return s;
 	}
@@ -226,5 +231,13 @@ public class PainelMB {
 
 	public void setPeriodo(int periodo) {
 		this.periodo = periodo;
+	}
+
+	public boolean isMinhaLotacao() {
+		return minhaLotacao;
+	}
+
+	public void setMinhaLotacao(boolean minhaLotacao) {
+		this.minhaLotacao = minhaLotacao;
 	}
 }

@@ -25,10 +25,10 @@ public class PortalMB {
 	private String senhaAtual;
 	private String termo;
 	private Portal p;
-	//armazena a lotaÁ„o verdadeira do usu·rio, pois se ele for coordenador, pode alterar sua lotaÁ„o para ver os chamados
+	//armazena a lota√ß√£o verdadeira do usu√°rio, pois se ele for coordenador, pode alterar sua lota√ß√£o para ver os chamados
 	private Lotacao original = new Lotacao();
 	/*
-	 * Este mÈtodo È respons·vel por autenticar o login do usu·rio e criar a sess„o, que ser· controlada pela classe filters.ControleDeAcesso.java
+	 * Este m√©todo √© respons√°vel por autenticar o login do usu√°rio e criar a sess√£o, que ser√° controlada pela classe filters.ControleDeAcesso.java
 	 */
 	public String logar() throws NamingException{
 		PortalDAO portalDAO = new PortalDAO();
@@ -40,15 +40,16 @@ public class PortalMB {
 					ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 					HttpSession session = (HttpSession) ec.getSession(false);
 					session.setAttribute("usuarioLogado", p.getLogin());
+					session.setAttribute("secao", p.getLotacao().getId());
 					this.setOriginal(p.getLotacao());
 					return "/painel.xhtml?faces-redirect=true";
 				}else{
-					System.out.println("Usu·rio ou senha inv·lidos...");
-					Mensagens.setMessage(3, "Usu·rio e/ou senha inv·lidos");
+					System.out.println("Usu√°rio ou senha inv√°lidos...");
+					Mensagens.setMessage(3, "Usu√°rio e/ou senha inv√°lidos");
 				}
 			}else{
-				System.out.println("Usu·rio ou senha inv·lidos...");
-				Mensagens.setMessage(3, "Usu·rio e/ou senha inv·lidos");
+				System.out.println("Usu√°rio ou senha inv√°lidos...");
+				Mensagens.setMessage(3, "Usu√°rio e/ou senha inv√°lidos");
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			
@@ -60,10 +61,10 @@ public class PortalMB {
 	}
 	
 	/*
-	 * Este mÈtodo serve para alterar a lotaÁ„o de um usu·rio coordenador que deseje ver chamados de uma das suas seÁıes
+	 * Este m√©todo serve para alterar a lota√ß√£o de um usu√°rio coordenador que deseje ver chamados de uma das suas se√ß√µes
 	 */
 	public void mudaLotacao(String lotacao) throws ClassNotFoundException, SQLException, NamingException{
-		System.out.println("Nova lotaÁ„o: "+lotacao);
+		System.out.println("Nova lota√ß√£o: "+lotacao);
 		LotacaoDAO dao = new LotacaoDAO();
 		Lotacao l = new Lotacao();
 		if(lotacao.length() > 5){	
@@ -73,12 +74,13 @@ public class PortalMB {
 	}
 	
 	/*
-	 * Este mÈtodo destrÛi a sess„o e encerra a execuÁ„o do sistema para o usu·rio
+	 * Este m√©todo destr√≥i a sess√£o e encerra a execu√ß√£o do sistema para o usu√°rio
 	 */
 	public String logout(){
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		HttpSession session = (HttpSession) ec.getSession(false);
 		session.removeAttribute("usuarioLogado");
+		session.removeAttribute("secao");
 		return "/index.xhtml?faces-redirect=true";
 	}
 
@@ -88,19 +90,19 @@ public class PortalMB {
 			if(pdao.getLogin(this.username) != null){
 				if(this.senha.equals(this.confSenha)){
 					if(pdao.insereUsuarioMySQL(this.username, this.senha)){
-						Mensagens.setMessage(1, "Usu·rio ativado com sucesso!");
+						Mensagens.setMessage(1, "Usu√°rio ativado com sucesso!");
 						return "primeiroacesso";
 					}else{
-						Mensagens.setMessage(3, "Erro ao ativar usu·rio. Favor tentar novamente.");
+						Mensagens.setMessage(3, "Erro ao ativar usu√°rio. Favor tentar novamente.");
 						return null;
 					}
 				}else{
-					Mensagens.setMessage(3, "- As senhas n„o conferem");
+					Mensagens.setMessage(3, "- As senhas n√£o conferem");
 					return null;
 				}
 				
 			}else{
-				Mensagens.setMessage(3, "Usu·rio inexistente na Extranet");
+				Mensagens.setMessage(3, "Usu√°rio inexistente na Extranet");
 				return null;
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -123,7 +125,7 @@ public class PortalMB {
 					Mensagens.setMessage(3, "Erro ao alterar a senha. Tente novamente!");
 				}
 			}else{
-				Mensagens.setMessage(3, "A senha atual est· incorreta!");
+				Mensagens.setMessage(3, "A senha atual est√° incorreta!");
 			}
 		}catch(Exception e){
 			Mensagens.setMessage(3, "Erro ao alterar a senha: "+e.getMessage());

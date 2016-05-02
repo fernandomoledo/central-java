@@ -61,7 +61,8 @@ function montaurl(url, filtro){
 	if(url == ""){
 		alert("Informe um termo para a busca!");
 	}else{
-		window.location="basedeconhecimento.jsf?termo="+url.replace("&"," ").replace("%"," ").replace("?"," ").replace("="," ").replace("#"," ")+"&filtro="+filtro;
+	
+		window.location="arvore.jsf?termo="+url.replace("&"," ").replace("%"," ").replace("?"," ").replace("="," ").replace("#"," ")+"&filtro="+filtro;
 	}
 }
 

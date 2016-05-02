@@ -20,7 +20,7 @@ public class CategoriaMB {
 	private Categoria filha = new Categoria();
 	
 	/*
-	 * Este mÈtodo È respons·vel por salvar/alterar uma categoria no banco central do MySQL
+	 * Este m√©todo √© respons√°vel por salvar/alterar uma categoria no banco central do MySQL
 	 */
 	public void salvar() throws NamingException{
 		CategoriaDAO dao = new CategoriaDAO();
@@ -31,7 +31,7 @@ public class CategoriaMB {
 					System.out.println("Categoria "+this.categoria.getNomeCategoria()+"-"+this.categoria.getTermoCategoria()+" alterada.");
 					this.categoria = new Categoria();
 				}else{
-					Mensagens.setMessage(3, "N„o foi possÌvel alterar a categoria "+this.categoria.getNomeCategoria());
+					Mensagens.setMessage(3, "N√£o foi poss√≠vel alterar a categoria:  "+this.categoria.getNomeCategoria());
 					
 				}
 			}else{
@@ -40,7 +40,7 @@ public class CategoriaMB {
 					System.out.println("Categoria "+this.categoria.getNomeCategoria()+"-"+this.categoria.getTermoCategoria()+" salva.");
 					this.categoria = new Categoria();
 				}else{
-					Mensagens.setMessage(3, "N„o foi possÌvel salvar a categoria "+this.categoria.getNomeCategoria());
+					Mensagens.setMessage(3, "N√£o foi poss√≠vel salvar a categoria: "+this.categoria.getNomeCategoria());
 					
 				}
 			}
@@ -52,41 +52,41 @@ public class CategoriaMB {
 	}
 	
 	/*
-	 * Este mÈtodo serve para carregar o objeto do tipo Categoria com os dados da categoria desejada para alteraÁ„o
+	 * Este m√©todo serve para carregar o objeto do tipo Categoria com os dados da categoria desejada para alteraÔøΩÔøΩo
 	 */
 	public void editar(int id) throws NamingException{
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
 			this.categoria = dao.getCategoriaByID(id);
 		}catch(ClassNotFoundException | SQLException e){
-			Mensagens.setMessage(3, "N„o foi possÌvel buscar a categoria: "+e.getMessage());
+			Mensagens.setMessage(3, "N√£o foi poss√≠vel buscar a categoria: "+e.getMessage());
 			e.printStackTrace();
 		}
 	}
 	
 	/*
-	 * Este mÈtodo È respons·vel por excluir uma determinada categoria/amarraÁ„o de categorias cadastrada
+	 * Este m√©todo √© respons√°vel por excluir uma determinada categoria/amarra√ß√£o de categorias cadastrada
 	 */
 	public void excluir(int pai, int filha) throws NamingException{
 		CategoriaDAO dao = new CategoriaDAO();
 		try{
 			if(dao.excluir(pai, filha)){
-				Mensagens.setMessage(1, "Categoria excluÌda com sucesso!");
+				Mensagens.setMessage(1, "Categoria exclu√≠da com sucesso!");
 			}else{
-				Mensagens.setMessage(3, "Erro ao excluir a categoria. Verifique se a mesma n„o È pai de outra categoria.");
+				Mensagens.setMessage(3, "Erro ao excluir a categoria. Verifique se a mesma n√£o √© pai de outra categoria.");
 			}
 		}catch(ClassNotFoundException | SQLException e){
-			Mensagens.setMessage(3, "Erro ao excluir a categoria. Verifique se a mesma n„o È pai de outra categoria.");
+			Mensagens.setMessage(3, "Erro ao excluir a categoria. Verifique se a mesma n√£o √© pai de outra categoria.");
 			e.printStackTrace();
 		}
 	}
 	
 	/*
-	 * Este mÈtodo È respons·vel por amarrar as categorias pai e filha
+	 * Este m√©todo √© respons√°vel por amarrar as categorias pai e filha
 	 */
 	public void amarrar() throws NamingException{
 		if(this.pai.getIdCategoria() == this.filha.getIdCategoria()){
-			Mensagens.setMessage(3, "A categoria filha n„o pode ser igual a categoria pai");
+			Mensagens.setMessage(3, "A categoria filha n√£o pode ser igual a categoria pai");
 		}else{
 			CategoriaDAO dao = new CategoriaDAO();
 			CategoriaPai cp = new CategoriaPai();
@@ -94,12 +94,12 @@ public class CategoriaMB {
 			cp.setPai(this.pai);
 			try{
 				if(dao.inserirAmarracao(cp)){
-					Mensagens.setMessage(1, "AmarraÁ„o realizada com sucesso.");
-					System.out.println("AmarraÁ„o entre "+cp.getPai().getNomeCategoria()+" e "+cp.getFilha().getTermoCategoria()+" salva.");
+					Mensagens.setMessage(1, "Amarra√ß√£o realizada com sucesso.");
+					System.out.println("Amarra√ß√£o entre "+cp.getPai().getNomeCategoria()+" e "+cp.getFilha().getTermoCategoria()+" salva.");
 					this.pai = new Categoria();
 					this.filha = new Categoria();
 				}else{
-					Mensagens.setMessage(3, "N„o foi possÌvel realizar a amarraÁ„o entre " +cp.getPai().getNomeCategoria()+" e "+cp.getFilha().getTermoCategoria());
+					Mensagens.setMessage(3, "N√£o foi poss√≠vel realizar a amarra√ß√£o entre  " +cp.getPai().getNomeCategoria()+" e "+cp.getFilha().getTermoCategoria());
 					
 				}
 			}catch(ClassNotFoundException | SQLException e){
@@ -111,7 +111,7 @@ public class CategoriaMB {
 	
 	
 	/*
-	 * Este mÈtodo lista todas as categorias amarradas do banco central MySQL
+	 * Este m√©todo lista todas as categorias amarradas do banco central MySQL
 	 */
 	public List<CategoriaPai> getCategoriasCompleto() throws NamingException{
 		CategoriaDAO dao = new CategoriaDAO();
@@ -125,7 +125,7 @@ public class CategoriaMB {
 	}
 	
 	/*
-	 * Este mÈtodo lista todas as categorias do banco central MySQL
+	 * Este m√©todo lista todas as categorias do banco central MySQL
 	 */	
 	public List<Categoria> getCategorias() throws NamingException{
 		CategoriaDAO dao = new CategoriaDAO();

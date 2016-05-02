@@ -2,7 +2,8 @@
 <Context path="/PoolConexao">
     <Resource auth="Container"
     driverClassName="oracle.jdbc.driver.OracleDriver"
-    	maxActive="40" maxldle="0"
+    	maxActive="30" 
+    	maxldle="1"
      name = "jdbc/central"
      type="javax.sql.DataSource"
      url="jdbc:oracle:thin:@una:1521:orac"
@@ -10,15 +11,16 @@
      password="#centralcau#" 
      validationQuery="select 1 from dual"
     	idleTimeout = "30"
-	     maxWait="-1"
+	     maxWait="60000"
 	    minEvictableIdleTimeMillis="1000"
 	    removeAbandonedTimeout="30"
 	    removeAbandoned="true"
+	    closeMethod="close"
      />
      
       <Resource auth="Container"
     driverClassName="com.mysql.jdbc.Driver"
-    maxActive="40" maxldle="0"
+    maxActive="30" maxldle="0"
      name = "jdbc/central2"
      type="javax.sql.DataSource"
      url="jdbc:mysql://localhost:3306/central"

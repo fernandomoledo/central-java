@@ -74,7 +74,7 @@ public class LotacaoDAO {
 	}
 	
 	public boolean verificaLotacao(String nome) throws SQLException, ClassNotFoundException, NamingException{
-		if(nome.equals("SE«√O DE ATENDIMENTO"))
+		if(nome.equals("SE√á√ÉO DE ATENDIMENTO"))
 			sql = "select * from lotacao_lotacao where pai = (select pai from lotacao_lotacao where filha = ?)";
 		else
 			sql = "select * from lotacao_lotacao where pai = ?";
@@ -127,7 +127,7 @@ public class LotacaoDAO {
 	
 	public List<LotacaoLotacao> getLotacoesAmarradasPorPai(String nome) throws SQLException, ClassNotFoundException, NamingException{
 		List<LotacaoLotacao> lotacoes = new ArrayList<LotacaoLotacao>();
-		if(nome.equals("SE«√O DE ATENDIMENTO"))
+		if(nome.equals("SE√á√ÉO DE ATENDIMENTO"))
 			sql = "select id, pai, filha from lotacao_lotacao where pai = (select pai from lotacao_lotacao where filha= ?) and filha = ? union select id, pai , pai AS filha from lotacao_lotacao where filha = ? order by pai, filha";
 		else
 			sql = "select id, pai, filha from lotacao_lotacao where pai = ? order by pai, filha";
@@ -135,7 +135,7 @@ public class LotacaoDAO {
 		con = ConexaoMySQL.abreConexao();
 		PreparedStatement ps =con.prepareStatement(sql);
 		ps.setString(1, nome);
-		if(nome.equals("SE«√O DE ATENDIMENTO")){
+		if(nome.equals("SE√á√ÉO DE ATENDIMENTO")){
 				ps.setString(2, nome);
 				ps.setString(3, nome);
 		}

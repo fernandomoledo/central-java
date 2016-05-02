@@ -21,7 +21,7 @@ public class AdminMB {
 
 	
 	/*
-	 * Este método é utilizado para carregar todas as lotações existentes na tabela lotacoes do UNA para os campos autocomplete da tela admin.jsf
+	 * Este mÃ©todo Ã© utilizado para carregar todas as lotaÃ§Ãµes existentes na tabela lotacoes do UNA para os campos autocomplete da tela admin.jsf
 	 */
 	public List<String> completeLotacoes(String query) throws NamingException{
 		LotacaoDAO dao = new LotacaoDAO();
@@ -35,56 +35,56 @@ public class AdminMB {
 			return lotacoes;
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
-			Mensagens.setMessage(3, "Não foi possível obter a lista de lotações: "+e.getMessage());
+			Mensagens.setMessage(3, "NÃ£o foi possÃ­vel obter a lista de lotaÃ§Ãµes: "+e.getMessage());
 			return null;
 		}
 		
 	}
 	
 	/*
-	 * Este método é responsável por salvar a vinculação (amarração) entre uma categoria principal e outra secundária da tela admin.jsf
+	 * Este mÃ©todo Ã© responsÃ¡vel por salvar a vinculaÃ§Ã£o (amarraÃ§Ã£o) entre uma categoria principal e outra secundÃ¡ria da tela admin.jsf
 	 */
 	public void salvar() throws ClassNotFoundException, NamingException{
 		LotacaoDAO dao = new LotacaoDAO();
 		if(this.lotacao.getNome().equals(this.secundaria.getNome())){
-			Mensagens.setMessage(3, "A lotação principal não pode ser igual a lotação secundária");
+			Mensagens.setMessage(3, "A lotaÃ§Ã£o principal nÃ£o pode ser igual a lotaÃ§Ã£o secundÃ¡ria");
 		}else{
 			try {
 				if(dao.salvar(this.lotacao.getNome(), this.secundaria.getNome())){
 					this.lotacao = new Lotacao();
 					this.secundaria = new Lotacao();
-					Mensagens.setMessage(1, "Lotações amarradas com sucesso.");
+					Mensagens.setMessage(1, "LotaÃ§Ãµes amarradas com sucesso.");
 					
 				}else{
-					Mensagens.setMessage(3, "Não foi possível amarrar de lotações.");
+					Mensagens.setMessage(3, "NÃ£o foi possÃ­vel amarrar as lotaÃ§Ãµes.");
 				}
 			} catch (SQLException e) {
-				Mensagens.setMessage(3, "Não foi possível amarrar as lotações: "+e.getMessage());
+				Mensagens.setMessage(3, "NÃ£o foi possÃ­vel amarrar as lotaÃ§Ãµes: "+e.getMessage());
 				e.printStackTrace();
 			}
 		}
 	}
 	
 	/*
-	 * Este método é responsável por excluir uma determinada amarração entre lotações através de seu id
+	 * Este mÃ©todo Ã© responsÃ¡vel por excluir uma determinada amarraÃ§Ã£o entre lotaÃ§Ãµes atravÃ©s de seu id
 	 */
 	public void excluir(int id) throws ClassNotFoundException, NamingException{
 		LotacaoDAO dao = new LotacaoDAO();
 		try {
 			if(dao.excluir(id)){
-				Mensagens.setMessage(1, "Amarração excluída com sucesso.");
+				Mensagens.setMessage(1, "AmarraÃ§Ã£o excluÃ­da com sucesso.");
 				
 			}else{
-				Mensagens.setMessage(3, "Não foi possível excluir a amarração.");
+				Mensagens.setMessage(3, "NÃ£o foi possÃ­vel excluir a amarraÃ§Ã£o.");
 			}
 		} catch (SQLException e) {
-			Mensagens.setMessage(3, "Não foi possível excluir a amarração: "+e.getMessage());
+			Mensagens.setMessage(3, "NÃ£o foi possÃ­vel excluir a amarraÃ§Ã£o: "+e.getMessage());
 			e.printStackTrace();
 		}
 	}
 	
 	/*
-	 * Este  método é responsável por listar todas as lotações amarradas na tabela lotacao_lotacao do MySQL
+	 * Este  mÃ©todo Ã© responsÃ¡vel por listar todas as lotaÃ§Ãµes amarradas na tabela lotacao_lotacao do MySQL
 	 * 
 	 */
 	public List<LotacaoLotacao> getLotacoesAmarradas() throws ClassNotFoundException, NamingException{
@@ -92,7 +92,7 @@ public class AdminMB {
 		try {
 			return dao.getLotacoesAmarradas();
 		} catch (SQLException e) {
-			Mensagens.setMessage(3, "Não foi possível obter a lista de lotações amarradas: "+e.getMessage());
+			Mensagens.setMessage(3, "NÃ£o foi possÃ­vel obter a lista de lotaÃ§Ãµes amarradas: "+e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
