@@ -1,5 +1,10 @@
 var baseUrl = "http://10.15.216.153/central/";
 
+$("#exportar").click(function(e){
+	window.open('data:application/vnd.ms-excel,'+ $("#saida-dados").html());
+	e.preventDefault();
+});
+
 $("#teste-btn").click(function(){
 	if($("#teste-btn").val() == "e"){
 		$("#div-sidebar").hide("slow");

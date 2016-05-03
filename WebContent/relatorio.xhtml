@@ -1,0 +1,86 @@
+<ui:composition  template="template.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+<ui:define name="conteudo">
+ <!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título -->
+      <div class="row">
+        <div class="col-md-12 text-center">
+        	<div class="push3"></div>
+          <h1>Relatório para Indicador 18 <br />Índice de falhas nos sistemas em produção</h1>
+        </div>
+      </div>
+      <div class="push3"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <div class="col-md-2"></div>
+          <div class="col-md-8">
+        <p:messages autoUpdate="true" closable="true" id="mensagens" style="width:50%;margin:0 auto;" />
+          <h:form id="fcad">     
+		       
+		        <p:panelGrid columns="2" style="width:50%; margin:0 auto;" styleClass="pequena,grande">
+				        <h:outputLabel value="Mês:" />
+				        <p:inputText id="mes" value="#{relatorioMB.mes}" placeholder="Ex.: 07"/>
+				       	
+				         <h:outputLabel value="Ano:" />
+				        <p:inputText id="ano" value="#{relatorioMB.ano}" placeholder="Ex.: 2013" />
+				     	<h:outputLabel value="" />
+                <p:commandButton value="Gerar Relatório" onstart="mostra_box();" oncomplete="esconde_box();"
+                actionListener="#{relatorioMB.gerarRelatorio()}" update="@all" />
+                </p:panelGrid>
+             	 <div class="push2"></div>
+		            <div class="row text-center">
+		           		<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
+		            </div>
+           
+           </h:form>
+            
+        
+            <div class="push3"></div> 
+             <h:form id="tabela" rendered="#{relatorioMB.dados.mes ne null}">  
+             	<h4>Dados para #{relatorioMB.dados.mes}/#{relatorioMB.dados.ano}</h4>
+           		<table class="table table-striped" id="saida-dados">    
+           				<tr>
+           					<th>Contém um dos assuntos</th>
+           					<td>#{relatorioMB.dados.item1}</td>
+           				</tr>
+           				<tr>
+           					<th>Contém pelo menos uma das palavras-chave</th>
+           					<td>#{relatorioMB.dados.item2}</td>
+           				</tr>
+           				<tr>
+           					<th>Contém um dos assuntos e pelo menos uma das palavras-chave</th>
+           					<td>#{relatorioMB.dados.item3}</td>
+           				</tr>
+           				<tr>
+           					<th>Contém um dos assuntos mas não contém nenhuma das palavras-chave</th>
+           					<td>#{relatorioMB.dados.item4}</td>
+           				</tr>
+           				<tr>
+           					<th>Contém pelo menos uma das palavras-chave mas não contém nenhum dos assuntos</th>
+           					<td>#{relatorioMB.dados.item5}</td>
+           				</tr>
+           				<tr>
+           					<th>Chamados não repetidos</th>
+           					<td>#{relatorioMB.dados.item6}</td>
+           				</tr>
+           		</table>
+           		<!--  <button id="exportar">Exportar para XLS</button> -->            
+             </h:form>	 
+          </div>
+      	
+          <div class="col-md-2"></div>
+        </div>
+      </div>           
+    </div>
+    
+    <!-- Fim Conteúdo da página -->
+    </ui:define>
+</ui:composition>
