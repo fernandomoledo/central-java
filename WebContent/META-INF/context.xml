@@ -6,7 +6,7 @@
     	maxldle="1"
      name = "jdbc/central"
      type="javax.sql.DataSource"
-     url="jdbc:oracle:thin:@una:1521:orac"
+     url="jdbc:oracle:thin:@unanova:1521:orac"
      username="app_faq_cau"
      password="#centralcau#" 
      validationQuery="select 1 from dual"

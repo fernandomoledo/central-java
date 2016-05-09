@@ -1,11 +1,15 @@
 package controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.naming.NamingException;
+
+import org.apache.log4j.Logger;
 
 import util.Mensagens;
 import dao.CategoriaDAO;
@@ -18,6 +22,7 @@ public class CategoriaMB {
 	private Categoria categoria = new Categoria();
 	private Categoria pai = new Categoria();
 	private Categoria filha = new Categoria();
+	final static Logger logger = Logger.getLogger(CategoriaMB.class);
 	
 	/*
 	 * Este método é responsável por salvar/alterar uma categoria no banco central do MySQL
@@ -47,7 +52,10 @@ public class CategoriaMB {
 			
 		}catch(ClassNotFoundException | SQLException e){
 			Mensagens.setMessage(3, "Problemas ao salvar a categoria: "+e.getMessage());
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
+
 		}
 	}
 	
@@ -60,7 +68,9 @@ public class CategoriaMB {
 			this.categoria = dao.getCategoriaByID(id);
 		}catch(ClassNotFoundException | SQLException e){
 			Mensagens.setMessage(3, "Não foi possível buscar a categoria: "+e.getMessage());
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 		}
 	}
 	
@@ -77,7 +87,9 @@ public class CategoriaMB {
 			}
 		}catch(ClassNotFoundException | SQLException e){
 			Mensagens.setMessage(3, "Erro ao excluir a categoria. Verifique se a mesma não é pai de outra categoria.");
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 		}
 	}
 	
@@ -104,7 +116,9 @@ public class CategoriaMB {
 				}
 			}catch(ClassNotFoundException | SQLException e){
 				Mensagens.setMessage(3, "Problemas ao amarrar as categorias: "+e.getMessage());
-				e.printStackTrace();
+				StringWriter stack = new StringWriter();
+				e.printStackTrace(new PrintWriter(stack));
+				logger.error("ERRO: " + stack.toString());
 			}
 		}
 	}
@@ -119,7 +133,9 @@ public class CategoriaMB {
 			return dao.listarCompleto();
 		}catch(ClassNotFoundException | SQLException e){
 			Mensagens.setMessage(3, "Problemas ao listar categorias: "+e.getMessage());
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			return null;
 		}
 	}
@@ -133,7 +149,9 @@ public class CategoriaMB {
 			return dao.listar();
 		}catch(ClassNotFoundException | SQLException e){
 			Mensagens.setMessage(3, "Problemas ao listar categorias: "+e.getMessage());
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			return null;
 		}
 	}

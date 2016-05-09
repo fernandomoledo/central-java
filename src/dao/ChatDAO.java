@@ -44,7 +44,9 @@ public class ChatDAO {
 		}
 		
 		//Collections.reverse(chats);
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		
 		return chats;
 	}
@@ -68,7 +70,9 @@ public class ChatDAO {
 				chats.add(c);
 		}
 		
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		
 		return chats;
 	}
@@ -82,7 +86,9 @@ public class ChatDAO {
 		ps.setString(2, c.getUsuarioChat());
 		ps.setString(3, c.getSecao());
 		ps.execute();
-		con.close();
+		
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return true;
 	}
 }

@@ -24,15 +24,18 @@ public class CategoriaDAO {
 	String user = session.getAttribute("usuarioLogado").toString();
 	
 	public boolean salvar(Categoria c)  throws ClassNotFoundException, SQLException, NamingException{
-		sql = "INSERT INTO categoria(nome_categoria,termo_categoria, usuario) VALUES(?,?,?)";
 		Connection con = null;
+		sql = "INSERT INTO categoria(nome_categoria,termo_categoria, usuario) VALUES(?,?,?)";
+		
 		con = ConexaoMySQL.abreConexao();
 		PreparedStatement ps =con.prepareStatement(sql); 
 		ps.setString(1, c.getNomeCategoria());
 		ps.setString(2, c.getTermoCategoria());
 		ps.setString(3, user);
 		ps.execute();
-		con.close();
+		
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return true;
 	}
 	
@@ -46,7 +49,8 @@ public class CategoriaDAO {
 		ps.setString(3, user);
 		ps.setInt(4, c.getIdCategoria());
 		ps.executeUpdate();
-		con.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return true;
 	}
 	
@@ -59,7 +63,9 @@ public class CategoriaDAO {
 		ps.setInt(2, cp.getFilha().getIdCategoria());
 		ps.setString(3, user);
 		ps.execute();
-		con.close();
+		
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return true;
 	}
 	
@@ -74,7 +80,9 @@ public class CategoriaDAO {
 			ps.setInt(1, pai);
 			ps.setInt(2, filha);
 			ps.execute();
-			con.close();
+			
+			if(ps != null) ps.close();
+			if(con != null) con.close();
 			
 		}else{
 			sql = "DELETE FROM categoria WHERE id_categoria = ?";
@@ -83,7 +91,9 @@ public class CategoriaDAO {
 			ps =con.prepareStatement(sql);
 			ps.setInt(1, filha);
 			ps.execute();
-			con.close();
+			
+			if(ps != null) ps.close();
+			if(con != null) con.close();
 		}
 		return true;
 	}
@@ -103,7 +113,9 @@ public class CategoriaDAO {
 			c.setTermoCategoria(rs.getString("termo_categoria"));
 		}
 		System.out.println("CONSULTA getCategoriaByID()");
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return c;
 	}
 	
@@ -124,7 +136,9 @@ public class CategoriaDAO {
 			
 		}
 		System.out.println("CONSULTA getCategoriasVisitadas()");
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return c;
 	}
 	
@@ -143,7 +157,9 @@ public class CategoriaDAO {
 			categorias.add(c);
 		}
 		System.out.println("CONSULTA listar() em CategoriaDAO");
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return categorias;
 	}
 	
@@ -164,7 +180,9 @@ public class CategoriaDAO {
 			categorias.add(cp);
 		}
 		
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		
 		sql = "SELECT c.id_categoria as id_pai, c.nome_categoria as nome_pai, c.termo_categoria as termo_pai, c1.id_categoria, c1.nome_categoria, c1.termo_categoria FROM categoria c, categoria c1, categoria_pai cp WHERE c.id_categoria = cp.pai AND c1.id_categoria = cp.filha ";
 		con = null;
@@ -186,7 +204,9 @@ public class CategoriaDAO {
 			categorias.add(cp);
 		}
 		System.out.println("CONSULTA listarCompleto()");
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return categorias;
 	}
 	
@@ -221,7 +241,9 @@ public class CategoriaDAO {
 			categorias.add(cp);
 		}
 		System.out.println("CONSULTA listarCategorias()");
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return categorias;
 	}
 	
@@ -237,7 +259,9 @@ public class CategoriaDAO {
 			contador++;
 		}
 		System.out.println("CONSULTA ehPai()");
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		if(contador > 0) return true;
 		return false;
 		

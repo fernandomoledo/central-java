@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +9,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.naming.NamingException;
+
+import org.apache.log4j.Logger;
 
 import util.Mensagens;
 import dao.LotacaoDAO;
@@ -18,7 +22,7 @@ import model.LotacaoLotacao;
 public class AdminMB {
 	private Lotacao lotacao = new Lotacao();
 	private Lotacao secundaria = new Lotacao();
-
+	final static Logger logger = Logger.getLogger(AdminMB.class);
 	
 	/*
 	 * Este método é utilizado para carregar todas as lotações existentes na tabela lotacoes do UNA para os campos autocomplete da tela admin.jsf
@@ -34,7 +38,9 @@ public class AdminMB {
 			}
 			return lotacoes;
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			Mensagens.setMessage(3, "Não foi possível obter a lista de lotações: "+e.getMessage());
 			return null;
 		}
@@ -59,8 +65,10 @@ public class AdminMB {
 					Mensagens.setMessage(3, "Não foi possível amarrar as lotações.");
 				}
 			} catch (SQLException e) {
+				StringWriter stack = new StringWriter();
+				e.printStackTrace(new PrintWriter(stack));
+				logger.error("ERRO: " + stack.toString());
 				Mensagens.setMessage(3, "Não foi possível amarrar as lotações: "+e.getMessage());
-				e.printStackTrace();
 			}
 		}
 	}
@@ -78,8 +86,10 @@ public class AdminMB {
 				Mensagens.setMessage(3, "Não foi possível excluir a amarração.");
 			}
 		} catch (SQLException e) {
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			Mensagens.setMessage(3, "Não foi possível excluir a amarração: "+e.getMessage());
-			e.printStackTrace();
 		}
 	}
 	
@@ -92,8 +102,10 @@ public class AdminMB {
 		try {
 			return dao.getLotacoesAmarradas();
 		} catch (SQLException e) {
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			Mensagens.setMessage(3, "Não foi possível obter a lista de lotações amarradas: "+e.getMessage());
-			e.printStackTrace();
 			return null;
 		}
 	}

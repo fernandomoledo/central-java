@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -23,6 +24,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -68,6 +70,7 @@ public class BaseDeConhecimentoMB {
 	private String termo="";
 	private String[] termos;
 	private List<ResultadosWiki> wiki;
+	final static Logger logger = Logger.getLogger(BaseDeConhecimentoMB.class);
 	
 	/*
 	 * O método construtor inicializa a árvore e verifica se há termo de busca para disparar a pesquisa
@@ -105,7 +108,9 @@ public class BaseDeConhecimentoMB {
 		 try {
 			cp = dao.listarCategorias(pai);
 		 }catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+				StringWriter stack = new StringWriter();
+				e.printStackTrace(new PrintWriter(stack));
+				logger.error("ERRO: " + stack.toString());
 		 }
 		 
 		 for(int i = 0; i < cp.size(); i++){
@@ -120,7 +125,7 @@ public class BaseDeConhecimentoMB {
 	 * Este método captura o nó da árvore selecionado e verifica se ele é pai ou não. Caso não seja, dispara a busca de chamados
 	 */
 	public void getSelecao() throws ClassNotFoundException, SQLException, NamingException{
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Filhos do n�: "+this.select.getChildCount(),null));
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Filhos do nó: "+this.select.getChildCount(),null));
 		chamados = new ArrayList<Chamado>();
 		chamadosFiltrados = null;
 		selecionado = null;
@@ -207,7 +212,9 @@ public class BaseDeConhecimentoMB {
 			this.mostraDetalhe = true;
 		} catch (ClassNotFoundException | SQLException e) {
 			Mensagens.setMessage(3, "Não foi possível obter o detalhe do chamado. "+e.getMessage());
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 		} 
 	}
 	
@@ -334,7 +341,9 @@ public class BaseDeConhecimentoMB {
 			    }
 			    
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 		}
 		
 		if(this.chamados.size() > 0) this.mostra = true;

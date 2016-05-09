@@ -36,7 +36,9 @@ public class PortalDAO {
 				p.setLotacao(lotacaoDao.getLotacaoById(rs.getInt("lotacao")));
 			}
 		
-		con.close();
+			if(rs != null) rs.close();
+			if(ps != null) ps.close();
+			if(con != null) con.close();
 		
 		return p;
 	}
@@ -49,7 +51,9 @@ public class PortalDAO {
 		ps.setString(1, user);
 		ps.setString(2, senha);
 		ps.execute();
-		con.close();
+		
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return true;
 	}
 	
@@ -66,7 +70,9 @@ public class PortalDAO {
 			achou++;
 		}
 		
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		if(achou > 0) return true;  return false;
 	}
 	
@@ -82,7 +88,9 @@ public class PortalDAO {
 			achou++;
 		}
 		
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		if(achou > 0) return true;  return false;
 	}
 	
@@ -94,7 +102,9 @@ public class PortalDAO {
 		ps.setString(1, senha);
 		ps.setString(2, user);
 		ps.execute();
-		con.close();
+
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return true;
 	}
 	

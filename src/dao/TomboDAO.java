@@ -32,7 +32,9 @@ public class TomboDAO {
 			tombos.add(t);
 		}
 		System.out.println("CONSULTA getTombosPorChamado()");
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return tombos;
 	}
 }

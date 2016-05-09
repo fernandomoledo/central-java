@@ -89,3 +89,9 @@ table tr td{
 .track3.dragging .handle3 {
     width: 10px;
 }
+
+.alert-chat {
+    color: #000000;
+    background-color: #BDBDBD !important;
+    border-color: #BDBDBD !important;
+}

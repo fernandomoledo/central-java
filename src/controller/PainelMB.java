@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 import util.Mensagens;
@@ -32,6 +35,7 @@ public class PainelMB {
 	private Lotacao lotacao = new Lotacao();
 	private int periodo;
 	private boolean minhaLotacao = false;
+	final static Logger logger = Logger.getLogger(PainelMB.class);
 	
 	/*
 	 * Este método verifica a lotação em que o usuário encontra-se lotado
@@ -52,7 +56,9 @@ public class PainelMB {
 			return chamadosToDo;
 		} catch (ClassNotFoundException | SQLException e) {
 			Mensagens.setMessage(3, "Não foi possível obter a lista de chamados a fazer...");
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			return null;
 		}
 	}
@@ -69,7 +75,9 @@ public class PainelMB {
 			return chamadosDoing;
 		} catch (ClassNotFoundException | SQLException e) {
 			Mensagens.setMessage(3, "Não foi possível obter a lista de chamados em andamento...");
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			return null;
 		}
 	}
@@ -86,7 +94,9 @@ public class PainelMB {
 			return chamadosDone;
 		} catch (ClassNotFoundException | SQLException e) {
 			Mensagens.setMessage(3, "Não foi possível obter a lista de chamados concluídos...");
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			return null;
 		}
 	}
@@ -102,7 +112,9 @@ public class PainelMB {
 			return chats;
 		}catch(ClassNotFoundException | SQLException e){
 			Mensagens.setMessage(3, "Não foi possível obter os avisos do chat...");
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			return null;
 		}
 	}
@@ -119,7 +131,9 @@ public class PainelMB {
 			return chats;
 		}catch(ClassNotFoundException | SQLException e){
 			Mensagens.setMessage(3, "Não foi possível obter os avisos do chat...");
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			return null;
 		}
 	}
@@ -145,7 +159,9 @@ public class PainelMB {
 				}
 			}catch(ClassNotFoundException | SQLException e){
 				Mensagens.setMessage(3, "Não foi possível enviar o aviso ao chat...");
-				e.printStackTrace();
+				StringWriter stack = new StringWriter();
+				e.printStackTrace(new PrintWriter(stack));
+				logger.error("ERRO: " + stack.toString());
 			
 			}
 			
@@ -162,7 +178,9 @@ public class PainelMB {
 			return dao.getLotacoesAmarradasPorPai(nome);
 		} catch (SQLException e) {
 			Mensagens.setMessage(3, "Não foi possível obter a lista de lotações amarradas por pai: "+e.getMessage());
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			return null;
 		}
 	}

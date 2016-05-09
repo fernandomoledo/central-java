@@ -56,7 +56,7 @@
            rowKey="#{chamado.id}"
            
            >
-           <p:ajax event="rowSelect" listener="#{baseDeConhecimentoMB.getDetalhe()}" update=":detalhe" />
+           <p:ajax event="rowSelect" listener="#{baseDeConhecimentoMB.getDetalhe()}" update=":detalhe" oncomplete="document.getElementById('tbl').scrollTop = 0;" />
           
 				<p:column headerText="Chamados encontrados para #{baseDeConhecimentoMB.select}/#{baseDeConhecimentoMB.termoBusca}#{baseDeConhecimentoMB.select.parent}:" >
 				

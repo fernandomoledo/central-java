@@ -30,7 +30,9 @@ public class LotacaoDAO {
 				l.setNome(rs.getString("NOME"));
 			}
 			System.out.println("CONSULTA getLotacaoByID()");
-			con.close();
+			if(rs != null) rs.close();
+			if(ps != null) ps.close();
+			if(con != null) con.close();
 			
 		return l;
 	}
@@ -50,7 +52,9 @@ public class LotacaoDAO {
 				l.setNome(rs.getString("NOME"));
 			}
 			System.out.println("CONSULTA getLotacaoByID()");
-			con.close();
+			if(rs != null) rs.close();
+			if(ps != null) ps.close();
+			if(con != null) con.close();
 			
 		return l;
 	}
@@ -68,7 +72,9 @@ public class LotacaoDAO {
 			l.setNome(rs.getString("nome"));
 			lotacoes.add(l);
 		}
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return lotacoes;
 		
 	}
@@ -87,7 +93,9 @@ public class LotacaoDAO {
 		while(rs.next()){
 			qtde++;
 		}
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		if(qtde >0) return true; return false;
 	}
 	
@@ -99,7 +107,9 @@ public class LotacaoDAO {
 		ps.setString(1, lprin);
 		ps.setString(2, lsec);
 		ps.execute();
-		con.close();
+
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return true;
 	}
 	
@@ -121,7 +131,9 @@ public class LotacaoDAO {
 			ll.setFilha(l1);
 			lotacoes.add(ll);
 		}
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return lotacoes;
 	}
 	
@@ -151,7 +163,9 @@ public class LotacaoDAO {
 			ll.setFilha(l1);
 			lotacoes.add(ll);
 		}
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return lotacoes;
 	}
 	public boolean excluir(int id) throws SQLException, ClassNotFoundException, NamingException{
@@ -161,7 +175,9 @@ public class LotacaoDAO {
 		PreparedStatement ps =con.prepareStatement(sql);
 		ps.setInt(1, id);
 		ps.execute();
-		con.close();
+	
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return true;
 	}
 }

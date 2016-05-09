@@ -47,7 +47,9 @@ private String sql;
 				andamentos.add(a);
 			}
 		
-		con.close();
+			if(rs != null) rs.close();
+			if(ps != null) ps.close();
+			if(con != null) con.close();
 		
 		return andamentos;
 	}
@@ -80,7 +82,9 @@ private String sql;
 				andamentos.add(a);
 			}
 		
-		 con.close();
+			if(rs != null) rs.close();
+			if(ps != null) ps.close();
+			if(con != null) con.close();
 		
 		return andamentos;
 	}
@@ -113,7 +117,9 @@ private String sql;
 				andamentos.add(a);
 			}
 		
-		con.close();
+			if(rs != null) rs.close();
+			if(ps != null) ps.close();
+			if(con != null) con.close();
 		
 		return andamentos;
 	}
@@ -140,7 +146,9 @@ private String sql;
 			chamados.add(c);
 		}
 		System.out.println("CONSULTA getChamadosComTombo()");
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return chamados;
 		
 	}
@@ -165,7 +173,9 @@ private String sql;
 			chamados.add(c);
 		}
 		System.out.println("CONSULTA getChamadosSemTombo()");
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return chamados;
 		
 	}
@@ -194,7 +204,9 @@ private String sql;
 			
 		}
 		System.out.println("CONSULTA getInfoChamado()");
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return andamento;
 	}
 	
@@ -214,7 +226,6 @@ private String sql;
           " c.lotacaosolicitante = l.id) ORDER BY id DESC";
 	 	Connection con = null;
 		con = ConexaoOracle.abreConexao();
-		System.out.println("termo camila " + termo + " / " + termo.replace("&", " ").replace("|", " "));
 		PreparedStatement ps = con.prepareStatement(sql);
 	 	ps.setString(1, StringUtils.isNumeric(termo) ? termo : "");
 	 	ps.setString(2, "%"+termo+"%");
@@ -235,7 +246,9 @@ private String sql;
 			chamados.add(c);
 			
 		}
-		con.close();
+		if(rs != null) rs.close();
+		if(ps != null) ps.close();
+		if(con != null) con.close();
 		return chamados;
 	}
 }

@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.SQLException;
 
 import javax.faces.bean.ManagedBean;
@@ -8,6 +10,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
 
 import util.ConexaoOracle;
 import util.Mensagens;
@@ -25,6 +29,7 @@ public class PortalMB {
 	private String senhaAtual;
 	private String termo;
 	private Portal p;
+	final static Logger logger = Logger.getLogger(PortalMB.class);
 	//armazena a lotação verdadeira do usuário, pois se ele for coordenador, pode alterar sua lotação para ver os chamados
 	private Lotacao original = new Lotacao();
 	/*
@@ -54,7 +59,9 @@ public class PortalMB {
 		} catch (ClassNotFoundException | SQLException e) {
 			
 			Mensagens.setMessage(3, "Erro no banco de dados UNA: "+e.getMessage());
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 		}
 		return null;
 		
@@ -88,6 +95,10 @@ public class PortalMB {
 		PortalDAO pdao = new PortalDAO();
 		try {
 			if(pdao.getLogin(this.username) != null){
+				if(pdao.verificaUsuarioMySQL(this.username)){
+					Mensagens.setMessage(3, "O usuário "+this.username+" já está cadastrado.");
+					return null;
+				}
 				if(this.senha.equals(this.confSenha)){
 					if(pdao.insereUsuarioMySQL(this.username, this.senha)){
 						Mensagens.setMessage(1, "Usuário ativado com sucesso!");
@@ -106,7 +117,9 @@ public class PortalMB {
 				return null;
 			}
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			Mensagens.setMessage(3, "Erro no banco de dados. "+e.getMessage());
 			return "index.jsf";
 		}
@@ -128,7 +141,21 @@ public class PortalMB {
 				Mensagens.setMessage(3, "A senha atual está incorreta!");
 			}
 		}catch(Exception e){
+			StringWriter stack = new StringWriter();
+			e.printStackTrace(new PrintWriter(stack));
+			logger.error("ERRO: " + stack.toString());
 			Mensagens.setMessage(3, "Erro ao alterar a senha: "+e.getMessage());
+		}
+	}
+	
+	public boolean isAdm(){
+		switch(this.username){
+			case "felipecury": return true;
+			case "juliomoreno": return true;
+			case "luizmoledo": return true;
+			case "marciozuchini": return true;
+			case "rleme": return true;
+			default: return false;
 		}
 	}
 	/*
