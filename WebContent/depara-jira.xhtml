@@ -1,0 +1,103 @@
+<ui:composition  template="template.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+<ui:define name="conteudo">
+ <!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título -->
+       <div class="push3"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Vinculação De/Para - JIRA</h1>
+        </div>
+      </div>
+      <div class="row">
+      	<div class="col-md-12 text-center">
+      	    <h:link outcome="modulo-jira" value="Módulos JIRA" rendered="#{portalMB.original.id == 641}" /> | 
+	        <h:link outcome="componente-jira" value="Componentes JIRA" rendered="#{portalMB.original.id == 641}" /> | 
+	        <h:link outcome="depara-jira" value="Vinculação JIRA" rendered="#{portalMB.original.id == 641}" />
+	   </div>
+	       <div class="push3"></div>
+        <div class="col-md-12 text-center">
+          <div class="col-md-2"></div>
+          <div class="col-md-8">
+            <p:button value="Nova vinculação" icon="ui-icon-plus" outcome="depara-jira" />
+          	   <div class="push3"></div>
+        <p:messages autoUpdate="true" closable="true" id="mensagens"  />
+          <h:form id="fcad">  
+         
+          		<h:inputHidden id="id_depara" value="#{jiraMB.deParaJIRA.id}" />
+		        <p:panelGrid columns="2" style="width:100%" styleClass="pequena,grande">
+				        <h:outputLabel value="Termo do chamado:" />
+				        <h:inputText id="termo" value="#{jiraMB.deParaJIRA.palavraChave}" pt:placeholder="Digite o termo do chamado"
+				        required="true" requiredMessage="- O termo do chamado é obrigatório" style="width:100%"/>
+				         <h:outputLabel value="Módulo:" />
+				         <h:selectOneMenu value="#{jiraMB.moduloJira.id}" required="true" requiredMessage="- O módulo JIRA é obrigatório">
+				         	<f:selectItem itemLabel="-- Escolha o módulo --" itemValue="" />
+				         	<f:selectItems value="#{jiraMB.listarModulos()}" var="m"  itemLabel="#{m.label}" itemValue="#{m.id}" />
+				         </h:selectOneMenu>
+				         <h:outputLabel value="Componente" />
+				         <h:selectOneMenu value="#{jiraMB.componenteJIRA.id}" required="true" requiredMessage="- O componente JIRA é obrigatório">
+				         	<f:selectItem itemLabel="-- Escolha o componente --" itemValue="" />
+				         	<f:selectItems value="#{jiraMB.listarComponentes()}" var="com"  itemLabel="#{com.componente}" itemValue="#{com.id}" />
+				         </h:selectOneMenu>
+				     	<h:outputLabel value="" />
+                <p:commandButton value="Salvar" actionListener="#{jiraMB.salvarDePara()}" update="@form :tabela" />
+                </p:panelGrid>            	
+           </h:form>
+            <div class="push3"></div>     
+             <h:form id="tabela">       
+            <p:dataTable var="dp" value="#{jiraMB.listarDePara()}" emptyMessage="Não existem vinculações cadastradas" rowHover="true"
+            rows="5" 
+            paginator="true"
+            widgetVar="jira-table"
+            paginatorPosition="bottom"
+            filteredValue="#{jiraMB.filteredDeParaJIRA}"
+             currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
+           rowsPerPageTemplate="5,10,20,30"
+           >
+	           <f:facet name="header">
+	            <p:outputPanel>
+	                <h:outputText value="Buscar em todos os campos: " />
+	                <p:inputText id="globalFilter" onkeyup="PF('jira-table').filter()" style="max-width:220px" placeholder="Digite o termo"/>
+	            </p:outputPanel>
+	        </f:facet>
+              	<p:column headerText="Termo" style="width:30%" filterBy="#{dp.palavraChave}" filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{dp.palavraChave}" />
+              	</p:column>
+			     <p:column headerText="Módulo" style="width:30%" filterBy="#{dp.modulo.label}" filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{dp.modulo.label}" />
+              	</p:column>
+              	  <p:column headerText="Componente" style="width:25%" filterBy="#{dp.componente.componente}" filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{dp.componente.componente}" />
+              	</p:column>
+			  <p:column headerText="Opções" priority="3">
+			  	<p:commandButton icon="ui-icon-gear" 
+			       title="" 
+				       	update="@all" actionListener="#{jiraMB.buscarDePara(dp.id)}"/>
+				       	
+			       <p:commandButton icon="ui-icon-trash" 
+			       title="" 
+				       	update="@form" actionListener="#{jiraMB.excluirDePara(dp.id)}" 
+				       		onclick="return confirm('Deseja realmente excluir a vinculação selecionada?');" />
+				       
+		      </p:column>
+            </p:dataTable>    
+             </h:form>	                
+          </div>
+      	
+          <div class="col-md-2"></div>
+        </div>
+      </div>           
+    </div>
+    
+    <!-- Fim Conteúdo da página -->
+    </ui:define>
+</ui:composition>

@@ -11,6 +11,7 @@
  <!-- Conteúdo da página -->
     <div class="container-fluid">
       <!-- Título -->
+       <div class="push3"></div>
       <div class="row">
         <div class="col-md-12 text-center">
           <h1>Categorias</h1>
@@ -90,7 +91,7 @@
 		       	 title="Editar a categoria #{categoria.filha.nomeCategoria}" update=":fcad" oncomplete="parent.scrollTo(0,0);"  />
 		      
 			       	<p:commandButton icon="ui-icon-trash" actionListener="#{categoriaMB.excluir(categoria.pai.idCategoria, categoria.filha.idCategoria)}" title="Excluir a categoria #{categoria.filha.nomeCategoria}" 
-			       	update="fcad:mensagens" onclick="return confirm('Deseja realmente excluir a categoria #{categoria.filha.nomeCategoria}?');"/>
+			       	update=":fcad:mensagens" onclick="return confirm('Deseja realmente excluir a categoria #{categoria.filha.nomeCategoria}?');"/>
 			       		
 		       </h:column>
             </h:dataTable>    

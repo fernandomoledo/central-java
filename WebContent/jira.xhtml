@@ -12,111 +12,89 @@
 	
 	<!-- Conteúdo da página -->
     <div class="container-fluid">
-     <div class="push3"></div>
       <!-- Título da Página -->
+       <div class="push3"></div>
       <div class="row">
         <div class="col-md-12 text-center">
-          <h1>Árvore do Conhecimento</h1>
+          <h1>Criação de issues - JIRA</h1>
         </div>
       </div>
-      <!-- Pula 30px -->
-      <div class="push3"></div>
+      <!-- Pula 20px -->
+      <div class="push2"></div>
       <div class="row">
+      	<div class="col-md-12 text-center">
+      	    <h:link outcome="modulo-jira" value="Módulos JIRA" rendered="#{portalMB.original.id == 641}" /> | 
+	        <h:link outcome="componente-jira" value="Componentes JIRA" rendered="#{portalMB.original.id == 641}" /> | 
+	        <h:link outcome="depara-jira" value="Vinculação JIRA" rendered="#{portalMB.original.id == 641}" />
+	   </div>
+	   	<div class="push3"></div>
         <!-- Container dos painéis -->
         <div class="col-md-12">
           <!-- Painel de busca e categorias -->
-          <div class="col-md-5 separator" id="div-sidebar" style="max-height:600px; overflow:auto;">             	
-			
-            <div class="push1"></div>
-            <h4>Navegue pelas categorias:</h4>
-            <p style="font-width:.4em; color:#FF0000">Clique nas setas</p>
-           <h:form id="arvore">
-
-	<p:tree value="#{baseDeConhecimentoMB.root}" var="node" selection="#{baseDeConhecimentoMB.select}" 
-	selectionMode="single" animate="true">
-	<p:ajax event="select" listener="#{baseDeConhecimentoMB.getSelecao()}" update=":texto :detalhe" onstart="mostra_box();" oncomplete="esconde_box();"  />
-		 <p:treeNode>
-            <p:commandLink value="#{node}" ajax="true" /> 
-        </p:treeNode>
-	</p:tree>
-</h:form>
-            <br /><br />
-            <h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
+          <div class="col-md-5 separator" id="div-sidebar" style="max-height:630px; overflow:auto;">             	
             <div class="push1"></div>
       		<h:form id="texto">
-      		<h:outputText value="Não foram encontrados chamados para #{baseDeConhecimentoMB.select}/#{baseDeConhecimentoMB.termoBusca}#{baseDeConhecimentoMB.select.parent}" rendered="#{((baseDeConhecimentoMB.select.toString() == '' || baseDeConhecimentoMB.termoBusca != '') &amp;&amp; (not baseDeConhecimentoMB.mostra))}" />
-           <p:dataTable var="chamado" value="#{baseDeConhecimentoMB.chamados}"  widgetVar="textoTable" rendered="#{baseDeConhecimentoMB.mostra}"
-           emptyMessage="Não foram encontrados chamados com os parâmetros informados..." rows="5" 
+      		<p:button outcome="jira" icon="ui-icon-refresh" value="Atualizar" />
+      		<br /><br />
+      			 <p:dataTable var="x" value="#{jiraMB.chamadosJira}"  widgetVar="textoTable"
+           emptyMessage="Não foram encontrados chamados para o Núcleo PJE" rows="10" 
             paginator="true"
             paginatorPosition="bottom"
            paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
            currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
            rowsPerPageTemplate="5,10,20"
            selectionMode="single"
-           selection="#{baseDeConhecimentoMB.selecionado}"
-           rowKey="#{chamado.id}"
+           selection="#{jiraMB.selecionado}"
+           rowKey="#{x.chamado.id}"
+           rendered="#{fn:length(jiraMB.chamadosJira) gt 0}"
            
            >
-           <p:ajax event="rowSelect" listener="#{baseDeConhecimentoMB.getDetalhe()}" update=":detalhe" oncomplete="document.getElementById('tbl').scrollTop = 0;" />
+           <p:ajax event="rowSelect" listener="#{jiraMB.getDetalhe()}" update=":detalhe" oncomplete="document.getElementById('tbl').scrollTop = 0;" />
           
-				<p:column headerText="Chamados encontrados para #{baseDeConhecimentoMB.select}/#{baseDeConhecimentoMB.termoBusca}#{baseDeConhecimentoMB.select.parent}:" >
+				<p:column headerText="Chamados encontrados para o Núcleo PJE:" >
 				
-					<b>#{chamado.numero}</b><br />
-					#{chamado.lotacaoSolicitante.nome}
+					<b>Chamado #{x.chamado.numero}/<h:outputText value="#{x.dtAndamento}">
+	            		<f:convertDateTime dateStyle="date" pattern="yyyy" /></h:outputText></b><br />
+					<b>Assunto:</b> #{x.texto.substring(0,50)}...
 					
 				</p:column>
 			</p:dataTable> 
-			<br /><br />
-		
-			<p:dataTable var="wiki" value="#{baseDeConhecimentoMB.wiki}"  widgetVar="wikiTable" rendered="#{baseDeConhecimentoMB.mostrawiki}"
-           emptyMessage="Não foram encontrados artigos na Wiki com o termo informado" rows="5" 
-            paginator="true"
-            paginatorPosition="bottom"
-           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
-           currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
-           rowsPerPageTemplate="5,10,20" rowHover="true"   >
-          
-          
-				<p:column headerText="Artigos encontrados na Wiki para '#{baseDeConhecimentoMB.termoBusca}':" >
-				
-					<h:outputLink value="#{wiki.url}" target="_blank" title="Clique para abrir na Wiki" > 
-					<b>#{wiki.titulo}</b><br />
-					#{wiki.url}<br />
-					<small><b><i>#{wiki.encontradoEm}</i></b></small>
-					</h:outputLink>
-				</p:column>
-			</p:dataTable> 
-</h:form>
-             
+			<h:outputText value="Não existem chamados do Núcleo PJE abertos no momento" rendered="#{fn:length(jiraMB.chamadosJira) eq 0}" />
+      	 	</h:form>
           </div>
           <button id="teste-btn" class="btn btn-primary" style="font-weight:bold;border:none;" value="e" title="Esconder a lista de chamados"> &lt;</button>
 
           <!-- Painel de chamados -->
           <div class="col-md-7" id="tbl" style="max-height:768px; overflow:auto;">
          <h:form id="detalhe">
-         <p:panelGrid rendered="#{baseDeConhecimentoMB.mostraDetalhe}">
+       
+         <p:panelGrid rendered="#{jiraMB.mostrar}">
             	<h3>Chamado 
-	            	#{baseDeConhecimentoMB.chamadoDetalhe.chamado.numero}/<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.dtAndamento}">
+	            	#{jiraMB.chamadoDetalhe.chamado.numero}/<h:outputText value="#{jiraMB.chamadoDetalhe.dtAndamento}">
 	            		<f:convertDateTime dateStyle="date" pattern="yyyy" />
 	            	</h:outputText>
             	</h3>
             	<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique aqui para abrir o chamado na Central">
 	            			<f:param name="acao" value="editarChamado" />
-	            			<f:param name="idChamado" value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.id}" />Ver na central de chamados</h:outputLink>
+	            			<f:param name="idChamado" value="#{jiraMB.chamadoDetalhe.chamado.id}" />Ver na central de chamados</h:outputLink>
+	            			|
+	            			<h:outputLink value="detalhe-jira.jsf" target="_blank" title="Clique aqui para abrir uma Issue no JIRA">
+	            			<f:param name="idChamado" value="#{jiraMB.chamadoDetalhe.chamado.id}" />Criar issue no JIRA</h:outputLink>
+	            			
             	<div class="push1"></div>
             <h4>Data de Abertura</h4>
             <p>
-            <h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.dtAndamento}">
+            <h:outputText value="#{jiraMB.chamadoDetalhe.dtAndamento}">
 	            		<f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy HH:mm" />
 	            </h:outputText>
             </p>
             <div class="push05"></div>
             <h4>Lotação</h4>
-            <p><h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.lotacaoSolicitante.nome}" escape="false" /></p>
+            <p><h:outputText value="#{jiraMB.chamadoDetalhe.chamado.lotacaoSolicitante.nome}" escape="false" /></p>
             <div class="push05"></div>
             <h4>Problema relatado</h4>
             
-            	<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" style="white-space:pre-wrap;" />
+            	<h:outputText value="#{jiraMB.chamadoDetalhe.texto.toUpperCase()}" escape="false" style="white-space:pre-wrap;" />
            
             <div class="push05"></div>
             <h4>Equipamentos</h4>
@@ -127,7 +105,7 @@
                 </tr>
               </thead>
               <tbody>
-              <ui:repeat var="tombo" value="#{baseDeConhecimentoMB.tombosDetalhe}">
+              <ui:repeat var="tombo" value="#{jiraMB.tombosDetalhe}">
                 <tr>
                   <td>#{tombo.nroTombo}</td>
                   <td>#{tombo.serie}</td>
@@ -145,9 +123,9 @@
             </table>
             <h4>Último atendimento</h4>
             <p>
-            <h:outputText value="#{baseDeConhecimentoMB.ultimoAndamento.dtAndamento}">
+            <h:outputText value="#{jiraMB.ultimoAndamento.dtAndamento}">
                   <f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy HH:mm" />
-            </h:outputText> - <h:outputText value="#{baseDeConhecimentoMB.ultimoAndamento.usuario.nome}" escape="false" /></p><div class="push05"></div>
+            </h:outputText> - <h:outputText value="#{jiraMB.ultimoAndamento.usuario.nome}" escape="false" /></p><div class="push05"></div>
             <h4>Andamentos do Chamado</h4>
             <table class="table table-striped">
               <thead>
@@ -156,7 +134,7 @@
                 </tr>
               </thead>
               <tbody>
-              <ui:repeat var="andamento" value="#{baseDeConhecimentoMB.andamentosDetalhe}">
+              <ui:repeat var="andamento" value="#{jiraMB.andamentosDetalhe}">
                 <tr>
                  <td>
                   	<h:outputText value="#{andamento.dtAndamento}">
@@ -165,7 +143,7 @@
            		</td>
            		<td>#{andamento.classificacao}</td>
            		<td><h:outputText value="#{andamento.usuario.nome}" escape="false" style="white-space:pre-wrap;" /></td>
-           		<td><h:outputText value="#{andamento.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" style="white-space:pre-wrap;" /></td>
+           		<td><h:outputText value="#{andamento.texto.toUpperCase()}" escape="false" style="white-space:pre-wrap;" /></td>
                 </tr>
                </ui:repeat>                           
               </tbody>

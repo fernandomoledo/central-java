@@ -22,6 +22,7 @@ public class ControleDeAcesso implements Filter {
 		
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain fc) throws IOException, ServletException {
@@ -33,11 +34,13 @@ public class ControleDeAcesso implements Filter {
 				!req.getRequestURI().endsWith("/index.jsf") &&
 				!req.getRequestURI().endsWith("/primeiroacesso.jsf") &&
 				!req.getRequestURI().contains("/javax.faces.resource/")){
+			System.out.println("Role 1");
 					res.sendRedirect(req.getContextPath()+"/index.jsf");
 		}else if((session.getAttribute("usuarioLogado") != null &&
 				req.getRequestURI().endsWith("/index.jsf")) ||
 				(session.getAttribute("usuarioLogado") != null &&
 						req.getRequestURI().endsWith("/"))){
+			System.out.println("Role 2");
 					res.sendRedirect(req.getContextPath()+"/painel.jsf");
 		}else{
 			fc.doFilter(request, response);

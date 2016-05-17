@@ -1,0 +1,82 @@
+<ui:composition  template="template.xhtml" 
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"> 
+<ui:define name="conteudo">
+	
+	<!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título da Página -->
+       <div class="push3"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Criação de issues - JIRA - Preparação da Issue</h1>
+        </div>
+      </div>
+      <!-- Pula 20px -->
+      <div class="push2"></div>
+      <div class="row">
+      	<div class="col-md-12 text-center">
+      	    <h:link outcome="modulo-jira" value="Módulos JIRA" rendered="#{portalMB.original.id == 641}" target="blank" /> | 
+	        <h:link outcome="componente-jira" value="Componentes JIRA" rendered="#{portalMB.original.id == 641}" target="blank" /> | 
+	        <h:link outcome="depara-jira" value="Vinculação JIRA" rendered="#{portalMB.original.id == 641}" target="blank" />
+	   </div>
+        <!-- Container dos painéis -->
+        <div class="col-md-12">
+          	<h:form>
+          	<p:messages autoUpdate="true" closable="true" id="mensagens"  />
+          	<div class="push2"></div>
+				<p:panelGrid columns="2">
+   						<b>Projeto:</b>
+   						<h:outputText value="#{jiraMB.issue.nome}" />
+   						<b>Tipo do item:</b>
+   						<h:outputText value="#{jiraMB.issue.tipoErro}" />
+   						<b>Resumo:</b>
+   						<h:outputText value="#{jiraMB.issue.resumo}" />
+   						<b>Versões afetadas:</b>
+   						<h:outputText value="#{jiraMB.issue.versao}" />
+   						<b>Subsistema:</b>
+   						<h:outputText value="#{jiraMB.issue.subsistema}" />
+   						<b>Módulo:</b> 
+   						<h:selectOneMenu id="modulo" value="#{jiraMB.issue.modulo}" required="true" requiredMessage="- O módulo é obrigatório" >
+   							<f:selectItem itemLabel="-- Nenhum --" itemValue="#{null}" />
+   							<f:selectItems value="#{jiraMB.listarModulos()}" var="jira" itemLabel="#{jira.label}" itemValue="#{jira.value}"/>
+   						</h:selectOneMenu>   						
+   						<b>Componente:</b> 
+   						<h:selectOneMenu id="componente" value="#{jiraMB.issue.componente}" required="true" requiredMessage="- O componente é obrigatório"  >
+   							<f:selectItem itemLabel="-- Nenhum --" itemValue="#{null}" />
+   							<f:selectItems value="#{jiraMB.listarComponentes()}" var="jira2" itemLabel="#{jira2.componente}" itemValue="#{jira2.componente}"/>
+   						</h:selectOneMenu>
+   						<b>Ambiente:</b>
+   						<h:outputText value="#{jiraMB.issue.ambiente}" />
+   						<b>Informações do usuário:</b>
+   						<h:outputText value="#{jiraMB.issue.servidor}" />
+   						<b>Chamado:</b>
+   						<h:outputText value="#{jiraMB.issue.chamado}" />
+   						<b>Processos:</b>
+   						<h:outputText value="#{jiraMB.issue.processo}" />
+   						<b>Descrição:</b>
+   						<h:outputText value="#{jiraMB.issue.descricao}" />
+   						<h:outputText />
+   						<p:commandButton value="Confirmar e criar Issue" actionListener="#{jiraMB.criarIssue()}" rendered="#{jiraMB.geraIssue}" icon="ui-icon-circle-check" update="@form">
+   							<p:confirm header="Confirmação" message="Tem certeza que revisou os dados e quer criar uma issue para o chamado #{jiraMB.issue.chamado}?" icon="ui-icon-alert" />
+   						</p:commandButton>
+   						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+   							<p:commandButton value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+   							<p:commandButton value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+   						</p:confirmDialog>
+   						</p:panelGrid>
+          	</h:form>
+          </div>
+        <!-- Fim Container dos painéis -->
+    </div>
+</div>
+    <!-- Fim Conteúdo da página -->
+</ui:define>
+</ui:composition>

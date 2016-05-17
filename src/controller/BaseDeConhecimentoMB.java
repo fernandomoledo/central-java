@@ -86,6 +86,7 @@ public class BaseDeConhecimentoMB {
 			}else{
 				this.termoBusca = params.get("termo").trim().replace("||", " & ");
 			}
+			this.termoBusca = this.termoBusca.replace("_", " ");
 			this.termo = this.termoBusca;
 			this.termoDestaque = this.termoBusca.toUpperCase();
 			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
@@ -241,9 +242,9 @@ public class BaseDeConhecimentoMB {
 			Process p = null;
 	
 			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
-				command = "C:\\curl\\curl\\bin\\curl.exe -c C:\\curl\\cookies.txt -d " + '"'+"lgname=cau_conhecimento&lgpassword=centralcau&action=login&format=xml" + '"'+ " http://smau-server/mediawiki/api.php ";
+				command = "C:\\curl\\curl\\bin\\curl.exe -c C:\\curl\\cookies.txt -d " + '"'+"lgname=cau_conhecimento&lgpassword=centralcau&action=login&format=xml" + '"'+ " http://10.15.199.151/api.php ";
 			else
-				command = "curl -c /tmp/cookies.txt -d lgname=cau_conhecimento&lgpassword=centralcau&action=login&format=xml http://smau-server/mediawiki/api.php";
+				command = "curl -c /tmp/cookies.txt -d lgname=cau_conhecimento&lgpassword=centralcau&action=login&format=xml http://10.15.199.151/api.php";
 			p = rt.exec(command);
 			String xml = "";
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -271,18 +272,18 @@ public class BaseDeConhecimentoMB {
 
 			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
 				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -d " + '"'+"lgname=cau_conhecimento&lgpassword=centralcau&action=login&lgtoken="+ 
-				token+"&format=xml" + '"'+ " http://smau-server/mediawiki/api.php ";
+				token+"&format=xml" + '"'+ " http://10.15.199.151/api.php ";
 			else
-				command = "curl -b /tmp/cookies.txt -d lgname=cau_conhecimento&lgpassword=centralcau&action=login&lgtoken="+token+"&format=xml http://smau-server/mediawiki/api.php";
+				command = "curl -b /tmp/cookies.txt -d lgname=cau_conhecimento&lgpassword=centralcau&action=login&lgtoken="+token+"&format=xml http://10.15.199.151/api.php";
 			p = rt.exec(command);
 			System.out.println(command);
 			reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			
 			
 			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
-				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -X POST http://smau-server/mediawiki/api.php?action=query&generator=search&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml";
+				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -X POST http://10.15.199.151/api.php?action=query&generator=search&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml";
 			else
-				command = "curl -b /tmp/cookies.txt -d action=query&generator=search&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml http://smau-server/mediawiki/api.php";
+				command = "curl -b /tmp/cookies.txt -d action=query&generator=search&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml http://10.15.199.151/api.php";
 			p = rt.exec(command);
 			
 			/*
@@ -312,9 +313,9 @@ public class BaseDeConhecimentoMB {
 			    }
 			
 			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
-				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -X POST http://smau-server/mediawiki/api.php?action=query&generator=search&gsrwhat=text&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml";
+				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -X POST http://10.15.199.151/api.php?action=query&generator=search&gsrwhat=text&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml";
 			else
-				command = "curl -b /tmp/cookies.txt -d action=query&generator=search&gsrwhat=text&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml http://smau-server/mediawiki/api.php";
+				command = "curl -b /tmp/cookies.txt -d action=query&generator=search&gsrwhat=text&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml http://10.15.199.151/api.php";
 			p = rt.exec(command);
 			/*
 			System.out.println(command);

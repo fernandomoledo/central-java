@@ -1,0 +1,60 @@
+<ui:composition  template="template.xhtml" 
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"> 
+<ui:define name="conteudo">
+	
+	<!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título da Página -->
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Jira 2</h1>
+        </div>
+      </div>
+      <!-- Pula 30px -->
+      <div class="push3"></div>
+      <div class="row">
+        <!-- Container dos painéis -->
+        <div class="col-md-12">
+          <!-- Painel de busca e categorias -->
+          <div class="col-md-5 separator" id="div-sidebar" style="max-height:600px; overflow:auto;">             	
+      		<h:form id="texto">
+      			 <p:dataTable var="x" value="#{jiraMB.chamadosJira}"  widgetVar="textoTable"
+           emptyMessage="Não foram encontrados chamados para o Núcleo PJE" rows="5" 
+            paginator="true"
+            paginatorPosition="bottom"
+           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
+           currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+           rowsPerPageTemplate="5,10,20"
+           selectionMode="single"
+           selection="#{jiraMB.selecionado}"
+           rowKey="#{x.id}"
+           
+           >
+           <p:ajax event="rowSelect" listener="#{jiraMB.getDetalhe()}" oncomplete="document.getElementById('tbl').scrollTop = 0;" />
+          
+				<p:column headerText="Chamados encontrados para o Núcleo PJE:" >
+				
+					<b>#{x.chamado.numero}/<h:outputText value="#{x.dtAndamento}">
+	            		<f:convertDateTime dateStyle="date" pattern="yyyy" /></h:outputText></b><br />
+					#{x.chamado.assunto.descricao}
+					
+				</p:column>
+			</p:dataTable> 
+      	 	</h:form>
+          </div>
+          <!-- Fim Painel de chamados -->
+        </div>
+        <!-- Fim Container dos painéis -->
+    </div>
+</div>
+    <!-- Fim Conteúdo da página -->
+</ui:define>
+</ui:composition>

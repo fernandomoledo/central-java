@@ -4,10 +4,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
 
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpSession;
 
@@ -148,15 +150,18 @@ public class PortalMB {
 		}
 	}
 	
-	public boolean isAdm(){
-		switch(this.username){
-			case "felipecury": return true;
-			case "juliomoreno": return true;
-			case "luizmoledo": return true;
-			case "marciozuchini": return true;
-			case "rleme": return true;
-			default: return false;
-		}
+	
+	public void isAdm(ComponentSystemEvent event){
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		if (!(this.username.equals("ersilva") || this.username.equals("terciolopes") || this.username.equals("felipecury") || this.username.equals("luizmoledo") || this.username.equals("rleme") || this.username.equals("juliomoreno") || this.username.equals("marciozuchini"))){
+			ConfigurableNavigationHandler nav 
+			   = (ConfigurableNavigationHandler) 
+				fc.getApplication().getNavigationHandler();
+			
+			nav.performNavigation("acesso-negado");
+		}		
 	}
 	/*
 	 * getters and setters

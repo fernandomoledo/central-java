@@ -17,6 +17,9 @@ public class RelatorioDAO {
 	private Relatorio relatorio = new Relatorio();
 	
 	public Relatorio getDados(String mes, String ano) throws SQLException, ClassNotFoundException, NamingException{
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 		sql = "select count(distinct(c.id)) "+
 			" from chamados c, andamentos an, assuntos a where c.id = an.chamado and an.classificacao='ABE' and to_char(an.dt_andamento,'MM/YYYY') = ? "+
 			" and c.assunto = a.id and a.lotacao in(SELECT l.id "+
@@ -24,19 +27,21 @@ public class RelatorioDAO {
 			" WHERE (l.mae in(631,1301,1316)  OR l.id = 631) AND l.id not in(1298)) and a.id not in "+
 			" (422,387,114,381,815,173,342,664,851,270,75,72,73,76,77,232,178,74,208,390,786,787, "+           
 			                   " 776,846,845,780,782,784,781,783,785,628,629,274,224,239,259,253,462,127,106,103,246)";
-		Connection con = null;
-		con = ConexaoOracle.abreConexao();
-		PreparedStatement ps = con.prepareStatement(sql);
-		ps.setString(1,mes+"/"+ano);
-		ResultSet rs = ps.executeQuery();
-		while(rs.next()){
-			this.relatorio.setAno(ano);
-			this.relatorio.setMes(mes);
-			this.relatorio.setItem1(rs.getInt(1));
+		try{
+			con = ConexaoOracle.abreConexao();
+			ps = con.prepareStatement(sql);
+			ps.setString(1,mes+"/"+ano);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				this.relatorio.setAno(ano);
+				this.relatorio.setMes(mes);
+				this.relatorio.setItem1(rs.getInt(1));
+			}
+		}finally{
+			rs.close();
+			ps.close();
+			con.close();
 		}
-		if(rs != null) rs.close();
-		if(ps != null) ps.close();
-		if(con != null) con.close();
 		
 		sql = "select count(distinct(c.id)) as qtde from chamados c, andamentos a, chamado_palavra cp, palavra_chave p where "+
 				" c.id = a.chamado and a.classificacao='ABE' and to_char(a.dt_andamento,'MM/YYYY') = ? and "+
@@ -65,18 +70,19 @@ public class RelatorioDAO {
                       " 2201,545,3502,177,178,1659,2030,2008,149,257,2674,1847,283,641,2556,508,607,758,2834,303,670,2555,1734,304,2672,3552, "+
                       " 732,307,2184,1984,745,611,2648,2646,3476,3617,1820,1868,2540,2096,1725,2395,182,1398,1716,2548,147,606,282,281,2411, "+
                       " 1633,3558,554,2443,1967,740,605,514,618,3272,2063,2386,3562,635,636,750,1817,101,552,762)";
-		con = null;
-		con = ConexaoOracle.abreConexao();
-		ps = con.prepareStatement(sql);
-		ps.setString(1,mes+"/"+ano);
-		rs = ps.executeQuery();
-		while(rs.next()){
-			this.relatorio.setItem2(rs.getInt(1));
+		try{
+			con = ConexaoOracle.abreConexao();
+			ps = con.prepareStatement(sql);
+			ps.setString(1,mes+"/"+ano);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				this.relatorio.setItem2(rs.getInt(1));
+			}
+		}finally{
+			rs.close();
+			ps.close();
+			con.close();
 		}
-		if(rs != null) rs.close();
-		if(ps != null) ps.close();
-		if(con != null) con.close();
-		
 		sql = "select count(*) from( "+                     
 			" select distinct(c.id) "+
 			" from chamados c, andamentos an, assuntos a where c.id = an.chamado and an.classificacao='ABE' and to_char(an.dt_andamento,'MM/YYYY') = ? "+
@@ -125,18 +131,20 @@ public class RelatorioDAO {
 			                   "   732,307,2184,1984,745,611,2648,2646,3476,3617,1820,1868,2540,2096,1725,2395,182,1398,1716,2548,147,606,282,281,2411, "+
 			                   "   1633,3558,554,2443,1967,740,605,514,618,3272,2063,2386,3562,635,636,750,1817,101,552,762) "+
 			" )";
-		con = null;
-		con = ConexaoOracle.abreConexao();
-		ps = con.prepareStatement(sql);
-		ps.setString(1,mes+"/"+ano);
-		ps.setString(2,mes+"/"+ano);
-		rs = ps.executeQuery();
-		while(rs.next()){
-			this.relatorio.setItem3(rs.getInt(1));
+		try{
+			con = ConexaoOracle.abreConexao();
+			ps = con.prepareStatement(sql);
+			ps.setString(1,mes+"/"+ano);
+			ps.setString(2,mes+"/"+ano);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				this.relatorio.setItem3(rs.getInt(1));
+			}
+		}finally{
+			rs.close();
+			ps.close();
+			con.close();
 		}
-		if(rs != null) rs.close();
-		if(ps != null) ps.close();
-		if(con != null) con.close();
 		
 		sql = "select count(*) from( "+                     
 				" select distinct(c.id) "+
@@ -187,18 +195,20 @@ public class RelatorioDAO {
 				                   "   1633,3558,554,2443,1967,740,605,514,618,3272,2063,2386,3562,635,636,750,1817,101,552,762) "+
 				" )";
 		
-		con = null;
-		con = ConexaoOracle.abreConexao();
-		ps = con.prepareStatement(sql);
-		ps.setString(1,mes+"/"+ano);
-		ps.setString(2,mes+"/"+ano);
-		rs = ps.executeQuery();
-		while(rs.next()){
-			this.relatorio.setItem4(rs.getInt(1));
+		try{
+			con = ConexaoOracle.abreConexao();
+			ps = con.prepareStatement(sql);
+			ps.setString(1,mes+"/"+ano);
+			ps.setString(2,mes+"/"+ano);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				this.relatorio.setItem4(rs.getInt(1));
+			}
+		}finally{
+			rs.close();
+			ps.close();
+			con.close();
 		}
-		if(rs != null) rs.close();
-		if(ps != null) ps.close();
-		if(con != null) con.close();
 		
 		sql = " select count(*) from ( select "+
 				" distinct(c.id) "+
@@ -245,18 +255,20 @@ public class RelatorioDAO {
 				" WHERE (l.mae in(631,1301,1316)  OR l.id = 631) AND l.id not in(1298)) and a.id not in "+
 				" (422,387,114,381,815,173,342,664,851,270,75,72,73,76,77,232,178,74,208,390,786,787, "+           
 				                  "  776,846,845,780,782,784,781,783,785,628,629,274,224,239,259,253,462,127,106,103,246)) ";
-		con = null;
-		con = ConexaoOracle.abreConexao();
-		ps = con.prepareStatement(sql);
-		ps.setString(1,mes+"/"+ano);
-		ps.setString(2,mes+"/"+ano);
-		rs = ps.executeQuery();
-		while(rs.next()){
-			this.relatorio.setItem5(rs.getInt(1));
+		try{
+			con = ConexaoOracle.abreConexao();
+			ps = con.prepareStatement(sql);
+			ps.setString(1,mes+"/"+ano);
+			ps.setString(2,mes+"/"+ano);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				this.relatorio.setItem5(rs.getInt(1));
+			}
+		}finally{
+			rs.close();
+			ps.close();
+			con.close();
 		}
-		if(rs != null) rs.close();
-		if(ps != null) ps.close();
-		if(con != null) con.close();
 		
 		sql = "select count(*) from( "+                     
 				" select distinct(c.id) "+
@@ -307,18 +319,20 @@ public class RelatorioDAO {
 				                   "   1633,3558,554,2443,1967,740,605,514,618,3272,2063,2386,3562,635,636,750,1817,101,552,762) "+
 				" )";
 		
-		con = null;
-		con = ConexaoOracle.abreConexao();
-		ps = con.prepareStatement(sql);
-		ps.setString(1,mes+"/"+ano);
-		ps.setString(2,mes+"/"+ano);
-		rs = ps.executeQuery();
-		while(rs.next()){
-			this.relatorio.setItem6(rs.getInt(1));
+		try{
+			con = ConexaoOracle.abreConexao();
+			ps = con.prepareStatement(sql);
+			ps.setString(1,mes+"/"+ano);
+			ps.setString(2,mes+"/"+ano);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				this.relatorio.setItem6(rs.getInt(1));
+			}
+		}finally{
+			rs.close();
+			ps.close();
+			con.close();
 		}
-		if(rs != null) rs.close();
-		if(ps != null) ps.close();
-		if(con != null) con.close();
 		System.out.println("Relatório gerado com sucesso!!!");
 		return this.relatorio;
 	}

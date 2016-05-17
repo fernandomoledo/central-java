@@ -1,0 +1,41 @@
+<ui:composition  template="template.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+<ui:define name="conteudo">
+ <!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título -->
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Acesso negado</h1>
+        </div>
+      </div>
+      <div class="push3"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+         		<div style="text-align:center;">
+					<img src="resources/img/logo-pag-erro.jpg" />
+					<br />
+					<h2>Ops! Você não pode acessar essa página!</h2> <br />
+					<h4>A página que você deseja acessar não está acessível para o seu usuário.</h4>
+					<br /><br />
+					<p>Contate o administrador do sistema pelo (19) 3231-5657 r. 211 e informe a ocorrência.</p>
+					<br /><br />
+					<a href="index.jsf">Voltar para HOME</a>
+				</div>
+      		</div>
+          <div class="col-md-4"></div>
+        </div>
+      </div>           
+    </div>
+    <!-- Fim Conteúdo da página -->
+    </ui:define>
+</ui:composition>

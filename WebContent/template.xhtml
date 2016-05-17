@@ -56,9 +56,10 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-          	<li><h:link outcome="admin" value="Administração" rendered="#{portalMB.isAdm()}" /></li>
+          	<li><h:link outcome="admin" value="Administração" rendered="#{portalMB.username=='ersilva' or portalMB.username=='terciolopes' or portalMB.username=='juliomoreno' or portalMB.username=='luizmoledo' or portalMB.username=='felipecury' or portalMB.username=='rleme' or portalMB.username=='marciozuchini'}" /></li>
           	<li><h:link outcome="arvore" value="Árvore do conhecimento" /></li>
-            <li><h:link outcome="categorias" value="Categorias" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}"><span class="sr-only">(current)</span></h:link></li>       
+            <li><h:link outcome="categorias" value="Categorias" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}"><span class="sr-only">(current)</span></h:link></li>
+            <li><h:link outcome="jira" value="Jira" rendered="#{portalMB.original.id == 641}" /></li>       
             <li><h:link outcome="painel" value="Painel" /></li>
           </ul>
          <h:form class="navbar-form navbar-left" role="search">

@@ -17,24 +17,29 @@ public class TomboDAO {
 	
 	public List<Tombo> getTombosPorChamado(long id) throws ClassNotFoundException, SQLException, NamingException{
 		List<Tombo> tombos = new ArrayList<Tombo>();
-		sql = " SELECT t.NRO_TOMBO, t.serie, t.dt_garantia, t.descricao from chamados c, chamado_tombo ct, tombos t  where c.id = ? and c.id = ct.chamado and ct.tombo = t.id";
 		Connection con = null;
-		con = ConexaoOracle.abreConexao();
-		PreparedStatement ps = con.prepareStatement(sql);
-		ps.setLong(1, id);
-		ResultSet rs = ps.executeQuery();
-		while(rs.next()){
-			Tombo t = new Tombo();
-			t.setNroTombo(rs.getLong("NRO_TOMBO"));
-			t.setSerie(rs.getString("serie"));
-			t.setDtGarantia(rs.getTimestamp("dt_garantia"));
-			t.setDescricao(rs.getString("descricao"));
-			tombos.add(t);
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		sql = " SELECT t.NRO_TOMBO, t.serie, t.dt_garantia, t.descricao from chamados c, chamado_tombo ct, tombos t  where c.id = ? and c.id = ct.chamado and ct.tombo = t.id";
+		try{
+			con = ConexaoOracle.abreConexao();
+			ps = con.prepareStatement(sql);
+			ps.setLong(1, id);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				Tombo t = new Tombo();
+				t.setNroTombo(rs.getLong("NRO_TOMBO"));
+				t.setSerie(rs.getString("serie"));
+				t.setDtGarantia(rs.getTimestamp("dt_garantia"));
+				t.setDescricao(rs.getString("descricao"));
+				tombos.add(t);
+			}
+			System.out.println("CONSULTA getTombosPorChamado()");
+		}finally{
+			rs.close();
+			ps.close();
+			con.close();
 		}
-		System.out.println("CONSULTA getTombosPorChamado()");
-		if(rs != null) rs.close();
-		if(ps != null) ps.close();
-		if(con != null) con.close();
 		return tombos;
 	}
 }
