@@ -9,6 +9,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.sql.SQLException;
@@ -403,22 +405,25 @@ public class JiraMB {
 		    String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes("UTF-8"));
 		    conn.setRequestProperty ("Authorization", basicAuth);
 
-		    String data =  "{\"fields\":{\"project\": {\"id\":\""+this.issue.getId()+"\"}, \"summary\":\""+this.issue.getResumo()+
+		    String data = "{\"fields\":{\"project\": {\"id\":\""+this.issue.getId()+"\"}, \"summary\":\""+this.issue.getResumo()+
 				"\", \"issuetype\":{\"id\": \"59\"}, \"versions\":[{\"name\":\""+this.issue.getVersao()+"\"}], \"environment\":\""+this.issue.getAmbiente()+
-				"\", \"description\":\""+this.issue.getDescricao()+"\",\"components\":[{\"name\":\""+this.issue.getComponente()+"\"}],\"customfield_11741\":{\"value\":\""+this.issue.getSubsistema()+
+				"\", \"description\":\""+this.issue.getDescricao().trim()+"\",\"components\":[{\"name\":\""+this.issue.getComponente()+"\"}],\"customfield_11741\":{\"value\":\""+this.issue.getSubsistema()+
 				"\"}, \"customfield_12243\":{\"id\":\""+this.issue.getModulo()+"\",\"value\":\""+this.issue.getModulo()+"\"},\"customfield_11441\":\""+this.issue.getServidor()+
 				"\", \"customfield_12241\":\""+this.issue.getChamado()+"\",\"customfield_11542\":\""+this.issue.getProcesso()+"\"}}";
 		    OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-		    out.write(data);
+		    out.write(data.replaceAll("\n", "\\n").replaceAll("\r", "\\r"));
 		    out.close();
-
-		    InputStream is = conn.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
+		    System.out.println(data.replaceAll("\n", "\\n").replaceAll("\r", "\\r"));
+		    //InputStream is = conn.getInputStream();
+            //InputStreamReader isr = new InputStreamReader(is);
+            
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
 
             int numCharsRead;
             char[] charArray = new char[1024];
             StringBuffer sb = new StringBuffer();
-            while ((numCharsRead = isr.read(charArray)) > 0) {
+            //while ((numCharsRead = isr.read(charArray)) > 0) {
+            while ((numCharsRead = reader.read(charArray)) > 0) {
                 sb.append(charArray, 0, numCharsRead);
             }
             String result = sb.toString();
@@ -428,10 +433,13 @@ public class JiraMB {
             System.out.println("*** END ***"); 
         	Gson gson = new Gson();
     		RetornoJIRA ret = gson.fromJson(result, RetornoJIRA.class);
-    		Mensagens.setMessage(1, "Issue JIRA "+ret.getKey()+" gerada com sucesso. Link: https://pje.csjt.jus.br/jira/browse/"+ret.getKey());
+    		Mensagens.setMessage(1, "Criada a Issue: https://pje.csjt.jus.br/jira/browse/"+ret.getKey());
     		this.geraIssue = false;
 		 } catch (Exception e) {
-		    e.printStackTrace();
+			 Mensagens.setMessage(3, "Erro ao criar a issue para o chamado "+issue.getChamado()+": "+e.getMessage());
+			 StringWriter stack = new StringWriter();
+				e.printStackTrace(new PrintWriter(stack));
+				logger.error("ERRO: " + stack.toString());
 		 }
 	
 	}

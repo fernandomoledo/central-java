@@ -86,10 +86,11 @@ public class BaseDeConhecimentoMB {
 			}else{
 				this.termoBusca = params.get("termo").trim().replace("||", " & ");
 			}
-			this.termoBusca = this.termoBusca.replace("_", " ");
+			
 			this.termo = this.termoBusca;
 			this.termoDestaque = this.termoBusca.toUpperCase();
 			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
+			this.termoBusca = this.termoBusca.replace("_", "\\_");
 			buscar();
 		}
 		System.out.println(params.toString());

@@ -4,7 +4,7 @@ public class Chamado {
 	private long id;
 	private int numero;
 	private String status;
-	private String urgente;
+	private boolean urgente;
 	private Portal solicitante;
 	private Assunto assunto;
 	private Portal responsavel;
@@ -29,10 +29,11 @@ public class Chamado {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getUrgente() {
+	
+	public boolean isUrgente() {
 		return urgente;
 	}
-	public void setUrgente(String urgente) {
+	public void setUrgente(boolean urgente) {
 		this.urgente = urgente;
 	}
 	public Portal getSolicitante() {
