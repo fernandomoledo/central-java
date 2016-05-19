@@ -45,7 +45,6 @@
 		              		<p:ajax event="change" update=":c_todo :c_doing :c_done :titulo" 
 		              		listener="#{portalMB.mudaLotacao(painelMB.lotacao.nome)}" onstart="mostra_box();" oncomplete="esconde_box();"  />
 		              			<f:selectItem itemLabel="-- Escolha a lotação desejada --" itemValue="" />
-		              			<f:selectItem itemLabel="*** Minha lotação de origem ***" itemValue="#{portalMB.original.nome}"  />
 			                 	<f:selectItems value="#{painelMB.getLotacoesAmarradasPorPai(portalMB.original.nome)}" noSelectionOption="true" var="lot" itemLabel="#{lot.filha.nome}" itemValue="#{lot.filha.nome}"  />
 			                 	
 			                 </h:selectOneMenu>
