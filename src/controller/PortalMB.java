@@ -48,6 +48,7 @@ public class PortalMB {
 					HttpSession session = (HttpSession) ec.getSession(false);
 					session.setAttribute("usuarioLogado", p.getLogin());
 					session.setAttribute("secao", p.getLotacao().getId());
+					session.setAttribute("codUsuario", p.getId());
 					this.setOriginal(p.getLotacao());
 					return "/painel.xhtml?faces-redirect=true";
 				}else{

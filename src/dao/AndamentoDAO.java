@@ -7,7 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
+import javax.servlet.http.HttpSession;
 
 import util.ConexaoOracle;
 import model.Andamento;
@@ -54,17 +57,21 @@ public class AndamentoDAO {
 	}
 	
 	public List<Andamento> getChamadosJIRA() throws ClassNotFoundException, SQLException, NamingException{
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		HttpSession session = (HttpSession) ec.getSession(false);
+		String codUsuario = session.getAttribute("codUsuario").toString();
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		List<Andamento> andamentos = new ArrayList<Andamento>();
 		sql = "SELECT c.id, c.numero, a.dt_andamento, to_char(a.texto) as texto, an.descricao "+
 		" FROM chamados c, andamentos a, assuntos an WHERE c.id = a.chamado and c.lotacaosolicitante = 1351 and c.assunto = an.id "+
-				" and c.lotacaodestino = 639 and c.status='AF' "+
+				" and c.responsavel = ? and c.status='AN' "+
 				" and upper(to_char(a.texto)) like 'PROJETO: PJE-JT%'";
 		try{
 			con = ConexaoOracle.abreConexao();
 			ps = con.prepareStatement(sql);
+			ps.setString(1, codUsuario);
 			rs = ps.executeQuery();
 			while(rs.next()){
 				Andamento a = new Andamento();

@@ -52,7 +52,7 @@
            >
            <p:ajax event="rowSelect" listener="#{jiraMB.getDetalhe()}" update=":detalhe" oncomplete="document.getElementById('tbl').scrollTop = 0;" />
           
-				<p:column headerText="Chamados encontrados para o Núcleo PJE:" >
+				<p:column headerText="Chamados do Núcleo PJE delegados para '#{portalMB.username}':" >
 				
 					<b>Chamado #{x.chamado.numero}/<h:outputText value="#{x.dtAndamento}">
 	            		<f:convertDateTime dateStyle="date" pattern="yyyy" /></h:outputText></b><br />
@@ -60,7 +60,7 @@
 					
 				</p:column>
 			</p:dataTable> 
-			<h:outputText value="Não existem chamados do Núcleo PJE abertos no momento" rendered="#{fn:length(jiraMB.chamadosJira) eq 0}" />
+			<h:outputText value="Não existem chamados do Núcleo PJE delegados para o seu usuário no momento" rendered="#{fn:length(jiraMB.chamadosJira) eq 0}" />
       	 	</h:form>
           </div>
           <button id="teste-btn" class="btn btn-primary" style="font-weight:bold;border:none;" value="e" title="Esconder a lista de chamados"> &lt;</button>
