@@ -25,8 +25,10 @@
       <div class="row">
         <!-- Container dos painéis -->
         <div class="col-md-12">
+        	<div class="row">
+        	</div>
           <!-- Painel de busca e categorias -->
-          <div class="col-md-5 separator" id="div-sidebar" style="max-height:600px; overflow:auto;">             	
+          <div class="col-md-5 separator" id="div-sidebar" style="max-height:768px; overflow:auto;">             	
 			
             <div class="push1"></div>
             <h4>Navegue pelas categorias:</h4>
@@ -68,7 +70,7 @@
 				</p:column>
 			</p:dataTable> 
 			<br /><br />
-		
+			<h:outputText value="#{baseDeConhecimentoMB.statusWiki}" rendered="#{fn:length(baseDeConhecimentoMB.wiki) eq 0}" />
 			<p:dataTable var="wiki" value="#{baseDeConhecimentoMB.wiki}"  widgetVar="wikiTable" rendered="#{baseDeConhecimentoMB.mostrawiki}"
            emptyMessage="Não foram encontrados artigos na Wiki com o termo informado" rows="5" 
             paginator="true"

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -20,6 +21,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -70,6 +72,7 @@ public class BaseDeConhecimentoMB {
 	private String termo="";
 	private String[] termos;
 	private List<ResultadosWiki> wiki;
+	private String statusWiki;
 	final static Logger logger = Logger.getLogger(BaseDeConhecimentoMB.class);
 	
 	/*
@@ -91,6 +94,12 @@ public class BaseDeConhecimentoMB {
 			this.termoDestaque = this.termoBusca.toUpperCase();
 			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
 			this.termoBusca = this.termoBusca.replace("_", "\\_");
+			this.termoBusca = this.termoBusca.replace("-", "\\-");
+			this.termoBusca = this.termoBusca.replace("@", "\\@");
+			this.termoBusca = this.termoBusca.replace("#", "\\#");
+			this.termoBusca = this.termoBusca.replace("&", "\\&");
+			this.termoBusca = this.termoBusca.replace("%", "\\%");
+			this.termoBusca = this.termoBusca.replace("*", "\\*");
 			buscar();
 		}
 		System.out.println(params.toString());
@@ -127,7 +136,6 @@ public class BaseDeConhecimentoMB {
 	 * Este método captura o nó da árvore selecionado e verifica se ele é pai ou não. Caso não seja, dispara a busca de chamados
 	 */
 	public void getSelecao() throws ClassNotFoundException, SQLException, NamingException{
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Filhos do nó: "+this.select.getChildCount(),null));
 		chamados = new ArrayList<Chamado>();
 		chamadosFiltrados = null;
 		selecionado = null;
@@ -226,121 +234,148 @@ public class BaseDeConhecimentoMB {
 	
 	public void buscar() throws NamingException, IOException, ParseException, ParserConfigurationException, SAXException{
 		ChamadoDAO dao = new ChamadoDAO();
+		String server = "";
+		String host = "smau-server";
+		String host2 = "10.15.199.151";
 		try {
 			this.chamados = dao.getChamadosBuscaGeral(this.termoBusca);
 			
-			//Wiki
-	
-			PrintWriter pw = new PrintWriter("/tmp/retorno.txt");
-			pw.print(Charset.defaultCharset().name());
-			pw.close();
-			String buscawiki = this.termo.replace("&", "+").replace("|", "+").replace(" ", "+");
-			wiki = new ArrayList<ResultadosWiki>();
-			Runtime rt = Runtime.getRuntime();
-			String s = "";
-			String command = "";
-			String token = "";
-			Process p = null;
-	
-			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
-				command = "C:\\curl\\curl\\bin\\curl.exe -c C:\\curl\\cookies.txt -d " + '"'+"lgname=cau_conhecimento&lgpassword=centralcau&action=login&format=xml" + '"'+ " http://10.15.199.151/api.php ";
+			String ipAddress = host;
+			InetAddress inet = InetAddress.getByName(ipAddress);
+			boolean reachable = inet.isReachable(5000);
+			if(reachable)
+				server = "http://"+host+"/mediawiki/api.php";
 			else
-				command = "curl -c /tmp/cookies.txt -d lgname=cau_conhecimento&lgpassword=centralcau&action=login&format=xml http://10.15.199.151/api.php";
-			p = rt.exec(command);
-			String xml = "";
-			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			while((s = reader.readLine()) != null){
-				System.out.println(s);
-				xml += s;
+				statusWiki = "Host "+host+" inacessível";
+			
+			if(server.equals("")){
+				ipAddress = host2;
+				inet = InetAddress.getByName(ipAddress);
+				reachable = inet.isReachable(5000);
+				if(reachable)
+					server = "http://"+host2+"/api.php";
+				else
+					statusWiki = "Host "+host2+" inacessível";
 			}
 			
-			System.out.println(xml);
-			 DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			    InputSource is = new InputSource();
-			    is.setCharacterStream(new StringReader(xml));
 			
-			    System.out.println(is.getEncoding());
-			    Document doc = db.parse(is);
-			    NodeList nodes = doc.getElementsByTagName("login");
-			  		    
-			    for (int i = 0; i < nodes.getLength(); i++) {
-			      Element element = (Element) nodes.item(i);
-			      
-			    
-			      System.out.println(element.getAttribute("token"));
-			      token = element.getAttribute("token");
-			    }
-
-			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
-				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -d " + '"'+"lgname=cau_conhecimento&lgpassword=centralcau&action=login&lgtoken="+ 
-				token+"&format=xml" + '"'+ " http://10.15.199.151/api.php ";
-			else
-				command = "curl -b /tmp/cookies.txt -d lgname=cau_conhecimento&lgpassword=centralcau&action=login&lgtoken="+token+"&format=xml http://10.15.199.151/api.php";
-			p = rt.exec(command);
-			System.out.println(command);
-			reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+						
+			//Wiki
+	
+		
+			wiki = new ArrayList<ResultadosWiki>();
 			
-			
-			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
-				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -X POST http://10.15.199.151/api.php?action=query&generator=search&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml";
-			else
-				command = "curl -b /tmp/cookies.txt -d action=query&generator=search&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml http://10.15.199.151/api.php";
-			p = rt.exec(command);
-			
-			/*
-			System.out.println(command);
-			reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			xml = "";
-			while((s = reader.readLine()) != null)
-				xml += s;
-			System.out.println(xml);
-			*/
-			 db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			    // is = new InputSource();
-			   //  is.setCharacterStream(new StringReader(p.getInputStream().toString()));
-
-			     doc = db.parse(p.getInputStream());
-			     nodes = doc.getElementsByTagName("page");
-			  		    
-			    for (int i = 0; i < nodes.getLength(); i++) {
-			      Element element = (Element) nodes.item(i);
-			      ResultadosWiki rw = new ResultadosWiki();
-			    
-			      System.out.println(element.getAttribute("title"));
-			      rw.setTitulo(element.getAttribute("title"));
-			      rw.setUrl(element.getAttribute("fullurl"));
-			      rw.setEncontradoEm("Correspondência com o título da página");
-			      wiki.add(rw);
-			    }
-			
-			if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
-				command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -X POST http://10.15.199.151/api.php?action=query&generator=search&gsrwhat=text&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml";
-			else
-				command = "curl -b /tmp/cookies.txt -d action=query&generator=search&gsrwhat=text&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml http://10.15.199.151/api.php";
-			p = rt.exec(command);
-			/*
-			System.out.println(command);
-			reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			xml = "";
-			while((s = reader.readLine()) != null)
-				xml += s;
-			System.out.println(xml);
-			*/
-			 db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			    // is = new InputSource();
-			   //  is.setCharacterStream(new StringReader(p.getInputStream().toString()));
-
-			     doc = db.parse(p.getInputStream());
-			     nodes = doc.getElementsByTagName("page");
-			  		    
-			    for (int i = 0; i < nodes.getLength(); i++) {
-			      Element element = (Element) nodes.item(i);
-			      ResultadosWiki rw = new ResultadosWiki();
-			      rw.setTitulo(element.getAttribute("title"));
-			      rw.setUrl(element.getAttribute("fullurl"));
-			      rw.setEncontradoEm("Correspondência com o texto da página");
-			      wiki.add(rw);
-			    }
+			if(!server.equals("")){
+				PrintWriter pw = new PrintWriter("/tmp/retorno.txt");
+				pw.print(Charset.defaultCharset().name());
+				pw.close();
+				String buscawiki = this.termo.replace("&", "+").replace("|", "+").replace(" ", "+");
+				Runtime rt = Runtime.getRuntime();
+				String s = "";
+				String command = "";
+				String token = "";
+				Process p = null;
+		
+				if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+					command = "C:\\curl\\curl\\bin\\curl.exe -c C:\\curl\\cookies.txt -d " + '"'+"lgname=cau_conhecimento&lgpassword=centralcau&action=login&format=xml" + '"'+ " http://10.15.199.151/api.php ";
+				else
+					command = "curl -c /tmp/cookies.txt -d lgname=cau_conhecimento&lgpassword=centralcau&action=login&format=xml "+server;
+				p = rt.exec(command);
+				String xml = "";
+				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				while((s = reader.readLine()) != null){
+					System.out.println(s);
+					xml += s;
+				}
+				
+				System.out.println(xml);
+				 DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				    InputSource is = new InputSource();
+				    is.setCharacterStream(new StringReader(xml));
+				
+				    System.out.println(is.getEncoding());
+				    Document doc = db.parse(is);
+				    NodeList nodes = doc.getElementsByTagName("login");
+				  		    
+				    for (int i = 0; i < nodes.getLength(); i++) {
+				      Element element = (Element) nodes.item(i);
+				      
+				    
+				      System.out.println(element.getAttribute("token"));
+				      token = element.getAttribute("token");
+				    }
+	
+				if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+					command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -d " + '"'+"lgname=cau_conhecimento&lgpassword=centralcau&action=login&lgtoken="+ 
+					token+"&format=xml" + '"'+ " http://10.15.199.151/api.php ";
+				else
+					command = "curl -b /tmp/cookies.txt -d lgname=cau_conhecimento&lgpassword=centralcau&action=login&lgtoken="+token+"&format=xml "+server;
+				p = rt.exec(command);
+				System.out.println(command);
+				reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				
+				
+				if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+					command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -X POST http://10.15.199.151/api.php?action=query&generator=search&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml";
+				else
+					command = "curl -b /tmp/cookies.txt -d action=query&generator=search&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml "+server;
+				p = rt.exec(command);
+				
+				/*
+				System.out.println(command);
+				reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				xml = "";
+				while((s = reader.readLine()) != null)
+					xml += s;
+				System.out.println(xml);
+				*/
+				 db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				    // is = new InputSource();
+				   //  is.setCharacterStream(new StringReader(p.getInputStream().toString()));
+	
+				     doc = db.parse(p.getInputStream());
+				     nodes = doc.getElementsByTagName("page");
+				  		    
+				    for (int i = 0; i < nodes.getLength(); i++) {
+				      Element element = (Element) nodes.item(i);
+				      ResultadosWiki rw = new ResultadosWiki();
+				    
+				      System.out.println(element.getAttribute("title"));
+				      rw.setTitulo(element.getAttribute("title"));
+				      rw.setUrl(element.getAttribute("fullurl"));
+				      rw.setEncontradoEm("Correspondência com o título da página");
+				      wiki.add(rw);
+				    }
+				
+				if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+					command = "C:\\curl\\curl\\bin\\curl.exe -b C:\\curl\\cookies.txt -X POST http://10.15.199.151/api.php?action=query&generator=search&gsrwhat=text&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml";
+				else
+					command = "curl -b /tmp/cookies.txt -d action=query&generator=search&gsrwhat=text&gsrsearch="+buscawiki+"&prop=info&inprop=url&format=xml "+server;
+				p = rt.exec(command);
+				/*
+				System.out.println(command);
+				reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				xml = "";
+				while((s = reader.readLine()) != null)
+					xml += s;
+				System.out.println(xml);
+				*/
+				 db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				    // is = new InputSource();
+				   //  is.setCharacterStream(new StringReader(p.getInputStream().toString()));
+	
+				     doc = db.parse(p.getInputStream());
+				     nodes = doc.getElementsByTagName("page");
+				  		    
+				    for (int i = 0; i < nodes.getLength(); i++) {
+				      Element element = (Element) nodes.item(i);
+				      ResultadosWiki rw = new ResultadosWiki();
+				      rw.setTitulo(element.getAttribute("title"));
+				      rw.setUrl(element.getAttribute("fullurl"));
+				      rw.setEncontradoEm("Corresponência com o texto da página");
+				      wiki.add(rw);
+				    }
+			}
 			    
 		} catch (ClassNotFoundException | SQLException e) {
 			StringWriter stack = new StringWriter();
@@ -485,6 +520,14 @@ public class BaseDeConhecimentoMB {
 
 	public void setWiki(List<ResultadosWiki> wiki) {
 		this.wiki = wiki;
+	}
+
+	public String getStatusWiki() {
+		return statusWiki;
+	}
+
+	public void setStatusWiki(String statusWiki) {
+		this.statusWiki = statusWiki;
 	}
 
 	

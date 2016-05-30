@@ -6,7 +6,7 @@
     	username="app_faq_cau"
      	password="#centralcau#" 
     	driverClassName="oracle.jdbc.driver.OracleDriver"
-    	url="jdbc:oracle:thin:@unanova:1521:orac"
+    	url="jdbc:oracle:thin:@una:1521:orac"
     	validationQuery="select 1 from dual"
     	maxTotal="40"
     	maxIdle="1"

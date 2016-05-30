@@ -96,7 +96,7 @@ public class LotacaoDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		int qtde = 0;
-		if(nome.equals("SEÇÃO DE ATENDIMENTO"))
+		if(nome.equals("SEÇÃO DE ATENDIMENTO") || nome.equals("SEÇÃO DE ATENDIMENTO ESPECIALIZADO"))
 			sql = "select * from lotacao_lotacao where pai = (select pai from lotacao_lotacao where filha = ?)";
 		else
 			sql = "select * from lotacao_lotacao where pai = ?";
@@ -168,7 +168,7 @@ public class LotacaoDAO {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		if(nome.equals("SEÇÃO DE ATENDIMENTO"))
+		if(nome.equals("SEÇÃO DE ATENDIMENTO") || nome.equals("SEÇÃO DE ATENDIMENTO ESPECIALIZADO"))
 			sql = "select id, pai, filha from lotacao_lotacao where pai = (select pai from lotacao_lotacao where filha= ?) and filha = ? union select id, pai , pai AS filha from lotacao_lotacao where filha = ? order by pai, filha";
 		else
 			sql = "select id, pai, filha from lotacao_lotacao where pai = ? order by pai, filha";
@@ -176,7 +176,7 @@ public class LotacaoDAO {
 			con = ConexaoMySQL.abreConexao();
 			ps =con.prepareStatement(sql);
 			ps.setString(1, nome);
-			if(nome.equals("SEÇÃO DE ATENDIMENTO")){
+			if(nome.equals("SEÇÃO DE ATENDIMENTO") || nome.equals("SEÇÃO DE ATENDIMENTO ESPECIALIZADO")){
 					ps.setString(2, nome);
 					ps.setString(3, nome);
 			}

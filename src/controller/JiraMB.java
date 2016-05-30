@@ -88,7 +88,7 @@ public class JiraMB {
 			StringWriter stack = new StringWriter();
 			e.printStackTrace(new PrintWriter(stack));
 			logger.error("ERRO: " + stack.toString());
-			Mensagens.setMessage(3, "Houve um problema ao listar os chamados ref. ao Núcleo PJE");
+			Mensagens.setMessage(3, "Houve um problema ao listar os chamados ref. ao NÃºcleo PJE");
 		}
 		return this.chamadosJira;
 	}
@@ -387,6 +387,21 @@ public class JiraMB {
 				"\", \"customfield_12241\":\""+this.issue.getChamado()+"\",\"customfield_11542\":\""+this.issue.getProcesso()+"\"}}' -H \"Content-Type:application/json\" https://pje.csjt.jus.br/jira/rest/api/2/issue/ -k";
 		*/
 		try{
+			/*
+			 * 
+			 * Antes de qualquer coisa, adicionar o certificado do site do Jira, seguindo os passos abaixo 
+			 * no servidor da aplicaÃ§Ã£o:
+			 * https://azure.microsoft.com/pt-br/documentation/articles/java-add-certificate-ca-store/
+			 * ou
+			 * cd /usr/lib/jvm/java-8-oracle/jre/lib/security e
+			 * keytool -keystore cacerts -importcert -alias aliascertificado -file Secure_Certificate_Authority.cer
+			 * senha changeit
+			 * para verificar: keytool -list -keystore cacerts | grep JIRA
+			 */
+			System.getProperties().put("http.proxyHost", "proxy.trt15.jus.br");
+		 	System.getProperties().put("http.proxyPort", "3128");
+		 	System.getProperties().put("http.proxyUser", "oab");
+		 	System.getProperties().put("http.proxyPassword", "oab15");
 			System.getProperties().put("https.proxyHost", "proxy.trt15.jus.br");
 		 	System.getProperties().put("https.proxyPort", "3128");
 		 	System.getProperties().put("https.proxyUser", "oab");
@@ -411,9 +426,9 @@ public class JiraMB {
 				"\"}, \"customfield_12243\":{\"id\":\""+this.issue.getModulo()+"\",\"value\":\""+this.issue.getModulo()+"\"},\"customfield_11441\":\""+this.issue.getServidor()+
 				"\", \"customfield_12241\":\""+this.issue.getChamado()+"\",\"customfield_11542\":\""+this.issue.getProcesso()+"\"}}";
 		    OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-		    out.write(data.replaceAll("\n", "\\n").replaceAll("\r", "\\r"));
+		    out.write(data.replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
 		    out.close();
-		    System.out.println(data.replaceAll("\n", "\\n").replaceAll("\r", "\\r"));
+		    System.out.println(data.replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
 		    //InputStream is = conn.getInputStream();
             //InputStreamReader isr = new InputStreamReader(is);
             
