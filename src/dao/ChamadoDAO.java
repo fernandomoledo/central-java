@@ -12,6 +12,7 @@ import javax.naming.NamingException;
 import org.apache.commons.lang3.StringUtils;
 
 import model.Andamento;
+import model.Assunto;
 import model.Chamado;
 import model.Lotacao;
 import model.Portal;
@@ -141,10 +142,10 @@ private String sql;
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		sql = " SELECT DISTINCT(c.id) as id, l.nome as nome, c.numero as numero FROM chamados c, andamentos a, lotacao l, chamado_tombo ct, tombos t WHERE contains (a.texto, ? ,1) > 0 AND "+      
+		sql = " SELECT id, nome, numero, ano from(SELECT c.id as id, l.nome as nome, c.numero as numero, to_char(a.dt_andamento,'YYYY') as ano, a.classificacao FROM chamados c, andamentos a, lotacao l, chamado_tombo ct, tombos t WHERE contains (a.texto, ? ,1) > 0 AND "+      
 	" UPPER(t.descricao) like ? AND "+
          " c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
-         " ct.tombo = t.id AND c.lotacaosolicitante = l.id AND c.id = ct.chamado AND c.id = a.chamado ORDER BY c.id DESC";
+         " ct.tombo = t.id AND c.lotacaosolicitante = l.id AND c.id = ct.chamado AND c.id = a.chamado ORDER BY c.id DESC) where classificacao = 'ABE'";
 		try{
 			con = ConexaoOracle.abreConexao();
 			ps = con.prepareStatement(sql);
@@ -158,6 +159,10 @@ private String sql;
 				l.setNome(rs.getString(2));
 				c.setLotacaoSolicitante(l);
 				c.setNumero(rs.getInt(3));
+				//foi colocada a data no assunto para aproveitar o campo String descrição (gambiarra para não alterar estrutura)
+				Assunto a = new Assunto();
+				a.setDescricao(rs.getString("ano"));
+				c.setAssunto(a);
 				chamados.add(c);
 			}
 			System.out.println("CONSULTA getChamadosComTombo()");
@@ -175,9 +180,9 @@ private String sql;
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		sql = "SELECT DISTINCT(c.id), l.nome, c.numero FROM chamados c, andamentos a, lotacao l WHERE contains (a.texto, ? ,1) > 0  AND "+
+		sql = "SELECT id,nome,numero,ano from(SELECT c.id, l.nome, c.numero, to_char(a.dt_andamento,'YYYY') as ano, a.classificacao FROM chamados c, andamentos a, lotacao l WHERE contains (a.texto, ? ,1) > 0  AND "+
          " c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
-         " c.lotacaosolicitante = l.id AND c.id = a.chamado ORDER BY c.id DESC";
+         " c.lotacaosolicitante = l.id AND c.id = a.chamado ORDER BY c.id DESC) where classificacao = 'ABE'";
 		try{
 			con = ConexaoOracle.abreConexao();
 			ps = con.prepareStatement(sql);
@@ -190,6 +195,10 @@ private String sql;
 				l.setNome(rs.getString(2));
 				c.setLotacaoSolicitante(l);
 				c.setNumero(rs.getInt(3));
+				//foi colocada a data no assunto para aproveitar o campo String descrição (gambiarra para não alterar estrutura)
+				Assunto a = new Assunto();
+				a.setDescricao(rs.getString("ano"));
+				c.setAssunto(a);
 				chamados.add(c);
 			}
 			System.out.println("CONSULTA getChamadosSemTombo()");
@@ -243,18 +252,18 @@ private String sql;
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-	 sql = "SELECT * FROM (SELECT distinct(c.id) as id, l.nome, c.numero FROM chamados c, chamado_tombo ct, tombos t, lotacao l WHERE (t.NRO_TOMBO = ? OR upper(t.descricao) like upper(?) OR upper(t.serie) like upper(?)) "+
+	 sql = "SELECT * FROM (SELECT c.id as id, l.nome, c.numero, to_char(a.dt_andamento,'YYYY') as dt_andamento, a.classificacao FROM chamados c, andamentos a, chamado_tombo ct, tombos t, lotacao l WHERE (t.NRO_TOMBO = ? OR upper(t.descricao) like upper(?) OR upper(t.serie) like upper(?)) "+
             
            " AND c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
           " c.id = ct.chamado AND ct.tombo = t.id AND c.lotacaosolicitante = l.id UNION "+  
            
-           " SELECT distinct(c.id) as id,l.nome, c.numero FROM chamados c, andamentos a, lotacao l "+
+           " SELECT c.id as id,l.nome, c.numero, to_char(a.dt_andamento,'YYYY') as dt_andamento, a.classificacao FROM chamados c, andamentos a, lotacao l "+
      " WHERE CONTAINS(to_char(a.texto),?,1) > 0  AND c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
            " c.id = a.chamado AND c.lotacaosolicitante = l.id UNION "+
-     "SELECT distinct(c.id) as id,l.nome, c.numero FROM chamados c, andamentos a, lotacao l, servidores s, portal p WHERE a.usuario = p.id and SUBSTR(p.CODIGO, 1, LENGTH(p.CODIGO) - 2) = s.codiserv and s.nome like upper(?) AND c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND  c.id = a.chamado AND c.lotacaosolicitante = l.id  UNION " +
-           " SELECT distinct(c.id) as id,l.nome, c.numero  FROM  chamados c,  lotacao l WHERE (upper(l.nome) like upper(?) OR c.numero = ? ) AND "+
+     "SELECT c.id as id,l.nome, c.numero,to_char(a.dt_andamento,'YYYY') as dt_andamento, a.classificacao FROM chamados c, andamentos a, lotacao l, servidores s, portal p WHERE a.usuario = p.id and SUBSTR(p.CODIGO, 1, LENGTH(p.CODIGO) - 2) = s.codiserv and s.nome like upper(?) AND c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND  c.id = a.chamado AND c.lotacaosolicitante = l.id  UNION " +
+           " SELECT c.id as id,l.nome, c.numero, to_char(a.dt_andamento,'YYYY') as dt_andamento, a.classificacao  FROM  chamados c, andamentos a, lotacao l WHERE (upper(l.nome) like upper(?) OR c.numero = ? ) AND "+
            " c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
-          " c.lotacaosolicitante = l.id) ORDER BY id DESC";
+          " c.lotacaosolicitante = l.id) WHERE classificacao = 'ABE' ORDER BY id DESC";
 	 	try{
 			con = ConexaoOracle.abreConexao();
 			ps = con.prepareStatement(sql);
@@ -274,6 +283,10 @@ private String sql;
 				Lotacao l = new Lotacao();
 				l.setNome(rs.getString(2));
 				c.setLotacaoSolicitante(l);
+				//foi colocada a data no assunto para aproveitar o campo String descrição (gambiarra para não alterar estrutura)
+				Assunto a = new Assunto();
+				a.setDescricao(rs.getString("dt_andamento"));
+				c.setAssunto(a);
 				chamados.add(c);
 				
 			}

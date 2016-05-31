@@ -64,7 +64,7 @@
           
 				<p:column headerText="Chamados encontrados para #{baseDeConhecimentoMB.select}/#{baseDeConhecimentoMB.termoBusca}#{baseDeConhecimentoMB.select.parent}:" >
 				
-					<b>#{chamado.numero}</b><br />
+					<b>#{chamado.numero}/#{chamado.assunto.descricao}</b><br />
 					#{chamado.lotacaoSolicitante.nome}
 					
 				</p:column>

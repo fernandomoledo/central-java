@@ -66,7 +66,8 @@
         <div class="col-md-12">
           <div class="col-md-9 separator">
             <div class="col-md-4 text-center" id="chamados-todo">    
-            	<h:form id="f-todo"><h3 id="counter">A Fazer (<h:outputText value="#{painelMB.qtdeToDo}" />)</h3></h:form>    
+            	<h:form id="f-todo"><h3 id="counter">A Fazer (<h:outputText value="#{painelMB.qtdeToDo}" />)</h3><p:commandButton title="Atualizar 'A fazer'" update=":f-todo :c_todo" icon="ui-icon-refresh" /></h:form>
+            	<div class="push1"></div>    
             	<h:form id="c_todo">
             	   <div class="scr">
             		<ui:repeat var="todo" value="#{painelMB.getChamadosToDo(portalMB.p.lotacao.id)}">
@@ -105,7 +106,8 @@
             	</h:form>
             </div>
             <div class="col-md-4 text-center" id="chamados-doing">            
-            <h:form id="f-doing"><h3>Em andamento (<h:outputText value="#{painelMB.qtdeDoing}" />)</h3></h:form> 
+            <h:form id="f-doing"><h3>Em andamento (<h:outputText value="#{painelMB.qtdeDoing}" />)</h3><p:commandButton title="Atualizar 'Em andamento'" update=":f-doing :c_doing" icon="ui-icon-refresh" /></h:form>
+            <div class="push1"></div> 
             	<h:form id="c_doing">
             	    <div class="scr">
             		<ui:repeat var="doing" value="#{painelMB.getChamadosDoing(portalMB.p.lotacao.id)}">

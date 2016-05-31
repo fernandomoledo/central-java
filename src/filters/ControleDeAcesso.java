@@ -34,13 +34,13 @@ public class ControleDeAcesso implements Filter {
 				!req.getRequestURI().endsWith("/index.jsf") &&
 				!req.getRequestURI().endsWith("/primeiroacesso.jsf") &&
 				!req.getRequestURI().contains("/javax.faces.resource/")){
-			System.out.println("Role 1");
-					res.sendRedirect(req.getContextPath()+"/index.jsf");
+					String url = req.getRequestURL().toString();
+					url = url.substring(url.indexOf("basedeconhecimento/")+19);
+					res.sendRedirect(req.getContextPath()+"/index.jsf?returnUrl="+url);
 		}else if((session.getAttribute("usuarioLogado") != null &&
 				req.getRequestURI().endsWith("/index.jsf")) ||
 				(session.getAttribute("usuarioLogado") != null &&
 						req.getRequestURI().endsWith("/"))){
-			System.out.println("Role 2");
 					res.sendRedirect(req.getContextPath()+"/painel.jsf");
 		}else{
 			fc.doFilter(request, response);

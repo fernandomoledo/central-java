@@ -3,6 +3,7 @@ package controller;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
+import java.util.Map;
 
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
@@ -34,6 +35,15 @@ public class PortalMB {
 	final static Logger logger = Logger.getLogger(PortalMB.class);
 	//armazena a lotação verdadeira do usuário, pois se ele for coordenador, pode alterar sua lotação para ver os chamados
 	private Lotacao original = new Lotacao();
+	private String url = "";
+	
+	public PortalMB(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
+		if(!params.isEmpty()){
+			url = params.get("returnUrl");
+		}
+	}
 	/*
 	 * Este método é responsável por autenticar o login do usuário e criar a sessão, que será controlada pela classe filters.ControleDeAcesso.java
 	 */
@@ -50,6 +60,11 @@ public class PortalMB {
 					session.setAttribute("secao", p.getLotacao().getId());
 					session.setAttribute("codUsuario", p.getId());
 					this.setOriginal(p.getLotacao());
+					this.senha = "";
+					this.confSenha = "";
+					this.senhaAtual = "";
+					if(!url.equals(""))
+						return url+"?faces-redirect=true";
 					return "/painel.xhtml?faces-redirect=true";
 				}else{
 					System.out.println("Usuário ou senha inválidos...");
@@ -89,6 +104,7 @@ public class PortalMB {
 	public String logout(){
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		HttpSession session = (HttpSession) ec.getSession(false);
+		this.url = "";
 		session.removeAttribute("usuarioLogado");
 		session.removeAttribute("secao");
 		return "/index.xhtml?faces-redirect=true";
