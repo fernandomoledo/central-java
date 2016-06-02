@@ -74,7 +74,7 @@
             			<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
 	            			<f:param name="idChamado" value="#{todo.chamado.id}" />
-            			<div class="alert #{fn:containsIgnoreCase(todo.chamado.lotacaoSolicitante.nome,'GABINETE') || fn:containsIgnoreCase(todo.chamado.lotacaoSolicitante.nome,'PRESIDÊNCIA')? 'alert-danger' : 'alert-warning'}">
+            			<div class="alert #{fn:containsIgnoreCase(todo.chamado.lotacaoSolicitante.nome,'GABINETE') || fn:containsIgnoreCase(todo.chamado.lotacaoSolicitante.nome,'PRESIDÊNCIA') ? 'alert-danger' : 'alert-warning'}">
             				 <h:panelGroup rendered="#{todo.chamado.urgente}">
             					<span class="label label-danger pull-right">Urgente</span>
             				</h:panelGroup>
@@ -90,7 +90,10 @@
 				                  <f:convertDateTime  pattern="dd/MM/yyyy HH:mm" />
 				            </h:outputText>
 				             -
-				          	<h:outputText value="(#{painelMB.retornaStatus(todo.chamado.status)})" style="font-size:.8em" />
+				             <h:panelGroup rendered="#{todo.chamado.status eq 'RE'}">
+            					<span class="label label-danger pull-right">REABERTURA</span>
+            				</h:panelGroup>
+				          	<h:outputText value="(#{painelMB.retornaStatus(todo.chamado.status)})" rendered="#{todo.chamado.status ne 'RE'}" style="font-size:.8em" />
 			                <div class="push05"></div>
 			                 <strong>#{todo.chamado.lotacaoSolicitante.nome}</strong>
 			                <div class="push05"></div>
