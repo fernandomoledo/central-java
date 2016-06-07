@@ -235,11 +235,12 @@ public class BaseDeConhecimentoMB {
 	public void buscar() throws NamingException, IOException, ParseException, ParserConfigurationException, SAXException{
 		ChamadoDAO dao = new ChamadoDAO();
 		String server = "";
-		String host = "smau-server";
-		String host2 = "10.15.199.151";
+		String host = "10.15.199.151";
+		
 		try {
 			this.chamados = dao.getChamadosBuscaGeral(this.termoBusca);
 			
+			/*
 			String ipAddress = host;
 			InetAddress inet = InetAddress.getByName(ipAddress);
 			boolean reachable = inet.isReachable(5000);
@@ -248,18 +249,7 @@ public class BaseDeConhecimentoMB {
 			else
 				statusWiki = "Host "+host+" inacessível";
 			
-			if(server.equals("")){
-				ipAddress = host2;
-				inet = InetAddress.getByName(ipAddress);
-				reachable = inet.isReachable(5000);
-				if(reachable)
-					server = "http://"+host2+"/api.php";
-				else
-					statusWiki = "Host "+host2+" inacessível";
-			}
-			
-			
-						
+			*/
 			//Wiki
 	
 		

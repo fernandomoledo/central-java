@@ -255,7 +255,7 @@ private String sql;
 	 sql = "SELECT * FROM (SELECT c.id as id, l.nome, c.numero, to_char(a.dt_andamento,'YYYY') as dt_andamento, a.classificacao FROM chamados c, andamentos a, chamado_tombo ct, tombos t, lotacao l WHERE (t.NRO_TOMBO = ? OR upper(t.descricao) like upper(?) OR upper(t.serie) like upper(?)) "+
             
            " AND c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
-          " c.id = ct.chamado AND ct.tombo = t.id AND c.lotacaosolicitante = l.id UNION "+  
+          " c.id = ct.chamado AND ct.tombo = t.id AND c.lotacaosolicitante = l.id and ct.chamado = a.chamado UNION "+  
            
            " SELECT c.id as id,l.nome, c.numero, to_char(a.dt_andamento,'YYYY') as dt_andamento, a.classificacao FROM chamados c, andamentos a, lotacao l "+
      " WHERE CONTAINS(to_char(a.texto),?,1) > 0  AND c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
@@ -263,7 +263,7 @@ private String sql;
      "SELECT c.id as id,l.nome, c.numero,to_char(a.dt_andamento,'YYYY') as dt_andamento, a.classificacao FROM chamados c, andamentos a, lotacao l, servidores s, portal p WHERE a.usuario = p.id and SUBSTR(p.CODIGO, 1, LENGTH(p.CODIGO) - 2) = s.codiserv and s.nome like upper(?) AND c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND  c.id = a.chamado AND c.lotacaosolicitante = l.id  UNION " +
            " SELECT c.id as id,l.nome, c.numero, to_char(a.dt_andamento,'YYYY') as dt_andamento, a.classificacao  FROM  chamados c, andamentos a, lotacao l WHERE (upper(l.nome) like upper(?) OR c.numero = ? ) AND "+
            " c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
-          " c.lotacaosolicitante = l.id) WHERE classificacao = 'ABE' ORDER BY id DESC";
+          " c.lotacaosolicitante = l.id and c.id = a.chamado) WHERE classificacao = 'ABE' ORDER BY id DESC";
 	 	try{
 			con = ConexaoOracle.abreConexao();
 			ps = con.prepareStatement(sql);

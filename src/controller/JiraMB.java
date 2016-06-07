@@ -335,6 +335,7 @@ public class JiraMB {
 		try{
 			andamento = dao.getChamadoJIRA(id);
 			String texto = andamento.getTexto();
+			
 			String[] linhas = andamento.getTexto().split(System.getProperty("line.separator"));
 
 			if(linhas[0].toUpperCase().contains("PJE-JT")){
@@ -406,6 +407,7 @@ public class JiraMB {
 		 	System.getProperties().put("https.proxyPort", "3128");
 		 	System.getProperties().put("https.proxyUser", "oab");
 		 	System.getProperties().put("https.proxyPassword", "oab15");
+		 
 		 	
 			String url = "https://pje.csjt.jus.br/jira/rest/api/2/issue/";
 		    URL obj = new URL(url);

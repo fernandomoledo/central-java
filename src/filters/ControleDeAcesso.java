@@ -35,8 +35,9 @@ public class ControleDeAcesso implements Filter {
 				!req.getRequestURI().endsWith("/primeiroacesso.jsf") &&
 				!req.getRequestURI().contains("/javax.faces.resource/")){
 					String url = req.getRequestURL().toString();
+					String params = req.getQueryString().toString();
 					url = url.substring(url.indexOf("basedeconhecimento/")+19);
-					res.sendRedirect(req.getContextPath()+"/index.jsf?returnUrl="+url);
+					res.sendRedirect(req.getContextPath()+"/index.jsf?returnUrl=["+url+"?"+params+"]");
 		}else if((session.getAttribute("usuarioLogado") != null &&
 				req.getRequestURI().endsWith("/index.jsf")) ||
 				(session.getAttribute("usuarioLogado") != null &&

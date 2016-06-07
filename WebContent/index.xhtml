@@ -33,7 +33,7 @@
             </div>
             <div class="push2"></div> 
             <div class="text-right">
-                <p:commandButton class="btn btn-primary" value="Entrar" action="#{portalMB.logar()}" onclick="mostra_box();"/>
+                <p:commandButton class="btn btn-primary" value="Entrar" action="#{portalMB.logar()}" onstart="mostra_box();" oncomplete="esconde_box();"/>
             </div>
                <div class="push2"></div> 
             <div style="text-align:center;"><h:graphicImage library="img" styleClass="ibox" name="carregando.gif"/></div>
@@ -41,7 +41,9 @@
             <div class="row">
             	 <b>Primeiro acesso? </b><h:link outcome="primeiroacesso" value="Clique aqui" />
             </div>
-           
+           <div class="row">
+           		<p style="text-align:center">Melhor visualizado em Mozilla Firefox e Google Chrome @ 1440 x 900</p>
+           </div>
           <div class="col-md-4"></div>
           
         </div>
