@@ -42,7 +42,6 @@ public class PortalMB {
 		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
 		if(!params.isEmpty()){
 			url = params.get("returnUrl");
-			url = url.replace("[", "").replace("]", "").toString();
 		}
 	}
 	/*

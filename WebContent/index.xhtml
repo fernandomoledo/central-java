@@ -24,12 +24,16 @@
           <p:messages id="msgs" autoUpdate="true" closable="true" />
             <div class="input-group">
               <span class="input-group-addon" id="sizing-addon2">Usuário:</span>
-              <h:inputText id="txt_usuario" value="#{portalMB.username}" class="form-control" pt:placeholder="Informe seu usuário da extranet..." aria-describedby="sizing-addon2" />
+              <h:inputText id="txt_usuario" value="#{portalMB.username}" 
+              class="form-control" pt:placeholder="Informe seu usuário da extranet..." 
+              aria-describedby="sizing-addon2" required="true" requiredMessage="- O usuário é obrigatório" />
             </div>
             <div class="push2"></div> 
               <div class="input-group">
               <span class="input-group-addon" id="sizing-addon2">Senha:</span>
-              <h:inputSecret id="txt_senha" value="#{portalMB.senha}" class="form-control" pt:placeholder="Informe sua senha..." aria-describedby="sizing-addon2" />
+              <h:inputSecret id="txt_senha" value="#{portalMB.senha}" 
+              class="form-control" pt:placeholder="Informe sua senha..." 
+              aria-describedby="sizing-addon2" required="true" requiredMessage="- A senha é obrigatória" />
             </div>
             <div class="push2"></div> 
             <div class="text-right">
@@ -41,6 +45,7 @@
             <div class="row">
             	 <b>Primeiro acesso? </b><h:link outcome="primeiroacesso" value="Clique aqui" />
             </div>
+                 <div class="push2"></div> 
            <div class="row">
            		<p style="text-align:center">Melhor visualizado em Mozilla Firefox e Google Chrome @ 1440 x 900</p>
            </div>

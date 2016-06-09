@@ -178,6 +178,9 @@ public class BaseDeConhecimentoMB {
 		}
 		
 		if(this.chamados.size() > 0) this.mostra = true;
+		wiki = new ArrayList<ResultadosWiki>();
+		if(this.wiki.size() > 0) this.setMostrawiki(true);
+		else this.setMostrawiki(false);
 	}
 	
 	/*
@@ -240,16 +243,16 @@ public class BaseDeConhecimentoMB {
 		try {
 			this.chamados = dao.getChamadosBuscaGeral(this.termoBusca);
 			
-			/*
+			
 			String ipAddress = host;
 			InetAddress inet = InetAddress.getByName(ipAddress);
 			boolean reachable = inet.isReachable(5000);
 			if(reachable)
-				server = "http://"+host+"/mediawiki/api.php";
+				server = "http://"+host+"/api.php";
 			else
 				statusWiki = "Host "+host+" inacessível";
 			
-			*/
+			
 			//Wiki
 	
 		
