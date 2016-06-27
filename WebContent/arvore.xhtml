@@ -126,7 +126,7 @@
             <div class="push05"></div>
             <h4>Problema relatado</h4>
             
-            	<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" style="white-space:pre-wrap;" />
+            	<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.texto.replace(baseDeConhecimentoMB.termoDestaque,baseDeConhecimentoMB.termoTroca)}" escape="false" style="white-space:pre-wrap;" />
            
             <div class="push05"></div>
             <h4>Equipamentos</h4>
@@ -175,7 +175,7 @@
            		</td>
            		<td>#{andamento.classificacao}</td>
            		<td><h:outputText value="#{andamento.usuario.nome}" escape="false" style="white-space:pre-wrap;" /></td>
-           		<td><h:outputText value="#{andamento.texto.toUpperCase().replace(baseDeConhecimentoMB.termoDestaque.toUpperCase(),baseDeConhecimentoMB.termoTroca.toUpperCase())}" escape="false" style="white-space:pre-wrap;" /></td>
+           		<td><h:outputText value="#{andamento.texto.replaceAll(baseDeConhecimentoMB.termoDestaque,baseDeConhecimentoMB.termoTroca)}" escape="false" style="white-space:pre-wrap;" /></td>
                 </tr>
                </ui:repeat>                           
               </tbody>

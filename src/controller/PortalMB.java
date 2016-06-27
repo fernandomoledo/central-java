@@ -41,7 +41,7 @@ public class PortalMB {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
 		if(!params.isEmpty()){
-			url = params.get("returnUrl");
+			this.url = params.get("returnUrl").toString();
 		}
 	}
 	/*
@@ -64,7 +64,7 @@ public class PortalMB {
 					this.confSenha = "";
 					this.senhaAtual = "";
 					if(!url.equals(""))
-						return url+"?faces-redirect=true";
+						return this.url+"?faces-redirect=true";
 					return "/painel.xhtml?faces-redirect=true";
 				}else{
 					System.out.println("Usuário ou senha inválidos...");

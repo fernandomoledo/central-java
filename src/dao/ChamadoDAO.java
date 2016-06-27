@@ -264,7 +264,10 @@ private String sql;
 		 	ps.setString(1, StringUtils.isNumeric(termo) ? termo : "");
 		 	ps.setString(2, "%"+termo+"%");
 		 	ps.setString(3, "%"+termo+"%");
-		 	ps.setString(4, termo);
+		 	if(termo.indexOf(" ") == -1)
+		 		ps.setString(4, termo+"%");
+		 	else
+		 		ps.setString(4, termo);
 		 	ps.setString(5, "%"+termo.replace("&", " ").replace("|", " ")+"%");
 			ps.setString(6, "%"+termo+"%");
 			ps.setString(7, StringUtils.isNumeric(termo) ? termo : "");

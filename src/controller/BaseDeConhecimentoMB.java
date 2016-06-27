@@ -196,10 +196,10 @@ public class BaseDeConhecimentoMB {
 			termos = termo.split("(\\|)|(\\&)");
 			for(int i = 0; i < termos.length; i++){
 				System.out.println("Termo "+(i+1)+": "+termos[i].trim());
-				chamadoDetalhe.setTexto(chamadoDetalhe.getTexto().toUpperCase().replace(termos[i].toUpperCase().trim(), "<mark>"+termos[i].toUpperCase().trim()+"</mark>"));
+				chamadoDetalhe.setTexto(chamadoDetalhe.getTexto().replaceAll("(?i)"+termos[i].trim(), "<mark>"+termos[i].trim()+"</mark>"));
 				chamadoDetalhe.getChamado().getLotacaoSolicitante().setNome(chamadoDetalhe.getChamado().getLotacaoSolicitante().getNome().toUpperCase().replace(termos[i].toUpperCase().trim(), "<mark>"+termos[i].toUpperCase().trim()+"</mark>"));
 			}
-			chamadoDetalhe.setTexto(chamadoDetalhe.getTexto().toUpperCase().replace(this.termoDestaque.toUpperCase().trim(), "<mark>"+this.termoDestaque.toUpperCase().trim()+"</mark>"));
+			chamadoDetalhe.setTexto(chamadoDetalhe.getTexto().replaceAll("(?i)"+this.termoDestaque.trim(), "<mark>"+this.termoDestaque.trim()+"</mark>"));
 			chamadoDetalhe.getChamado().getLotacaoSolicitante().setNome(chamadoDetalhe.getChamado().getLotacaoSolicitante().getNome().toUpperCase().replace(this.termoDestaque.toUpperCase().trim(), "<mark>"+this.termoDestaque.toUpperCase().trim()+"</mark>"));
 			
 			this.tombosDetalhe = tDao.getTombosPorChamado(id);
@@ -214,12 +214,12 @@ public class BaseDeConhecimentoMB {
 			this.andamentosDetalhe = aDao.getAndamentosPorChamado(id);
 			for(int i = 0; i < andamentosDetalhe.size(); i++){
 				for(int j = 0; j < termos.length; j++){
-					andamentosDetalhe.get(i).setTexto(andamentosDetalhe.get(i).getTexto().toUpperCase().replace(termos[j].toUpperCase().trim(), "<mark>"+termos[j].toUpperCase().trim()+"</mark>"));
-					andamentosDetalhe.get(i).getUsuario().setNome(andamentosDetalhe.get(i).getUsuario().getNome().toUpperCase().replace(termos[j].toUpperCase().trim(), "<mark>"+termos[j].toUpperCase().trim()+"</mark>"));
+					andamentosDetalhe.get(i).setTexto(andamentosDetalhe.get(i).getTexto().replaceAll("(?i)"+termos[j].trim(), "<mark>"+termos[j].trim()+"</mark>"));
+					andamentosDetalhe.get(i).getUsuario().setNome(andamentosDetalhe.get(i).getUsuario().getNome().replaceAll("(?i)"+termos[j].trim(), "<mark>"+termos[j].trim()+"</mark>"));
 				
 				}
-				andamentosDetalhe.get(i).setTexto(andamentosDetalhe.get(i).getTexto().toUpperCase().replace(termoDestaque.toUpperCase().trim(), "<mark>"+termoDestaque.toUpperCase().trim()+"</mark>"));
-				andamentosDetalhe.get(i).getUsuario().setNome(andamentosDetalhe.get(i).getUsuario().getNome().toUpperCase().replace(termoDestaque.toUpperCase().trim(), "<mark>"+termoDestaque.toUpperCase().trim()+"</mark>"));
+				andamentosDetalhe.get(i).setTexto(andamentosDetalhe.get(i).getTexto().replaceAll("(?i)"+termoDestaque.trim(), "<mark>"+termoDestaque.trim()+"</mark>"));
+				andamentosDetalhe.get(i).getUsuario().setNome(andamentosDetalhe.get(i).getUsuario().getNome().replaceAll("(?i)"+termoDestaque.trim(), "<mark>"+termoDestaque.trim()+"</mark>"));
 			}
 			this.ultimoAndamento = this.andamentosDetalhe.get(this.andamentosDetalhe.size()-1);
 			this.mostraDetalhe = true;
