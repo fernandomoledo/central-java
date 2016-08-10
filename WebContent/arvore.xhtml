@@ -124,6 +124,11 @@
             <h4>Lotação</h4>
             <p><h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.lotacaoSolicitante.nome}" escape="false" /></p>
             <div class="push05"></div>
+             <h4>Assunto</h4>
+            
+            	<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.assunto.descricao.replace(baseDeConhecimentoMB.termoDestaque,baseDeConhecimentoMB.termoTroca)}" escape="false" style="white-space:pre-wrap;" />
+           
+            <div class="push05"></div>
             <h4>Problema relatado</h4>
             
             	<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.texto.replace(baseDeConhecimentoMB.termoDestaque,baseDeConhecimentoMB.termoTroca)}" escape="false" style="white-space:pre-wrap;" />

@@ -25,8 +25,8 @@
 	          <h4>#{portalMB.p.lotacao.nome}</h4>
 	        </div>
 	        <div class="col-md-12 text-center">
-	          <a href="https://www.trt15.jus.br/centralChamados/chamado.do?acao=editarChamado" target="_blank">Abrir novo chamado</a>|
-	          <a href="https://www.trt15.jus.br/centralChamados/" target="_blank">Ver meus chamados</a>|
+	          <a href="https://www.trt15.jus.br/centralChamados/chamado.do?acao=editarChamado" target="_blank">Abrir novo chamado</a> |
+	          <a href="https://www.trt15.jus.br/centralChamados/" target="_blank">Ver meus chamados</a> |
 	           <a href="https://www.trt15.jus.br/centralChamados/consulta.do?acao=listarConsulta" target="_blank">Consultas Central</a>
 	        </div>	
 			               	
@@ -66,10 +66,15 @@
         <div class="col-md-12">
           <div class="col-md-9 separator">
             <div class="col-md-4 text-center" id="chamados-todo">    
-            	<h:form id="f-todo"><h3 id="counter">A Fazer (<h:outputText value="#{painelMB.qtdeToDo}" />)</h3><p:commandButton title="Atualizar 'A fazer'" update=":f-todo :c_todo" icon="ui-icon-refresh" /></h:form>
+            	<h:form id="f-todo"><h3 id="counter">A Fazer (<h:outputText value="#{painelMB.qtdeToDo}" />)</h3>
+            		<p:commandButton title="Atualizar 'A fazer'" update=":f-todo :c_todo" icon="ui-icon-refresh">
+            				<p:ajax event="click" update="@form" onstart="mostra_box3();" oncomplete="esconde_box3();" />
+            		</p:commandButton>
+            	</h:form>
             	<div class="push1"></div>    
             	<h:form id="c_todo">
             	   <div class="scr">
+            	    <h:graphicImage style="display:none;" value="/resources/img/aguarde.gif" styleClass="ibox3" />
             		<ui:repeat var="todo" value="#{painelMB.getChamadosToDo(portalMB.p.lotacao.id)}">
             			<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />
@@ -109,10 +114,15 @@
             	</h:form>
             </div>
             <div class="col-md-4 text-center" id="chamados-doing">            
-            <h:form id="f-doing"><h3>Em andamento (<h:outputText value="#{painelMB.qtdeDoing}" />)</h3><p:commandButton title="Atualizar 'Em andamento'" update=":f-doing :c_doing" icon="ui-icon-refresh" /></h:form>
+            <h:form id="f-doing"><h3>Em andamento (<h:outputText value="#{painelMB.qtdeDoing}" />)</h3>
+            	<p:commandButton title="Atualizar 'Em andamento'" update=":f-doing :c_doing" icon="ui-icon-refresh">
+            		<p:ajax event="click"  update="@form" onstart="mostra_box4();" oncomplete="esconde_box4();" />
+            	</p:commandButton>
+            </h:form>
             <div class="push1"></div> 
             	<h:form id="c_doing">
             	    <div class="scr">
+            	    <h:graphicImage style="display:none;" value="/resources/img/aguarde.gif" styleClass="ibox4" />
             		<ui:repeat var="doing" value="#{painelMB.getChamadosDoing(portalMB.p.lotacao.id)}">
             		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
 	            			<f:param name="acao" value="editarChamado" />

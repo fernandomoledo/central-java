@@ -88,7 +88,7 @@ public class JiraMB {
 			StringWriter stack = new StringWriter();
 			e.printStackTrace(new PrintWriter(stack));
 			logger.error("ERRO: " + stack.toString());
-			Mensagens.setMessage(3, "Houve um problema ao listar os chamados ref. ao NÃºcleo PJE");
+			Mensagens.setMessage(3, "Houve um problema ao listar os chamados ref. ao Núcleo PJE");
 		}
 		return this.chamadosJira;
 	}
@@ -358,8 +358,11 @@ public class JiraMB {
 			 
 			 issue.setDescricao(texto.substring(texto.indexOf("Descrição:")+10,texto.indexOf("Prioridade:")).trim().replace("\"", "'"));
 			 
-			 issue.setProcesso(linhas[2].substring(linhas[2].indexOf("00")-1).trim());
-			 
+			 if(linhas[2].indexOf("00") == -1){
+				 issue.setProcesso("");
+			 }else{
+				 issue.setProcesso(linhas[2].substring(linhas[2].indexOf("00")-1).trim());
+			 }
 			 String data = new SimpleDateFormat("yyyy").format(andamento.getDtAndamento());
 			 issue.setChamado(andamento.getChamado().getNumero()+ "/" + data);
 			 

@@ -61,6 +61,22 @@ function esconde_box2(){
 	$(".ibox2").hide();
 }
 
+function mostra_box3(){
+	$(".ibox3").show();
+}
+
+function esconde_box3(){
+	$(".ibox3").hide();
+}
+
+function mostra_box4(){
+	$(".ibox4").show();
+}
+
+function esconde_box4(){
+	$(".ibox4").hide();
+}
+
 function montaurl(url, filtro){
 	//alert(url + " - " +  filtro);
 	if(url == ""){

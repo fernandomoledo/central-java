@@ -24,9 +24,9 @@
       <div class="push2"></div>
       <div class="row">
       	<div class="col-md-12 text-center">
-      	    <h:link outcome="modulo-jira" value="Módulos JIRA" rendered="#{portalMB.original.id == 641}" /> | 
-	        <h:link outcome="componente-jira" value="Componentes JIRA" rendered="#{portalMB.original.id == 641}" /> | 
-	        <h:link outcome="depara-jira" value="Vinculação JIRA" rendered="#{portalMB.original.id == 641}" />
+      	    <h:link outcome="modulo-jira" value="Módulos JIRA" /> | 
+	        <h:link outcome="componente-jira" value="Componentes JIRA"  /> | 
+	        <h:link outcome="depara-jira" value="Vinculação JIRA" />
 	   </div>
 	   	<div class="push3"></div>
         <!-- Container dos painéis -->
@@ -79,8 +79,9 @@
 	            			<f:param name="acao" value="editarChamado" />
 	            			<f:param name="idChamado" value="#{jiraMB.chamadoDetalhe.chamado.id}" />Ver na central de chamados</h:outputLink>
 	            			|
-	            			<h:outputLink value="detalhe-jira.jsf" target="_blank" title="Clique aqui para abrir uma Issue no JIRA">
+	            			<h:outputLink value="detalhe-jira.jsf" target="_blank" title="Clique aqui para abrir uma Issue no JIRA" rendered="#{not fn:containsIgnoreCase(jiraMB.chamadoDetalhe.texto,'Defeito em Produção')}">
 	            			<f:param name="idChamado" value="#{jiraMB.chamadoDetalhe.chamado.id}" />Criar issue no JIRA</h:outputLink>
+	            			<h:outputText rendered="#{fn:containsIgnoreCase(jiraMB.chamadoDetalhe.texto,'Defeito em Produção')}" value="*** DEFEITO EM PRODUÇÃO. CRIAR ISSUE MANUALMENTE ***" style="color:#FF0000;font-weight:bold;"/>
 	            			
             	<div class="push1"></div>
             <h4>Data de Abertura</h4>
@@ -95,7 +96,7 @@
             <div class="push05"></div>
             <h4>Problema relatado</h4>
             
-            	<h:outputText value="#{jiraMB.chamadoDetalhe.texto.toUpperCase()}" escape="false" style="white-space:pre-wrap;" />
+            	<h:outputText value="#{jiraMB.chamadoDetalhe.texto}" escape="false" style="white-space:pre-wrap;" />
            
             <div class="push05"></div>
             <h4>Equipamentos</h4>

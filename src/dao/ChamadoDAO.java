@@ -211,8 +211,9 @@ private String sql;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		Andamento andamento = new Andamento();
-		sql = " SELECT c.id, c.numero, to_char(a.dt_andamento,'YYYY') as ano, a.dt_andamento, l.nome, to_char(a.texto) as texto "+
-			" FROM chamados c, andamentos a, lotacao l WHERE c.id = a.chamado AND a.classificacao='ABE' AND c.lotacaosolicitante = l.id AND c.id = ?";
+		sql = " SELECT c.id, c.numero, ass.descricao, to_char(a.dt_andamento,'YYYY') as ano, a.dt_andamento, l.nome, to_char(a.texto) as texto "+
+			" FROM chamados c, andamentos a, lotacao l, assuntos ass WHERE c.id = a.chamado AND a.classificacao='ABE' AND "
+			+ " c.lotacaosolicitante = l.id AND c.id = ? AND c.assunto = ass.id";
 		try{
 		con = ConexaoOracle.abreConexao();
 		ps = con.prepareStatement(sql);
@@ -224,6 +225,9 @@ private String sql;
 			Chamado c = new Chamado();
 			c.setNumero(rs.getInt("numero"));
 			c.setId(rs.getLong("id"));
+			Assunto a = new Assunto();
+			a.setDescricao(rs.getString("descricao"));
+			c.setAssunto(a);
 			Lotacao l = new Lotacao();
 			l.setNome(rs.getString("nome"));
 			c.setLotacaoSolicitante(l);
@@ -254,6 +258,9 @@ private String sql;
            " SELECT distinct(c.id) as id,l.nome, c.numero FROM chamados c, andamentos a, lotacao l "+
      " WHERE CONTAINS(to_char(a.texto),?,1) > 0  AND c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
            " c.id = a.chamado AND c.lotacaosolicitante = l.id UNION "+
+          " SELECT distinct(c.id) as id,l.nome, c.numero FROM chamados c, assuntos a, lotacao l "+
+           " WHERE upper(a.descricao) like upper(?) AND c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
+                 " c.assunto = a.id AND c.lotacaosolicitante = l.id UNION "+
      "SELECT distinct(c.id) as id,l.nome, c.numero FROM chamados c, andamentos a, lotacao l, servidores s, portal p WHERE a.usuario = p.id and SUBSTR(p.CODIGO, 1, LENGTH(p.CODIGO) - 2) = s.codiserv and s.nome like upper(?) AND c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND  c.id = a.chamado AND c.lotacaosolicitante = l.id  UNION " +
            " SELECT distinct(c.id) as id,l.nome, c.numero FROM  chamados c, andamentos a, lotacao l WHERE (upper(l.nome) like upper(?) OR c.numero = ? ) AND "+
            " c.lotacaodestino in(187, 192, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 1302, 904, 971, 898, 1308, 1309, 1317, 1319) AND "+
@@ -268,15 +275,15 @@ private String sql;
 		 		ps.setString(4, termo+"%");
 		 	else
 		 		ps.setString(4, termo);
-		 	ps.setString(5, "%"+termo.replace("&", " ").replace("|", " ")+"%");
-			ps.setString(6, "%"+termo+"%");
-			ps.setString(7, StringUtils.isNumeric(termo) ? termo : "");
+		 	ps.setString(5, "%"+termo+"%");
+		 	ps.setString(6, "%"+termo.replace("&", " ").replace("|", " ")+"%");
+			ps.setString(7, "%"+termo+"%");
+			ps.setString(8, StringUtils.isNumeric(termo) ? termo : "");
 			rs = ps.executeQuery();
 			while(rs.next()){
 				Chamado c = new Chamado();
 				c.setId(rs.getLong(1));
 				c.setNumero(rs.getInt(3));
-				
 				Lotacao l = new Lotacao();
 				l.setNome(rs.getString(2));
 				c.setLotacaoSolicitante(l);

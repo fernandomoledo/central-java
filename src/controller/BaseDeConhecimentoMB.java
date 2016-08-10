@@ -44,6 +44,7 @@ import dao.CategoriaDAO;
 import dao.ChamadoDAO;
 import dao.TomboDAO;
 import model.Andamento;
+import model.Assunto;
 import model.Categoria;
 import model.CategoriaPai;
 import model.Chamado;
@@ -91,15 +92,19 @@ public class BaseDeConhecimentoMB {
 			}
 			
 			this.termo = this.termoBusca;
-			this.termoDestaque = this.termoBusca.toUpperCase();
+			this.termoDestaque = this.termoBusca;
 			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
-			this.termoBusca = this.termoBusca.replace("_", "\\_");
-			this.termoBusca = this.termoBusca.replace("-", "\\-");
+			this.termoBusca = this.termoBusca.replace("_", " ");
+			this.termoBusca = this.termoBusca.replace("-", " ");
+			/*
 			this.termoBusca = this.termoBusca.replace("@", "\\@");
 			this.termoBusca = this.termoBusca.replace("#", "\\#");
 			this.termoBusca = this.termoBusca.replace("&", "\\&");
 			this.termoBusca = this.termoBusca.replace("%", "\\%");
 			this.termoBusca = this.termoBusca.replace("*", "\\*");
+			*/
+			this.termoBusca = this.termoBusca.replace("$$", "%");
+
 			buscar();
 		}
 		System.out.println(params.toString());
@@ -196,9 +201,15 @@ public class BaseDeConhecimentoMB {
 			termos = termo.split("(\\|)|(\\&)");
 			for(int i = 0; i < termos.length; i++){
 				System.out.println("Termo "+(i+1)+": "+termos[i].trim());
+				Assunto a = new Assunto();
+				a.setDescricao(chamadoDetalhe.getChamado().getAssunto().getDescricao().replaceAll("(?i)"+termos[i].trim(), "<mark>"+termos[i].trim()+"</mark>"));
+				chamadoDetalhe.getChamado().setAssunto(a);
 				chamadoDetalhe.setTexto(chamadoDetalhe.getTexto().replaceAll("(?i)"+termos[i].trim(), "<mark>"+termos[i].trim()+"</mark>"));
 				chamadoDetalhe.getChamado().getLotacaoSolicitante().setNome(chamadoDetalhe.getChamado().getLotacaoSolicitante().getNome().toUpperCase().replace(termos[i].toUpperCase().trim(), "<mark>"+termos[i].toUpperCase().trim()+"</mark>"));
 			}
+			Assunto a = new Assunto();
+			a.setDescricao(chamadoDetalhe.getChamado().getAssunto().getDescricao().replaceAll("(?i)"+this.termoDestaque.trim(), "<mark>"+this.termoDestaque.trim()+"</mark>"));
+			chamadoDetalhe.getChamado().setAssunto(a);
 			chamadoDetalhe.setTexto(chamadoDetalhe.getTexto().replaceAll("(?i)"+this.termoDestaque.trim(), "<mark>"+this.termoDestaque.trim()+"</mark>"));
 			chamadoDetalhe.getChamado().getLotacaoSolicitante().setNome(chamadoDetalhe.getChamado().getLotacaoSolicitante().getNome().toUpperCase().replace(this.termoDestaque.toUpperCase().trim(), "<mark>"+this.termoDestaque.toUpperCase().trim()+"</mark>"));
 			
