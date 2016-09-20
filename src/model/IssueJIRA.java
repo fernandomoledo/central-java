@@ -10,6 +10,7 @@ public class IssueJIRA {
 	private String descricao;
 	private String componente;
 	private String subsistema;
+	private String urgencia;
 	private String modulo;
 	private String servidor;
 	private String chamado;
@@ -91,5 +92,11 @@ public class IssueJIRA {
 	}
 	public void setProcesso(String processo) {
 		this.processo = processo;
+	}
+	public String getUrgencia() {
+		return urgencia;
+	}
+	public void setUrgencia(String urgencia) {
+		this.urgencia = urgencia;
 	}
 }

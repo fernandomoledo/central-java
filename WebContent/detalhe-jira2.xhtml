@@ -17,7 +17,7 @@
        	<div class="push2"></div>
       <div class="row">
         <div class="col-md-12 text-center">
-          <h1>Criação de issues - JIRA - Preparação da Issue</h1>
+          <h1>Criação de issues - JIRAtor 2.0 - Preparação da Issue</h1>
         </div>
       </div>
       <!-- Pula 20px -->
@@ -26,47 +26,51 @@
       	<div class="col-md-12 text-center">
       	    <h:link outcome="modulo-jira" value="Módulos JIRA" target="blank" /> | 
 	        <h:link outcome="componente-jira" value="Componentes JIRA" target="blank" /> | 
-	        <h:link outcome="depara-jira" value="Vinculação JIRA"  target="blank" />
+	        <h:link outcome="depara-jira" value="Vinculação JIRA"  target="blank" /> |
+	       <h:form><h:commandLink value="Abrir chamado no Assyst" action="#{jira2MB.redirect(jira2MB.issueJira.chamado)}" target="_blank" /></h:form>
+	        
 	   </div>
         <!-- Container dos painéis -->
         <div class="col-md-12">
           	<h:form>
-          	<p:messages autoUpdate="true" closable="true" id="mensagens"  />
-          	<div class="push2"></div>
+          	<p:messages autoUpdate="true"  id="mensagens"  />
+  
 				<p:panelGrid columns="2">
    						<b>Projeto:</b>
-   						<h:outputText value="#{jiraMB.issue.nome}" />
+   						<h:outputText value="#{jira2MB.issueJira.nome}" />
    						<b>Tipo do item:</b>
-   						<h:outputText value="#{jiraMB.issue.tipoErro}" />
+   						<h:outputText value="#{jira2MB.issueJira.tipoErro}" />
    						<b>Resumo:</b>
-   						<h:outputText value="#{jiraMB.issue.resumo}" />
+   						<h:outputText value="#{jira2MB.issueJira.resumo}" />
    						<b>Versões afetadas:</b>
-   						<h:inputText value="#{jiraMB.issue.versao}" required="true" requiredMessage="- Versões Afetadas é um campo obrigatório" />
+   						<h:inputText value="#{jira2MB.issueJira.versao}" required="true" requiredMessage="- Versões Afetadas é um campo obrigatório" />
+   						<b>Urgência:</b>
+   						<h:outputText value="#{jira2MB.issueJira.urgencia}" />
    						<b>Subsistema:</b>
-   						<h:outputText value="#{jiraMB.issue.subsistema}" />
+   						<h:outputText value="#{jira2MB.issueJira.subsistema}" />
    						<b>Módulo:</b> 
-   						<h:selectOneMenu id="modulo" value="#{jiraMB.issue.modulo}" required="true" requiredMessage="- O módulo é obrigatório" >
+   						<h:selectOneMenu id="modulo" value="#{jira2MB.issueJira.modulo}" required="true" requiredMessage="- O módulo é obrigatório" >
    							<f:selectItem itemLabel="-- Nenhum --" itemValue="#{null}" />
-   							<f:selectItems value="#{jiraMB.listarModulos()}" var="jira" itemLabel="#{jira.label}" itemValue="#{jira.value}"/>
+   							<f:selectItems value="#{jira2MB.listarModulos()}" var="jira" itemLabel="#{jira.label}" itemValue="#{jira.value}"/>
    						</h:selectOneMenu>   						
    						<b>Componente:</b> 
-   						<h:selectOneMenu id="componente" value="#{jiraMB.issue.componente}" required="true" requiredMessage="- O componente é obrigatório"  >
+   						<h:selectOneMenu id="componente" value="#{jira2MB.issueJira.componente}" required="true" requiredMessage="- O componente é obrigatório"  >
    							<f:selectItem itemLabel="-- Nenhum --" itemValue="#{null}" />
-   							<f:selectItems value="#{jiraMB.listarComponentes()}" var="jira2" itemLabel="#{jira2.componente}" itemValue="#{jira2.componente}"/>
+   							<f:selectItems value="#{jira2MB.listarComponentes()}" var="jira2" itemLabel="#{jira2.componente}" itemValue="#{jira2.componente}"/>
    						</h:selectOneMenu>
    						<b>Ambiente:</b>
-   						<h:outputText value="#{jiraMB.issue.ambiente}" />
+   						<h:outputText value="#{jira2MB.issueJira.ambiente}" />
    						<b>Informações do usuário:</b>
-   						<h:outputText value="#{jiraMB.issue.servidor}" />
+   						<h:outputText value="#{jira2MB.issueJira.servidor}" />
    						<b>Chamado:</b>
-   						<h:outputText value="#{jiraMB.issue.chamado}" />
+   						<h:outputText value="#{jira2MB.issueJira.chamado}" />
    						<b>Processos:</b>
-   						<h:outputText value="#{jiraMB.issue.processo}" />
+   						<h:outputText value="#{jira2MB.issueJira.processo}" />
    						<b>Descrição:</b>
-   						<h:outputText value="#{jiraMB.issue.descricao}" />
+   						<h:outputText value="#{jira2MB.issueJira.descricao}" escape="false"/>
    						<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
-   						<p:commandButton value="Confirmar e criar Issue" actionListener="#{jiraMB.criarIssue()}" rendered="#{jiraMB.geraIssue}" icon="ui-icon-circle-check" update="@form" onstart="mostra_box();" oncomplete="esconde_box();">
-   							<p:confirm header="Confirmação" message="Tem certeza que revisou os dados e quer criar uma issue para o chamado #{jiraMB.issue.chamado}?" icon="ui-icon-alert" />
+   						<p:commandButton value="Confirmar e criar Issue" actionListener="#{jira2MB.criarIssue()}" rendered="#{jira2MB.geraIssue}" icon="ui-icon-circle-check" update="@form" onstart="mostra_box();" oncomplete="esconde_box();">
+   							<p:confirm header="Confirmação" message="Tem certeza que revisou os dados e quer criar uma issue para o chamado #{jira2MB.issueJira.chamado}?" icon="ui-icon-alert" />
    						</p:commandButton>
    						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
    							<p:commandButton value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />

@@ -12,23 +12,16 @@
     <div class="container-fluid">
       <!-- Título -->
       <div class="row">
-		<div class="alert alert-info">
-			<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
-			  <strong>Aviso:</strong> Você deve estar logado na Central de Chamados antes de clicar no chamado desejado!
-		</div>
+		
 		</div>
 	<div class="push2"></div>
       <div class="row">
       	<h:form id="titulo">
 	        <div class="col-md-12 text-center">
-	          <h1>Painel de Chamados</h1>
-	          <h4>#{portalMB.p.lotacao.nome}</h4>
+	          <h1>Base de Conhecimento - CAU</h1>
+	          <h4>Busca de chamados legados da Central de Chamados e JIRATOR</h4>
 	        </div>
-	        <div class="col-md-12 text-center">
-	          <a href="https://www.trt15.jus.br/centralChamados/chamado.do?acao=editarChamado" target="_blank">Abrir novo chamado</a> |
-	          <a href="https://www.trt15.jus.br/centralChamados/" target="_blank">Ver meus chamados</a> |
-	           <a href="https://www.trt15.jus.br/centralChamados/consulta.do?acao=listarConsulta" target="_blank">Consultas Central</a>
-	        </div>	
+	       
 			               	
         </h:form>
       </div>
@@ -36,184 +29,11 @@
 		<!--  teste escolha perfil -->
 		<div class="row">
 			<div class="col-md-12">
-				<div class="col-md-3"></div>
-				<div class="col-md-6 text-center">
-				<h:form rendered="#{painelMB.verificaLotacao(portalMB.original.nome)}">
-					 <div class="input-group">
-		              <span class="input-group-addon" id="sizing-addon2">Alterar lotação:</span>
-		              		<h:selectOneMenu value="#{painelMB.lotacao.nome}" class="form-control" aria-describedby="sizing-addon2">
-		              		<p:ajax event="change" update=":c_todo :c_doing :c_done :titulo" 
-		              		listener="#{portalMB.mudaLotacao(painelMB.lotacao.nome)}" onstart="mostra_box();" oncomplete="esconde_box();"  />
-		              			<f:selectItem itemLabel="-- Escolha a lotação desejada --" itemValue="" />
-			                 	<f:selectItems value="#{painelMB.getLotacoesAmarradasPorPai(portalMB.original.nome)}" noSelectionOption="true" var="lot" itemLabel="#{lot.filha.nome}" itemValue="#{lot.filha.nome}"  />
-			                 	
-			                 </h:selectOneMenu>
-		            </div>		  
-		            <div class="push1"></div>
-		            <div class="row text-center">
-		           		<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
-		            </div>
-				</h:form>
-					<div class="push1"></div>          	         
-	          		<span class="glyphicon glyphicon-pushpin"></span> Chamados sob minha responsabilidade
-				</div>
-				<div class="col-md-3"></div>
-			</div>
-		</div>
-		<!--  fim de teste de escolha de perfil -->
-      <div class="push2"></div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="col-md-9 separator">
-            <div class="col-md-4 text-center" id="chamados-todo">    
-            	<h:form id="f-todo"><h3 id="counter">A Fazer (<h:outputText value="#{painelMB.qtdeToDo}" />)</h3>
-            		<p:commandButton title="Atualizar 'A fazer'" update=":f-todo :c_todo" icon="ui-icon-refresh">
-            				<p:ajax event="click" update="@form" onstart="mostra_box3();" oncomplete="esconde_box3();" />
-            		</p:commandButton>
-            	</h:form>
-            	<div class="push1"></div>    
-            	<h:form id="c_todo">
-            	   <div class="scr">
-            	    <h:graphicImage style="display:none;" value="/resources/img/aguarde.gif" styleClass="ibox3" />
-            		<ui:repeat var="todo" value="#{painelMB.getChamadosToDo(portalMB.p.lotacao.id)}">
-            			<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
-	            			<f:param name="acao" value="editarChamado" />
-	            			<f:param name="idChamado" value="#{todo.chamado.id}" />
-            			<div class="alert #{fn:containsIgnoreCase(todo.chamado.lotacaoSolicitante.nome,'GABINETE') || fn:containsIgnoreCase(todo.chamado.lotacaoSolicitante.nome,'PRESIDÊNCIA') ? 'alert-danger' : 'alert-warning'}">
-            				 <h:panelGroup rendered="#{todo.chamado.urgente}">
-            					<span class="label label-danger pull-right">Urgente</span>
-            				</h:panelGroup>
-            				<h4>
-			                <strong>
-			                	#{todo.chamado.numero}/<h:outputText value="#{todo.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
-			                </strong>
-			                 <c:if test="#{todo.chamado.responsavel.id == portalMB.p.id}">
-			               		 <span class="glyphicon glyphicon-pushpin" title="Eu sou o responsável por este chamado"></span>
-			               	</c:if>
-			                </h4>
-			               <h:outputText value="#{todo.dtAndamento}" style="font-size:.8em;" >
-				                  <f:convertDateTime  pattern="dd/MM/yyyy HH:mm" />
-				            </h:outputText>
-				             -
-				             <h:panelGroup rendered="#{todo.chamado.status eq 'RE'}">
-            					<span class="label label-danger pull-right">REABERTURA</span>
-            				</h:panelGroup>
-				          	<h:outputText value="(#{painelMB.retornaStatus(todo.chamado.status)})" rendered="#{todo.chamado.status ne 'RE'}" style="font-size:.8em" />
-			                <div class="push05"></div>
-			                 <strong>#{todo.chamado.lotacaoSolicitante.nome}</strong>
-			                <div class="push05"></div>
-			                 #{fn:substring(todo.texto,0,100)}...
-			                <div class="push05"></div>
-			              
-			            </div>	
-			            </h:outputLink>		     	
-            		</ui:repeat>
-            		</div>
-            		<h:outputText value="Não existem chamados a fazer" rendered="#{painelMB.qtdeToDo == 0}" />
-            		  <p:poll interval="300" update=":c_todo" />
-            	</h:form>
-            </div>
-            <div class="col-md-4 text-center" id="chamados-doing">            
-            <h:form id="f-doing"><h3>Em andamento (<h:outputText value="#{painelMB.qtdeDoing}" />)</h3>
-            	<p:commandButton title="Atualizar 'Em andamento'" update=":f-doing :c_doing" icon="ui-icon-refresh">
-            		<p:ajax event="click"  update="@form" onstart="mostra_box4();" oncomplete="esconde_box4();" />
-            	</p:commandButton>
-            </h:form>
-            <div class="push1"></div> 
-            	<h:form id="c_doing">
-            	    <div class="scr">
-            	    <h:graphicImage style="display:none;" value="/resources/img/aguarde.gif" styleClass="ibox4" />
-            		<ui:repeat var="doing" value="#{painelMB.getChamadosDoing(portalMB.p.lotacao.id)}">
-            		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
-	            			<f:param name="acao" value="editarChamado" />
-	            			<f:param name="idChamado" value="#{doing.chamado.id}" />
-            			<div class="alert alert-success">
-            			 	<h:panelGroup rendered="#{doing.chamado.urgente}">
-            					<span class="label label-success pull-right">Urgente</span>
-            				</h:panelGroup>
-            				<h4>
-			                <strong>
-			                	#{doing.chamado.numero}/<h:outputText value="#{doing.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
-			                </strong>
-			               <h:panelGroup rendered="#{doing.chamado.responsavel.id eq portalMB.p.id}">
-			               		 <span class="glyphicon glyphicon-pushpin" title="Eu sou o responsável por este chamado"></span>
-			               	</h:panelGroup>
-			                </h4>
-			       
-			               <h:outputText value="#{doing.dtAndamento}" style="font-size:.8em;">
-				                  <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-				            </h:outputText>
-				            -
-				           <h:outputText value="(#{painelMB.retornaStatus(doing.chamado.status)})" style="font-size:.8em" />
-			                <div class="push05"></div>
-			                 <strong>#{doing.chamado.lotacaoSolicitante.nome}</strong>
-			                <div class="push05"></div>
-			                 #{fn:substring(doing.texto,0,100)}...
-			                <div class="push05"></div>
-			         
-			            </div>	
-			            </h:outputLink>		     	
-            		</ui:repeat>
-            		</div>
-            		 <h:outputText value="Não existem chamados em andamento" rendered="#{painelMB.qtdeDoing == 0}" />
-            		  <p:poll interval="300" update=":c_doing" />
-            	</h:form>
-            
-            </div>
-            <div class="col-md-4 text-center" id="chamados-done">
-            <h:form id="f-done"><h3>Concluídos (<h:outputText value="#{painelMB.qtdeDone}" />)</h3></h:form> 
-            	<h:form id="c_done">
-            		<p:selectOneButton value="#{painelMB.periodo}">
-            		<p:ajax event="change" update="@form" onstart="mostra_box2();" oncomplete="esconde_box2();" />
-            			<f:selectItem itemLabel="Hoje" itemValue="0"  />
-			            <f:selectItem itemLabel="Ontem" itemValue="1" />
-			            <f:selectItem itemLabel="7d" itemValue="7" />
-			            <f:selectItem itemLabel="30d" itemValue="30" />
-			        </p:selectOneButton>
-			        <div class="push1"></div>
-					   <div class="scr">
-					    <div class="row text-center">
-		           		<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox2" />
-		            </div>
-            		<ui:repeat var="done" value="#{painelMB.getChamadosDone(portalMB.p.lotacao.id)}">
-            		<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique no chamado para abri-lo na Central">
-	            			<f:param name="acao" value="editarChamado" />
-	            			<f:param name="idChamado" value="#{done.chamado.id}" />
-            			<div class="alert alert-info">
-            			 	<h:panelGroup rendered="#{done.chamado.urgente}">
-            					<span class="label label-info pull-right">Urgente</span>
-            				</h:panelGroup>
-            				<h4>
-			                <strong>
-			                	#{done.chamado.numero}/<h:outputText value="#{done.dtAndamento}"><f:convertDateTime dateStyle="short" pattern="yyyy" /></h:outputText>
-			                </strong>
-			                 <h:panelGroup rendered="#{done.chamado.responsavel.id eq portalMB.p.id}">
-			               		 <span class="glyphicon glyphicon-pushpin" title="Eu sou o responsável por este chamado"></span>
-			               	</h:panelGroup>
-			                </h4>
-			               <h:outputText value="#{done.dtAndamento}" style="font-size:.8em">
-				                  <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-				            </h:outputText>
-				               -
-				           <h:outputText value="(#{painelMB.retornaStatus(done.chamado.status)})" style="font-size:.8em" />
-				    
-			                <div class="push05"></div>
-			                 <strong>#{done.chamado.lotacaoSolicitante.nome}</strong>
-			                <div class="push05"></div>
-			                 #{fn:substring(done.texto,0,100)}...
-			                <div class="push05"></div>
-			                 
-			            </div>	
-			            </h:outputLink>		     	
-            		</ui:repeat>   
-            		  </div>  
-            		<h:outputText value="Não existem chamados finalizados no período" rendered="#{painelMB.qtdeDone == 0}"/>
-            		  <p:poll interval="300" update=":c_done" />       		
-            	</h:form>
-            </div>
-          
-          </div>
-          <div class="col-md-3">
+			
+		<div class="col-md-1"></div>
+
+          <div class="col-md-10">					
+          <div class="col-md-1"></div>
           <h:form id="form1" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}">
             <div class="text-center"><h3>Avisos</h3></div>
             <div class="text-center">
@@ -247,16 +67,11 @@
             </div>
             
          </h:form>
-         <h:form>
-         	<p:poll interval="1" update=":form1 :f-todo :f-doing :f-done" />
-         </h:form>
+        
         </div>
       </div>
     </div>
     </div>
-    <script type="text/javascript">
-    	
-  		setInterval(function(){ document.title= $("#counter").html() + " - Base de Conhecimento"; }, 1000);
-    </script>
+    
 </ui:define>
 </ui:composition>
