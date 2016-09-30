@@ -1,0 +1,109 @@
+<ui:composition  template="template.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+<ui:define name="conteudo">
+ <!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título -->
+       <div class="push3"></div>
+       	<div class="push2"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Categorias</h1>
+        </div>
+      </div>
+      <div class="push3"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <div class="col-md-3"></div>
+          <div class="col-md-6">
+         <h:form id="fcad">
+         <p:messages autoUpdate="true" closable="true" id="mensagens"  />
+           <h:inputHidden value="#{categoriaMB.categoria.idCategoria}" />
+             <div class="input-group">
+              <span class="input-group-addon" id="sizing-addon2">Descrição da categoria:</span>
+              <h:inputText id="nome_categoria" value="#{categoriaMB.categoria.nomeCategoria}" class="form-control" pt:placeholder="Informe o nome da categoria" aria-describedby="sizing-addon2" required="true" requiredMessage="A descrição da categoria é obrigatória" />
+            </div>
+            <div class="push1"></div> 
+            <div class="input-group">
+              <span class="input-group-addon" id="sizing-addon2">Termo de busca:</span>
+              <h:inputText id="termo_categoria" value="#{categoriaMB.categoria.termoCategoria}" class="form-control termo" pt:placeholder="Informe o termo de busca" aria-describedby="sizing-addon2" />
+            </div>
+            <div class="row">
+	            <div class="alert alert-info" id="termo_helper" style="display:none; margin-top: 5px;">
+	              <strong>Dica!</strong> Aqui você pode informar termos de busca adicionais separados por <b>|</b> se forem vários termos distintos ou por <b>&amp;</b> se forem termos unificados. Ex: Memória RAM | Memória ou Banco &amp; Caixa
+	            </div>          
+            </div>  
+            <div class="push2"></div> 
+            <div class="text-right">
+                <h:commandButton class="btn btn-primary" value="Salvar" actionListener="#{categoriaMB.salvar()}" update="@form" />
+            </div>
+           </h:form>
+            <div class="push2"></div>
+            
+            <h4>Definir amarração de categorias</h4>
+            <h:form id="famarra">
+            <div class="input-group">
+              <span class="input-group-addon" id="sizing-addon2">Categoria Filha</span>          
+	          <h:selectOneMenu value="#{categoriaMB.filha.idCategoria}" class="form-control" aria-describedby="sizing-addon2" required="true" requiredMessage="A categoria filha é obrigatória">
+	              <f:selectItem itemValue="#{null}" itemLabel="-- Escolha a categoria filha --" />
+	              <f:selectItems value="#{categoriaMB.getCategorias()}" var="c" itemLabel="#{c.nomeCategoria}" itemValue="#{c.idCategoria}" />
+	           </h:selectOneMenu>
+            </div>
+             <div class="push1"></div> 
+            <div class="input-group">
+              <span class="input-group-addon" id="sizing-addon2">Categoria Pai</span>        
+	          <h:selectOneMenu value="#{categoriaMB.pai.idCategoria}" class="form-control" aria-describedby="sizing-addon2" required="true" requiredMessage="A categoria pai é obrigatória">
+	              <f:selectItem itemValue="#{null}" itemLabel="-- Escolha a categoria pai --" />
+	              <f:selectItems value="#{categoriaMB.getCategorias()}" var="c" itemLabel="#{c.nomeCategoria}" itemValue="#{c.idCategoria}" />
+	           </h:selectOneMenu>
+	           
+            </div>
+            <div class="push2"></div> 
+            <div class="text-right">
+                <h:commandButton class="btn btn-primary" value="Salvar" actionListener="#{categoriaMB.amarrar()}" />
+            </div>
+           </h:form>
+        
+            <div class="push3"></div>     
+             <h:form>       
+            <h:dataTable class="table table-striped example2" id="example2" var="categoria" value="#{categoriaMB.categoriasCompleto}">
+              <h:column>
+		       	<f:facet name="header">Categoria</f:facet>
+		       	#{categoria.filha.nomeCategoria}
+		       </h:column>
+		        <h:column>
+		       	<f:facet name="header">Termo de busca</f:facet>
+		       	#{categoria.filha.termoCategoria}
+		       </h:column>
+		        <h:column>
+		       	<f:facet name="header">Pai</f:facet>
+		       #{categoria.pai.nomeCategoria}
+		       </h:column>
+		        <h:column>
+		       	<f:facet name="header">Opções</f:facet>
+		       	<p:commandButton icon="ui-icon-wrench" actionListener="#{categoriaMB.editar(categoria.filha.idCategoria)}" 
+		       	 title="Editar a categoria #{categoria.filha.nomeCategoria}" update=":fcad" oncomplete="parent.scrollTo(0,0);"  />
+		      
+			       	<p:commandButton icon="ui-icon-trash" actionListener="#{categoriaMB.excluir(categoria.pai.idCategoria, categoria.filha.idCategoria)}" title="Excluir a categoria #{categoria.filha.nomeCategoria}" 
+			       	update=":fcad:mensagens" onclick="return confirm('Deseja realmente excluir a categoria #{categoria.filha.nomeCategoria}?');"/>
+			       		
+		       </h:column>
+            </h:dataTable>    
+             </h:form>	                
+          </div>
+      	
+          <div class="col-md-3"></div>
+        </div>
+      </div>           
+    </div>
+    
+    <!-- Fim Conteúdo da página -->
+    </ui:define>
+</ui:composition>

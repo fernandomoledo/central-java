@@ -129,7 +129,7 @@ public class Jira2MB {
 		 			pos = uids[i];
 		 			break;
 		 		}else{
-		 			pos = "0";
+		 			pos = "-1";
 		 		}
 		 	}
 		 
@@ -573,12 +573,13 @@ public class Jira2MB {
     		
     		 Runtime rt = Runtime.getRuntime();
 			 Process p = rt.exec("curl -D- -X GET http://10.15.199.183:8989/assyst/assystEJB/Action/new?eventId="+idIssue+"&actionTypeId=3");
+			 p.waitFor();
+			 Thread.sleep(1000);
 			 System.out.println(p.toString());
-			 
-    		Runtime rt2 = Runtime.getRuntime();
-			Process p2 = rt2.exec("curl -D- -X GET http://10.15.199.183:8989/assyst/assystEJB/Action/new?eventId="+idIssue+"&actionTypeId=121&remarks=\"Criada%20a%20issue%20-%20" + msgSaida +"\"");
-			System.out.println(p2.toString());
-    		Mensagens.setMessage(1, "Criada a issue: " + msgSaida);
+			p = rt.exec("curl -D- -X GET http://10.15.199.183:8989/assyst/assystEJB/Action/new?eventId="+idIssue+"&actionTypeId=121&remarks=\"Criada%20a%20issue%20-%20" + msgSaida +"\"");
+			p.waitFor();
+			System.out.println(p.toString());
+    		Mensagens.setMessage(1, "Criada a issue: " + msgSaida+". Chamado "+issueJira.getChamado() +" alterado para \"Pendente de terceiros\".");
     		
 		 	System.out.println("Chamado Assyst: "+idIssue);
     		this.geraIssue = false;
