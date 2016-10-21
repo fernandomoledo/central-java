@@ -23,6 +23,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -573,11 +574,17 @@ public class Jira2MB {
     		
     		 Runtime rt = Runtime.getRuntime();
 			 Process p = rt.exec("curl -D- -X GET http://10.15.199.183:8989/assyst/assystEJB/Action/new?eventId="+idIssue+"&actionTypeId=3");
-			 p.waitFor();
+			 if(!p.waitFor(30,TimeUnit.SECONDS)){
+				 Mensagens.setMessage(3, "Não foi possível dar o andamento 'Iniciar atendimento' no chamado "+issueJira.getChamado());
+				 p.destroy();
+			 }
 			 Thread.sleep(1000);
 			 System.out.println(p.toString());
 			p = rt.exec("curl -D- -X GET http://10.15.199.183:8989/assyst/assystEJB/Action/new?eventId="+idIssue+"&actionTypeId=121&remarks=\"Criada%20a%20issue%20-%20" + msgSaida +"\"");
-			p.waitFor();
+			if(!p.waitFor(30,TimeUnit.SECONDS)){
+				 Mensagens.setMessage(3, "Não foi possível dar o andamento 'Pendente de terceiros' no chamado "+issueJira.getChamado());
+				 p.destroy();
+			 }
 			System.out.println(p.toString());
     		Mensagens.setMessage(1, "Criada a issue: " + msgSaida+". Chamado "+issueJira.getChamado() +" alterado para \"Pendente de terceiros\".");
     		
