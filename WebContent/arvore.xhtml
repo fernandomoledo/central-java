@@ -14,6 +14,11 @@
     <div class="container-fluid">
       <!-- Título da Página -->
       <div class="row">
+		<div class="alert alert-danger">
+		  <strong>Aviso:</strong> Você deve estar logado na Central de Chamados antes de clicar no chamado desejado!
+		</div>
+		</div>
+      <div class="row">
       <!-- 
 		<div class="alert alert-danger">
 			<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
@@ -110,6 +115,9 @@
 	            		<f:convertDateTime dateStyle="date" pattern="yyyy" />
 	            	</h:outputText>
             	</h3>
+            	<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique aqui para abrir o chamado na Central">
+          				<f:param name="acao" value="editarChamado" />
+            			<f:param name="idChamado" value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.id}" />Ver na central de chamados</h:outputLink>
             	
             	<div class="push1"></div>
             <h4>Data de Abertura</h4>
