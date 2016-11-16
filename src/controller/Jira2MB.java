@@ -108,8 +108,8 @@ public class Jira2MB {
 		HttpSession session = (HttpSession) ec.getSession(false);
 		String login = session.getAttribute("usuarioLogado").toString();
 		
-		String[] logins = {"adrianacavaggioni","douglasfracalossi","filipepiga","leandragenka","lucianodavini","mauriciofontana","victorbarros"};
-		String[] uids = {"282","300","392","388","387","391","389"};
+		String[] logins = {"adrianacavaggioni","douglasfracalossi","filipepiga","gustavomilanezi","leandragenka","lucianodavini","mauriciofontana","victorbarros"};
+		String[] uids = {"282","300","392","309","388","387","391","389"};
 		try{
 			System.getProperties().put("http.proxyHost", "proxy.trt15.jus.br");
 		 	System.getProperties().put("http.proxyPort", "3128");
