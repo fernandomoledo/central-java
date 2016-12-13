@@ -2,7 +2,7 @@ package model;
 
 public class ModuloJIRA {
 	private int id;
-	private int value;
+	private String value;
 	private String label;
 	public int getId() {
 		return id;
@@ -10,10 +10,10 @@ public class ModuloJIRA {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getValue() {
+	public String getValue() {
 		return value;
 	}
-	public void setValue(int value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 	public String getLabel() {

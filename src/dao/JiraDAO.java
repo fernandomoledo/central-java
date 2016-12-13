@@ -25,7 +25,7 @@ public class JiraDAO {
 				con = ConexaoMySQL.abreConexao();
 				ps = con.prepareStatement(sql);
 				ps.setString(1, m.getLabel());
-				ps.setInt(2, m.getValue());
+				ps.setString(2, m.getValue());
 				ps.execute();
 				System.out.println("Módulo "+m.getLabel()+" salvo!");
 			}finally{	
@@ -44,7 +44,7 @@ public class JiraDAO {
 				con = ConexaoMySQL.abreConexao();
 				ps = con.prepareStatement(sql);
 				ps.setString(1, m.getLabel());
-				ps.setInt(2, m.getValue());
+				ps.setString(2, m.getValue());
 				ps.setInt(3, m.getId());
 				ps.execute();
 				System.out.println("Módulo "+m.getLabel()+" atualizado!");
@@ -70,7 +70,7 @@ public class JiraDAO {
 				ModuloJIRA m = new ModuloJIRA();
 				m.setId(rs.getInt("id"));
 				m.setLabel(rs.getString("label"));
-				m.setValue(rs.getInt("valor_modulo"));
+				m.setValue(rs.getString("valor_modulo"));
 				modulos.add(m);
 			}
 		}finally{	
@@ -95,7 +95,7 @@ public class JiraDAO {
 			while(rs.next()){				
 				m.setId(rs.getInt("id"));
 				m.setLabel(rs.getString("label"));
-				m.setValue(rs.getInt("valor_modulo"));
+				m.setValue(rs.getString("valor_modulo"));
 			}
 		}finally{	
 			rs.close();

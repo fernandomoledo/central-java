@@ -67,9 +67,11 @@
    						<b>Processos:</b>
    						<h:outputText value="#{jira2MB.issueJira.processo}" />
    						<b>Descrição:</b>
-   						<h:outputText value="#{jira2MB.issueJira.descricao}" escape="false"/>
+   						<h:outputText value="#{jira2MB.issueJira.descricao}" escape="false" style="white-space:pre-wrap;" />
    						<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
-   						<p:commandButton value="Confirmar e criar Issue" actionListener="#{jira2MB.criarIssue()}" rendered="#{jira2MB.geraIssue}" icon="ui-icon-circle-check" update="@form" onstart="mostra_box();" oncomplete="esconde_box();">
+   						<p:commandButton value="Confirmar e criar Issue" actionListener="#{jira2MB.criarIssue()}" 
+   						rendered="#{jira2MB.geraIssue}" icon="ui-icon-circle-check" update="@form" onstart="mostra_box();" 
+   						oncomplete="esconde_box();window.scrollTo(0,0);">
    							<p:confirm header="Confirmação" message="Tem certeza que revisou os dados e quer criar uma issue para o chamado #{jira2MB.issueJira.chamado}?" icon="ui-icon-alert" />
    						</p:commandButton>
    						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">

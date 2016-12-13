@@ -107,6 +107,8 @@ public class PortalMB {
 		this.url = "";
 		session.removeAttribute("usuarioLogado");
 		session.removeAttribute("secao");
+		session.removeAttribute("codUsuario");
+		session.invalidate();
 		return "/index.xhtml?faces-redirect=true";
 	}
 

@@ -239,6 +239,7 @@ public class Jira2MB {
 			}
 		}
 		this.moduloJira = new ModuloJIRA();
+		this.filteredModulos = null;
 	}
 	
 	public List<ModuloJIRA> listarModulos(){
@@ -305,6 +306,7 @@ public class Jira2MB {
 			}
 		}
 		this.componenteJIRA = new ComponenteJIRA();
+		this.filteredComponentes = null;
 	}
 	
 	public List<ComponenteJIRA> listarComponentes(){
@@ -455,19 +457,20 @@ public class Jira2MB {
         String xml = "";
         String s = "";
         while(( s = reader.readLine()) != null){
-			xml += s;
+			xml += s + "\n";
 		}
-
-        String issue = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("</remarks>")-1);
         
+        String descrOriginal = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("&lt"));     
+        String issue = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("</remarks>")-1).replace("\n", "");
         
+        //System.out.println(descrOriginal);
         // ends here
 		
 		try{
 				issueJira.setId("10311");
 				issueJira.setNome("PJE-JT");
 				
-				issueJira.setDescricao(this.substitui(issue.substring(0, issue.indexOf("==#")-4).replace("\"", "'")));
+				issueJira.setDescricao(this.substitui(descrOriginal));
 		        issueJira.setTipoErro(issue.substring(issue.indexOf("** *")+21,issue.indexOf("** *R")));
 		        issueJira.setResumo(this.substitui(issue.substring(issue.indexOf("*Resumo")+7,issue.indexOf("** *V")).replace("\"", "'")));
 		        issueJira.setUrgencia(String.valueOf(Integer.parseInt(issue.substring(issue.indexOf("*Urgência")+9,issue.indexOf("** *S")))));
@@ -477,9 +480,10 @@ public class Jira2MB {
 		        issueJira.setAmbiente(issue.substring(issue.indexOf("Ambiente?")+9,issue.indexOf("** *P")));
 		        issueJira.setVersao(issue.substring(issue.indexOf("*Versão do PJE")+14,issue.indexOf("** *U"))+ " - "+issueJira.getAmbiente());
 		        issueJira.setServidor(this.substitui(issue.substring(issue.indexOf("*Perfil do usuário")+18,issue.indexOf("** N"))));
-		        issueJira.setProcesso(issue.substring(issue.indexOf("** Número dos processos")+23,issue.indexOf("#==")));
+		        issueJira.setProcesso(this.substitui(issue.substring(issue.indexOf("** Número dos processos")+23,issue.indexOf("#=="))));
 		        issueJira.setChamado(xml.substring(xml.indexOf("<formattedReference>")+20,xml.indexOf("</formattedReference>")));
 		        
+		       
 		
 			 
 			 JiraDAO daoJira = new JiraDAO();
@@ -591,6 +595,7 @@ public class Jira2MB {
 		 	System.out.println("Chamado Assyst: "+idIssue);
     		this.geraIssue = false;
 		 } catch (Exception e) {
+			 System.out.println(e.toString());
 			 Mensagens.setMessage(3, "Erro ao criar a issue para o chamado "+issueJira.getChamado()+": "+e.getMessage());
 			 StringWriter stack = new StringWriter();
 				e.printStackTrace(new PrintWriter(stack));
@@ -600,7 +605,7 @@ public class Jira2MB {
 	}
 	
 	public String substitui(String t){
-		return t.replace("\"", "'").replace("&amp;", "\\&").replace("&lt;","<").replace("&gt;",">");
+		return t.replace("\"", "''").replace("&amp;", "\\&").replace("&lt;","<").replace("&gt;",">").replace("<empty>", "-");
 	}
 	
 	public String getProjeto() {

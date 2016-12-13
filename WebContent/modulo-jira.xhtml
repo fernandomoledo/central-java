@@ -38,11 +38,11 @@
 				        <h:inputText id="modulo" value="#{jiraMB.moduloJira.label}" pt:placeholder="Digite o nome do módulo JIRA"
 				        required="true" requiredMessage="- O nome do módulo é obrigatório" style="width:100%"/>
 				         <h:outputLabel value="Código do módulo JIRA:" />
-				        <h:inputText id="cod_modulo" value="#{jiraMB.moduloJira.value eq 0 ? null : jiraMB.moduloJira.value }" 
+				        <h:inputText id="cod_modulo" value="#{jiraMB.moduloJira.value}" 
 				        required="true" requiredMessage="- O código do módulo é obrigatório"
 				        pt:placeholder="Digite o código do módulo"/>
 				     	<h:outputLabel value="" />
-                <p:commandButton value="Salvar" actionListener="#{jiraMB.salvarModulo()}" update="@form :tabela" />
+                <p:commandButton value="Salvar" actionListener="#{jiraMB.salvarModulo()}" update="@all" />
                 </p:panelGrid>            	
            </h:form>
             <div class="push3"></div>     
