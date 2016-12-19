@@ -87,6 +87,8 @@ public class Jira2MB {
 	private IssueJIRA issueJira = new IssueJIRA();
 	private boolean geraIssue = true;
 	private String idIssue = "";
+	private String req = "R";
+	
 
 	final static Logger logger = Logger.getLogger(JiraMB.class);
 	
@@ -100,6 +102,19 @@ public class Jira2MB {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	public String abrir(){
+		switch(req.substring(1).length()){
+		case 1:
+			return "detalhe-jira2.jsf?id=500000"+req.substring(1)+"&faces-redirect=true"; 
+		case 2:
+			return "detalhe-jira2.jsf?id=50000"+req.substring(1)+"&faces-redirect=true"; 
+		case 3:
+			return "detalhe-jira2.jsf?id=5000"+req.substring(1)+"&faces-redirect=true"; 
+		default:
+			return "detalhe-jira2.jsf?id=500"+req.substring(1)+"&faces-redirect=true"; 
 		}
 	}
 	
@@ -819,6 +834,15 @@ public class Jira2MB {
 	public void setGeraIssue(boolean geraIssue) {
 		this.geraIssue = geraIssue;
 	}
+
+	public String getReq() {
+		return req;
+	}
+
+	public void setReq(String req) {
+		this.req = req;
+	}
+	
 	
 	
 }
