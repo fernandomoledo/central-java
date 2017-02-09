@@ -475,48 +475,54 @@ public class Jira2MB {
 			xml += s + "\n";
 		}
         
-        String descrOriginal = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("&lt"));     
-        String issue = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("</remarks>")-1).replace("\n", "");
+        if(!xml.contains("Tipo de Pendência") && !xml.contains("Incidente")){
+        	ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        	ec.redirect("erro-issue.html");
+        }else{
         
-        //System.out.println(descrOriginal);
-        // ends here
-		
-		try{
-				issueJira.setId("10311");
-				issueJira.setNome("PJE-JT");
-				
-				issueJira.setDescricao(this.substitui(descrOriginal));
-		        issueJira.setTipoErro(issue.substring(issue.indexOf("** *")+21,issue.indexOf("** *R")));
-		        issueJira.setResumo(this.substitui(issue.substring(issue.indexOf("*Resumo")+7,issue.indexOf("** *V")).replace("\"", "'")));
-		        issueJira.setUrgencia(String.valueOf(Integer.parseInt(issue.substring(issue.indexOf("*Urgência")+9,issue.indexOf("** *S")))));
-		        issueJira.setSubsistema(issue.substring(issue.indexOf("*Subsistema")+11,issue.indexOf("** M")));
-		        System.out.println("Módulo: " + issue.substring(issue.indexOf("** Módulo")+9,issue.indexOf("** C")));
-		        System.out.println("Componentes: " + issue.substring(issue.indexOf("** Componentes")+14,issue.indexOf("** *Q")));
-		        issueJira.setAmbiente(issue.substring(issue.indexOf("Ambiente?")+9,issue.indexOf("** *P")));
-		        issueJira.setVersao(issue.substring(issue.indexOf("*Versão do PJE")+14,issue.indexOf("** *U"))+ " - "+issueJira.getAmbiente());
-		        issueJira.setServidor(this.substitui(issue.substring(issue.indexOf("*Perfil do usuário")+18,issue.indexOf("** N"))));
-		        issueJira.setProcesso(this.substitui(issue.substring(issue.indexOf("** Número dos processos")+23,issue.indexOf("#=="))));
-		        issueJira.setChamado(xml.substring(xml.indexOf("<formattedReference>")+20,xml.indexOf("</formattedReference>")));
-		        
-		       
-		
-			 
-			 JiraDAO daoJira = new JiraDAO();
-			 
-			 for(DeParaJIRA dp : daoJira.listarDePara()){
-				if(issueJira.getResumo().contains(dp.getPalavraChave())){
-					issueJira.setModulo(String.valueOf(dp.getModulo().getValue()));
-					issueJira.setComponente(dp.getComponente().getComponente());
-				}
-			 }
-			 System.out.println("Módulo - "+issueJira.getModulo()+" / " + issueJira.getComponente());
+	        String descrOriginal = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("&lt"));     
+	        String issue = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("</remarks>")-1).replace("\n", "");
+	        
+	        //System.out.println(descrOriginal);
+	        // ends here
 			
-		}catch(Exception e){
-			Mensagens.setMessage(3, "Não foi possível preparar o chamado para criação de issue. "+e.getMessage());
-			StringWriter stack = new StringWriter();
-			e.printStackTrace(new PrintWriter(stack));
-			logger.error("ERRO: " + stack.toString());
-		}
+			try{
+					issueJira.setId("10311");
+					issueJira.setNome("PJE-JT");
+					
+					issueJira.setDescricao(this.substitui(descrOriginal));
+			        issueJira.setTipoErro(issue.substring(issue.indexOf("** *")+21,issue.indexOf("** *R")));
+			        issueJira.setResumo(this.substitui(issue.substring(issue.indexOf("*Resumo")+7,issue.indexOf("** *V")).replace("\"", "'")));
+			        issueJira.setUrgencia(String.valueOf(Integer.parseInt(issue.substring(issue.indexOf("*Urgência")+9,issue.indexOf("** *S")))));
+			        issueJira.setSubsistema(issue.substring(issue.indexOf("*Subsistema")+11,issue.indexOf("** M")));
+			        System.out.println("Módulo: " + issue.substring(issue.indexOf("** Módulo")+9,issue.indexOf("** C")));
+			        System.out.println("Componentes: " + issue.substring(issue.indexOf("** Componentes")+14,issue.indexOf("** *Q")));
+			        issueJira.setAmbiente(issue.substring(issue.indexOf("Ambiente?")+9,issue.indexOf("** *P")));
+			        issueJira.setVersao(issue.substring(issue.indexOf("*Versão do PJE")+14,issue.indexOf("** *U"))+ " - "+issueJira.getAmbiente());
+			        issueJira.setServidor(this.substitui(issue.substring(issue.indexOf("*Perfil do usuário")+18,issue.indexOf("** N"))));
+			        issueJira.setProcesso(this.substitui(issue.substring(issue.indexOf("** Número dos processos")+23,issue.indexOf("#=="))));
+			        issueJira.setChamado(xml.substring(xml.indexOf("<formattedReference>")+20,xml.indexOf("</formattedReference>")));
+			        
+			       
+			
+				 
+				 JiraDAO daoJira = new JiraDAO();
+				 
+				 for(DeParaJIRA dp : daoJira.listarDePara()){
+					if(issueJira.getResumo().contains(dp.getPalavraChave())){
+						issueJira.setModulo(String.valueOf(dp.getModulo().getValue()));
+						issueJira.setComponente(dp.getComponente().getComponente());
+					}
+				 }
+				 System.out.println("Módulo - "+issueJira.getModulo()+" / " + issueJira.getComponente());
+				
+			}catch(Exception e){
+				Mensagens.setMessage(3, "Não foi possível preparar o chamado para criação de issue. "+e.getMessage());
+				StringWriter stack = new StringWriter();
+				e.printStackTrace(new PrintWriter(stack));
+				logger.error("ERRO: " + stack.toString());
+			}
+        }
 	}
 	
 	public void criarIssue() throws IOException, InterruptedException{
