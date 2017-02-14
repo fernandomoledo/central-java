@@ -74,7 +74,7 @@
            >
            <p:ajax event="rowSelect" listener="#{baseDeConhecimentoMB.getDetalhe()}" update=":detalhe" oncomplete="document.getElementById('tbl').scrollTop = 0;" />
           
-				<p:column headerText="Chamados encontrados para #{baseDeConhecimentoMB.select}/#{baseDeConhecimentoMB.termoBusca}#{baseDeConhecimentoMB.select.parent}:" >
+				<p:column headerText="Chamados encontrados para ''#{baseDeConhecimentoMB.select}/#{baseDeConhecimentoMB.termoBusca}#{baseDeConhecimentoMB.select.parent}'':" >
 				
 					<b>#{chamado.numero}</b><br />
 					#{chamado.lotacaoSolicitante.nome}

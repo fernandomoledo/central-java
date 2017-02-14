@@ -483,6 +483,10 @@ public class Jira2MB {
 	        String descrOriginal = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("&lt"));     
 	        String issue = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("</remarks>")-1).replace("\n", "");
 	        
+	        
+	        //issue exemplo sem modulo e componente
+	        //issue = "Após clicar no botão ''Grava'' na tarefa ''Minutar despacho - conversão em diligência'', no processo 0012061-78.2015.5.15.0015 , o sistema não exibe o botão ''Enviar para assinatura'', apesar de informar que o documento foi salvo.<==# ADDITIONAL INFORMATION (DO NOT EDIT) #=** *Tipo de PendênciaIncidente** *ResumoTarefa - Erro de Movimentação - 0012061-78.2015.5.15.0015** *Versão do PJE1.13.2** *Urgência4** *Subsistema1º Grau** *Qual é o Ambiente?Produção** *Perfil do usuárioJose Aparecido de Alcantara Tavares / 070.027.238-04 / Assessor / 1ª Vara do Trabalho de Franca** Número dos processos0012061-78.2015.5.15.0015#==>";
+	        
 	        //System.out.println(descrOriginal);
 	        // ends here
 			
@@ -494,9 +498,13 @@ public class Jira2MB {
 			        issueJira.setTipoErro(issue.substring(issue.indexOf("** *")+21,issue.indexOf("** *R")));
 			        issueJira.setResumo(this.substitui(issue.substring(issue.indexOf("*Resumo")+7,issue.indexOf("** *V")).replace("\"", "'")));
 			        issueJira.setUrgencia(String.valueOf(Integer.parseInt(issue.substring(issue.indexOf("*Urgência")+9,issue.indexOf("** *S")))));
-			        issueJira.setSubsistema(issue.substring(issue.indexOf("*Subsistema")+11,issue.indexOf("** M")));
-			        System.out.println("Módulo: " + issue.substring(issue.indexOf("** Módulo")+9,issue.indexOf("** C")));
-			        System.out.println("Componentes: " + issue.substring(issue.indexOf("** Componentes")+14,issue.indexOf("** *Q")));
+			        if(issue.indexOf("** M") > -1){
+				        issueJira.setSubsistema(issue.substring(issue.indexOf("*Subsistema")+11,issue.indexOf("** M")));
+				        System.out.println("Módulo: " + issue.substring(issue.indexOf("** Módulo")+9,issue.indexOf("** C")));
+				        System.out.println("Componentes: " + issue.substring(issue.indexOf("** Componentes")+14,issue.indexOf("** *Q")));
+			        }else{
+			        	issueJira.setSubsistema(issue.substring(issue.indexOf("*Subsistema")+11,issue.indexOf("** *Q")));
+			        }
 			        issueJira.setAmbiente(issue.substring(issue.indexOf("Ambiente?")+9,issue.indexOf("** *P")));
 			        issueJira.setVersao(issue.substring(issue.indexOf("*Versão do PJE")+14,issue.indexOf("** *U"))+ " - "+issueJira.getAmbiente());
 			        issueJira.setServidor(this.substitui(issue.substring(issue.indexOf("*Perfil do usuário")+18,issue.indexOf("** N"))));
@@ -573,9 +581,10 @@ public class Jira2MB {
 				"\"}, \"customfield_12243\":{\"id\":\""+this.issueJira.getModulo()+"\",\"value\":\""+this.issueJira.getModulo()+"\"},\"customfield_11441\":\""+this.issueJira.getServidor()+
 				"\", \"customfield_12241\":\""+this.issueJira.getChamado()+"\",\"customfield_11542\":\""+this.issueJira.getProcesso()+"\"}}";
 		    OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-		    out.write(data.replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
+		    System.out.println(data.replace("\\", "\\\\").replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
+		    out.write(data.replace("\\", "\\\\").replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
 		    out.close();
-		    System.out.println(data.replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
+		    //System.out.println(data.replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
 		    //InputStream is = conn.getInputStream();
             //InputStreamReader isr = new InputStreamReader(is);
             
