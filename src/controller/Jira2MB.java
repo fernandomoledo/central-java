@@ -480,7 +480,7 @@ public class Jira2MB {
         	ec.redirect("erro-issue.html");
         }else{
         
-	        String descrOriginal = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("&lt"));     
+	        String descrOriginal = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("&lt;=="));     
 	        String issue = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("</remarks>")-1).replace("\n", "");
 	        
 	        
@@ -635,7 +635,8 @@ public class Jira2MB {
 	}
 	
 	public String substitui(String t){
-		return t.replace("\"", "''").replace("&amp;", "\\&").replace("&lt;","<").replace("&gt;",">").replace("<empty>", "-");
+		//return t.replace("\"", "''").replace("&amp;", "\\&").replace("&lt;","<").replace("&gt;",">").replace("<empty>", "-");
+		return t.replace("\"", "''").replace("&amp;", "\\&").replace("<empty>", "-");
 	}
 	
 	public String getProjeto() {
