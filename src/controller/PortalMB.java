@@ -1,9 +1,23 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
@@ -12,14 +26,19 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.naming.NamingException;
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
 
+import util.ConexaoLDAP;
 import util.ConexaoOracle;
 import util.Mensagens;
 import model.Lotacao;
 import model.Portal;
+import net.haxx.curl.CurlGlue;
 import dao.LotacaoDAO;
 import dao.PortalDAO;
 
@@ -48,39 +67,34 @@ public class PortalMB {
 	 * Este método é responsável por autenticar o login do usuário e criar a sessão, que será controlada pela classe filters.ControleDeAcesso.java
 	 */
 	public String logar() throws NamingException{
-		PortalDAO portalDAO = new PortalDAO();
-		p = null;
-		try {
-			p = portalDAO.getLogin(this.username);
-			if(p != null){
-				if(portalDAO.verificaUsuarioMySQL(this.username, this.senha)){
-					ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-					HttpSession session = (HttpSession) ec.getSession(false);
-					session.setAttribute("usuarioLogado", p.getLogin());
-					session.setAttribute("secao", p.getLotacao().getId());
-					session.setAttribute("codUsuario", p.getId());
-					this.setOriginal(p.getLotacao());
-					this.senha = "";
-					this.confSenha = "";
-					this.senhaAtual = "";
-					if(!url.equals(""))
-						return this.url+"?faces-redirect=true";
-					return "/painel.xhtml?faces-redirect=true";
-				}else{
-					System.out.println("Usuário ou senha inválidos...");
-					Mensagens.setMessage(3, "Usuário e/ou senha inválidos");
-				}
+		try{
+			if(ConexaoLDAP.autentica(this.username, this.senha)){
+			//if(portalDAO.verificaUsuarioMySQL(this.username, this.senha)){
+				PortalDAO portalDAO = new PortalDAO();
+				Portal p = portalDAO.getLogin(this.username);
+				ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+				HttpSession session = (HttpSession) ec.getSession(false);
+				session.setAttribute("usuarioLogado", p.getLogin());
+				session.setAttribute("secao", p.getLotacao().getId());
+				session.setAttribute("codUsuario", p.getId());
+				this.setOriginal(p.getLotacao());
+				this.senha = "";
+				this.confSenha = "";
+				this.senhaAtual = "";
+				if(!url.equals(""))
+					return this.url+"?faces-redirect=true";
+				return "/painel.xhtml?faces-redirect=true";
 			}else{
-				System.out.println("Usuário ou senha inválidos...");
-				Mensagens.setMessage(3, "Usuário e/ou senha inválidos");
+				System.out.println("Falha na autenticação!");
+				Mensagens.setMessage(3, "Falha na autenticação!");
 			}
-		} catch (ClassNotFoundException | SQLException e) {
-			
-			Mensagens.setMessage(3, "Erro no banco de dados UNA: "+e.getMessage());
-			StringWriter stack = new StringWriter();
-			e.printStackTrace(new PrintWriter(stack));
-			logger.error("ERRO: " + stack.toString());
+		}catch(SQLException | ClassNotFoundException e){
+			Mensagens.setMessage(3, "Falha no banco de dados. Acione o administrador do sistema!");
 		}
+//}else{
+//	System.out.println("Usuário ou senha inválidos...");
+//	Mensagens.setMessage(3, "Usuário e/ou senha inválidos");
+//}
 		return null;
 		
 	}
@@ -240,6 +254,8 @@ public class PortalMB {
 	public void setSenhaAtual(String senhaAtual) {
 		this.senhaAtual = senhaAtual;
 	}
+	
+	////TESTE
 	
 	
 	

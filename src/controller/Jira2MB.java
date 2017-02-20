@@ -857,8 +857,6 @@ public class Jira2MB {
 
 	public void setReq(String req) {
 		this.req = req;
-	}
-	
-	
+	}	
 	
 }

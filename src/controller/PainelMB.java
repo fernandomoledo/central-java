@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
@@ -258,4 +259,5 @@ public class PainelMB {
 	public void setMinhaLotacao(boolean minhaLotacao) {
 		this.minhaLotacao = minhaLotacao;
 	}
+	
 }
