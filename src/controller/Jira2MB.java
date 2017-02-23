@@ -636,7 +636,7 @@ public class Jira2MB {
 	
 	public String substitui(String t){
 		//return t.replace("\"", "''").replace("&amp;", "\\&").replace("&lt;","<").replace("&gt;",">").replace("<empty>", "-");
-		return t.replace("\"", "''").replace("&amp;", "\\&").replace("<empty>", "-");
+		return t.replace("\"", "''").replace("&amp;", "\\&").replace("&lt;empty&gt;", "-");
 	}
 	
 	public String getProjeto() {

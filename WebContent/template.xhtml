@@ -78,7 +78,7 @@
           <h:form>
            <ul class="nav navbar-nav navbar-right">
             	<li>
-	              <a href="#">Bem-vindo, <b>#{portalMB.username}</b></a>
+	              <a href="#">Bem-vindo, <b>#{portalMB.nome}</b></a>
 	             </li>
            
                 <li><h:commandLink action="#{portalMB.logout()}" value="Sair" title="Clique aqui para sair do sistema" onclick="return confirm('Deseja realmente sair?');" /></li>
@@ -93,7 +93,7 @@
 <hr />
 
     <footer class="text-center">
-      <p>Copyright &copy; 2016 - Tribunal Regional do Trabalho 15ª Região. Todos os direitos reservados.</p>
+      <p>Copyright &copy; 2016 - <h:outputText value="#{portalMB.anoAtual}" /> :: Tribunal Regional do Trabalho 15ª Região. Todos os direitos reservados.</p>
     </footer>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

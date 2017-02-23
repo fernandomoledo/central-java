@@ -16,6 +16,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -50,6 +52,7 @@ public class PortalMB {
 	private String confSenha;
 	private String senhaAtual;
 	private String termo;
+	private String nome;
 	private Portal p;
 	final static Logger logger = Logger.getLogger(PortalMB.class);
 	//armazena a lotação verdadeira do usuário, pois se ele for coordenador, pode alterar sua lotação para ver os chamados
@@ -68,7 +71,9 @@ public class PortalMB {
 	 */
 	public String logar() throws NamingException{
 		try{
-			if(ConexaoLDAP.autentica(this.username, this.senha)){
+			String ret = ConexaoLDAP.autentica(this.username, this.senha);
+			if(!ret.equals("")){
+				this.nome = ret;
 			//if(portalDAO.verificaUsuarioMySQL(this.username, this.senha)){
 				PortalDAO portalDAO = new PortalDAO();
 				Portal p = portalDAO.getLogin(this.username);
@@ -254,8 +259,16 @@ public class PortalMB {
 	public void setSenhaAtual(String senhaAtual) {
 		this.senhaAtual = senhaAtual;
 	}
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 	
-	////TESTE
+	public String getAnoAtual(){
+		return new SimpleDateFormat("yyyy").format(new Date());
+	}
 	
 	
 	

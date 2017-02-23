@@ -15,7 +15,7 @@ import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 
 public class ConexaoLDAP {
-	public static boolean autentica(String username, String password){
+	public static String autentica(String username, String password){
 		Hashtable env = new Hashtable();
 
         env.put(Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.ldap.LdapCtxFactory");
@@ -50,13 +50,13 @@ public class ConexaoLDAP {
 
                 dc = new InitialDirContext(env);
                 System.out.println("Autenticado!: " + fullDN + " / " + cn);
-                return true;
+                return cn;
                 
             }
         } catch (NamingException e) {
         	e.getMessage();
             System.out.println("Credenciais inválidas!");
-            return false;
+            return "";
         } finally {
             if (results != null) {
                 try {
@@ -71,6 +71,6 @@ public class ConexaoLDAP {
                 }
             }
         }
-		return false;
+		return "";
 	}
 }
