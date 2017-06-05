@@ -1,0 +1,21 @@
+/*String cmd = "curl -D- -u trt15:pje@alemanha -X POST --data '{\"fields\":{\"project\": {\"id\":\""+this.issue.getId()+"\"}, \"summary\":\""+this.issue.getResumo()+
+				"\", \"issuetype\":{\"id\": \"59\"}, \"versions\":[{\"name\":\""+this.issue.getVersao()+"\"}], \"environment\":\""+this.issue.getAmbiente()+
+				"\", \"description\":\""+this.issue.getDescricao()+"\",\"components\":[{\"name\":\""+this.issue.getComponente()+"\"}],\"customfield_11741\":{\"value\":\""+this.issue.getSubsistema()+
+				"\"}, \"customfield_12243\":{\"id\":\""+this.issue.getModulo()+"\",\"value\":\""+this.issue.getModulo()+"\"},\"customfield_11441\":\""+this.issue.getServidor()+
+				"\", \"customfield_12241\":\""+this.issue.getChamado()+"\",\"customfield_11542\":\""+this.issue.getProcesso()+"\"}}' -H \"Content-Type:application/json\" https://pje.csjt.jus.br/jira/rest/api/2/issue/ -k";
+		*/
+
+
+
+
+/*
+			 * 
+			 * Antes de qualquer coisa, adicionar o certificado do site do Jira, seguindo os passos abaixo 
+			 * no servidor da aplicação:
+			 * https://azure.microsoft.com/pt-br/documentation/articles/java-add-certificate-ca-store/
+			 * ou
+			 * cd /usr/lib/jvm/java-8-oracle/jre/lib/security e
+			 * keytool -keystore cacerts -importcert -alias aliascertificado -file Secure_Certificate_Authority.cer
+			 * senha changeit
+			 * para verificar: keytool -list -keystore cacerts | grep JIRA
+			 */

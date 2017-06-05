@@ -58,8 +58,9 @@
           <ul class="nav navbar-nav">
           	<li><h:link outcome="admin" value="ADMin" rendered="#{portalMB.username=='ersilva' or portalMB.username=='terciolopes' or portalMB.username=='juliomoreno' or portalMB.username=='luizmoledo' or portalMB.username=='felipecury' or portalMB.username=='rleme' or portalMB.username=='marciozuchini'}" /></li>
           	<li><h:link outcome="arvore" value="BoK" title="Base Of Knowledge - Árvore do Conhecimento" /></li>
+          	<!--<li><h:outputLink value="#{portalMB.server}/ckeditor" title="FAQ casos atendidos CAU">FAQ</h:outputLink></li>-->
             <li><h:link outcome="categorias" value="Categorias" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}"><span class="sr-only">(current)</span></h:link></li>
-            <li><h:link outcome="jira2_0" value="JIRAtor 2.0" title="Criação automática de issues no JIRA" /></li>       
+            <li><h:link outcome="jira2_0" value="JIRA" title="Criação automática de issues no JIRA" /></li>       
           </ul>
          <h:form class="navbar-form navbar-left" role="search">
             <div class="form-group">
@@ -141,6 +142,5 @@
     <h:outputScript library="js" name="bootstrap.min.js" />
  	<h:outputScript library="js" name="jquery-ui.min.js" />
     <h:outputScript library="js" name="main.js" />
-
   </body>
 </html>

@@ -47,6 +47,7 @@ import dao.PortalDAO;
 @ManagedBean
 @SessionScoped
 public class PortalMB {
+	private String server;
 	private String username;
 	private String senha;
 	private String confSenha;
@@ -77,6 +78,7 @@ public class PortalMB {
 			//if(portalDAO.verificaUsuarioMySQL(this.username, this.senha)){
 				PortalDAO portalDAO = new PortalDAO();
 				Portal p = portalDAO.getLogin(this.username);
+	
 				ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 				HttpSession session = (HttpSession) ec.getSession(false);
 				session.setAttribute("usuarioLogado", p.getLogin());
@@ -93,8 +95,8 @@ public class PortalMB {
 				System.out.println("Falha na autenticação!");
 				Mensagens.setMessage(3, "Falha na autenticação!");
 			}
-		}catch(SQLException | ClassNotFoundException e){
-			Mensagens.setMessage(3, "Falha no banco de dados. Acione o administrador do sistema!");
+		}catch(Exception e){
+			Mensagens.setMessage(3, "Falha ao conectar-se com o banco de dados UNA. Acione o administrador do sistema!");
 		}
 //}else{
 //	System.out.println("Usuário ou senha inválidos...");
@@ -268,6 +270,12 @@ public class PortalMB {
 	
 	public String getAnoAtual(){
 		return new SimpleDateFormat("yyyy").format(new Date());
+	}
+	public String getServer() {
+		return "http://localhost";
+	}
+	public void setServer(String server) {
+		this.server = server;
 	}
 	
 	

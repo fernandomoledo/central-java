@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -123,17 +124,18 @@ public class Jira2MB {
 		HttpSession session = (HttpSession) ec.getSession(false);
 		String login = session.getAttribute("usuarioLogado").toString();
 		
+	
 		String[] logins = {"adrianacavaggioni","douglasfracalossi","filipepiga","gustavomilanezi","leandragenka","lucianodavini","mauriciofontana","victorbarros"};
 		String[] uids = {"282","300","392","309","388","387","391","389"};
 		try{
-			System.getProperties().put("http.proxyHost", "proxy.trt15.jus.br");
+			System.getProperties().put("http.proxyHost", "proxy1.trt15.jus.br");
 		 	System.getProperties().put("http.proxyPort", "3128");
-		 	System.getProperties().put("http.proxyUser", "oab");
-		 	System.getProperties().put("http.proxyPassword", "oab15");
-			System.getProperties().put("https.proxyHost", "proxy.trt15.jus.br");
+		 	System.getProperties().put("http.proxyUser", "luizmoledo");
+		 	System.getProperties().put("http.proxyPassword", "frinfo3735");
+			System.getProperties().put("https.proxyHost", "proxy1.trt15.jus.br");
 		 	System.getProperties().put("https.proxyPort", "3128");
-		 	System.getProperties().put("https.proxyUser", "oab");
-		 	System.getProperties().put("https.proxyPassword", "oab15");
+		 	System.getProperties().put("https.proxyUser", "luizmoledo");
+		 	System.getProperties().put("https.proxyPassword", "frinfo3735");
 		 	
 		 	/*
 		 	 * For para percorrer logins e trazer uids
@@ -148,7 +150,7 @@ public class Jira2MB {
 		 			pos = "-1";
 		 		}
 		 	}
-		 
+		 	
 			String url = "https://www.trt15.jus.br/assystREST/v1/events?eventType=4&eventStatus=open&affectedUserName=Nucleo%20Apoiopje&assignedUserId="+pos+"&callbackRequired=true";
 			System.out.println("UID: "+pos+" / URL: "+url);
 			
@@ -445,14 +447,14 @@ public class Jira2MB {
 			idIssue = params.get("id");
 		}
 		
-		System.getProperties().put("http.proxyHost", "proxy.trt15.jus.br");
+		System.getProperties().put("http.proxyHost", "proxy1.trt15.jus.br");
 	 	System.getProperties().put("http.proxyPort", "3128");
-	 	System.getProperties().put("http.proxyUser", "oab");
-	 	System.getProperties().put("http.proxyPassword", "oab15");
-		System.getProperties().put("https.proxyHost", "proxy.trt15.jus.br");
+	 	System.getProperties().put("http.proxyUser", "luizmoledo");
+	 	System.getProperties().put("http.proxyPassword", "frinfo3735");
+		System.getProperties().put("https.proxyHost", "proxy1.trt15.jus.br");
 	 	System.getProperties().put("https.proxyPort", "3128");
-	 	System.getProperties().put("https.proxyUser", "oab");
-	 	System.getProperties().put("https.proxyPassword", "oab15");
+	 	System.getProperties().put("https.proxyUser", "luizmoledo");
+	 	System.getProperties().put("https.proxyPassword", "frinfo3735");
 	 
 		String url = "https://www.trt15.jus.br/assystREST/v1/events/"+idIssue;
 	    URL obj = new URL(url);
@@ -534,99 +536,89 @@ public class Jira2MB {
 	}
 	
 	public void criarIssue() throws IOException, InterruptedException{
-		/*String cmd = "curl -D- -u trt15:pje@alemanha -X POST --data '{\"fields\":{\"project\": {\"id\":\""+this.issue.getId()+"\"}, \"summary\":\""+this.issue.getResumo()+
-				"\", \"issuetype\":{\"id\": \"59\"}, \"versions\":[{\"name\":\""+this.issue.getVersao()+"\"}], \"environment\":\""+this.issue.getAmbiente()+
-				"\", \"description\":\""+this.issue.getDescricao()+"\",\"components\":[{\"name\":\""+this.issue.getComponente()+"\"}],\"customfield_11741\":{\"value\":\""+this.issue.getSubsistema()+
-				"\"}, \"customfield_12243\":{\"id\":\""+this.issue.getModulo()+"\",\"value\":\""+this.issue.getModulo()+"\"},\"customfield_11441\":\""+this.issue.getServidor()+
-				"\", \"customfield_12241\":\""+this.issue.getChamado()+"\",\"customfield_11542\":\""+this.issue.getProcesso()+"\"}}' -H \"Content-Type:application/json\" https://pje.csjt.jus.br/jira/rest/api/2/issue/ -k";
-		*/
-		try{
-			/*
-			 * 
-			 * Antes de qualquer coisa, adicionar o certificado do site do Jira, seguindo os passos abaixo 
-			 * no servidor da aplicaÃ§Ã£o:
-			 * https://azure.microsoft.com/pt-br/documentation/articles/java-add-certificate-ca-store/
-			 * ou
-			 * cd /usr/lib/jvm/java-8-oracle/jre/lib/security e
-			 * keytool -keystore cacerts -importcert -alias aliascertificado -file Secure_Certificate_Authority.cer
-			 * senha changeit
-			 * para verificar: keytool -list -keystore cacerts | grep JIRA
-			 */
-			System.getProperties().put("http.proxyHost", "proxy.trt15.jus.br");
-		 	System.getProperties().put("http.proxyPort", "3128");
-		 	System.getProperties().put("http.proxyUser", "oab");
-		 	System.getProperties().put("http.proxyPassword", "oab15");
-			System.getProperties().put("https.proxyHost", "proxy.trt15.jus.br");
-		 	System.getProperties().put("https.proxyPort", "3128");
-		 	System.getProperties().put("https.proxyUser", "oab");
-		 	System.getProperties().put("https.proxyPassword", "oab15");
-		 
-		 	
-			String url = "https://pje.csjt.jus.br/jira/rest/api/2/issue/";
-		    URL obj = new URL(url);
-		    HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
-
-		    conn.setRequestProperty("Content-Type", "application/json");
-		    conn.setDoOutput(true);
-
-		    conn.setRequestMethod("POST");
-		  
-		    String userpass = "trt15" + ":" + "pje@alemanha";
-		    String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes("UTF-8"));
-		    conn.setRequestProperty ("Authorization", basicAuth);
-
-		    String data = "{\"fields\":{\"project\": {\"id\":\""+this.issueJira.getId()+"\"}, \"summary\":\""+this.issueJira.getResumo()+
-				"\", \"issuetype\":{\"id\": \"59\"}, \"versions\":[{\"name\":\""+this.issueJira.getVersao()+"\"}], \"customfield_11940\":"+this.issueJira.getUrgencia()+",\"environment\":\""+this.issueJira.getAmbiente()+
-				"\", \"description\":\""+this.issueJira.getDescricao().trim()+"\",\"components\":[{\"name\":\""+this.issueJira.getComponente()+"\"}],\"customfield_11741\":{\"value\":\""+this.issueJira.getSubsistema()+
-				"\"}, \"customfield_12243\":{\"id\":\""+this.issueJira.getModulo()+"\",\"value\":\""+this.issueJira.getModulo()+"\"},\"customfield_11441\":\""+this.issueJira.getServidor()+
-				"\", \"customfield_12241\":\""+this.issueJira.getChamado()+"\",\"customfield_11542\":\""+this.issueJira.getProcesso()+"\"}}";
-		    OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-		    System.out.println(data.replace("\\", "\\\\").replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
-		    out.write(data.replace("\\", "\\\\").replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
-		    out.close();
-		    //System.out.println(data.replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
-		    //InputStream is = conn.getInputStream();
-            //InputStreamReader isr = new InputStreamReader(is);
-            
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
-
-            int numCharsRead;
-            char[] charArray = new char[1024];
-            StringBuffer sb = new StringBuffer();
-            //while ((numCharsRead = isr.read(charArray)) > 0) {
-            while ((numCharsRead = reader.read(charArray)) > 0) {
-                sb.append(charArray, 0, numCharsRead);
-            }
-            String result = sb.toString();
-
-            System.out.println("*** BEGIN ***");
-            System.out.println(result);
-            System.out.println("*** END ***"); 
-        	Gson gson = new Gson();
-    		RetornoJIRA ret = gson.fromJson(result, RetornoJIRA.class);
-    		String msgSaida = "https://pje.csjt.jus.br/jira/browse/"+ret.getKey();
-    		
-    		 Runtime rt = Runtime.getRuntime();
-			 Process p = rt.exec("curl -D- -X GET http://10.15.199.183:8989/assyst/assystEJB/Action/new?eventId="+idIssue+"&actionTypeId=3");
-			 if(!p.waitFor(30,TimeUnit.SECONDS)){
-				 Mensagens.setMessage(3, "Não foi possível dar o andamento 'Iniciar atendimento' no chamado "+issueJira.getChamado());
-				 p.destroy();
-			 }
-			 Thread.sleep(1000);
-			 System.out.println(p.toString());
-			p = rt.exec("curl -D- -X GET http://10.15.199.183:8989/assyst/assystEJB/Action/new?eventId="+idIssue+"&actionTypeId=121&remarks=\"Criada%20a%20issue%20-%20" + msgSaida +"\"");
-			if(!p.waitFor(30,TimeUnit.SECONDS)){
-				 Mensagens.setMessage(3, "Não foi possível dar o andamento 'Pendente de terceiros' no chamado "+issueJira.getChamado());
-				 p.destroy();
-			 }
-			System.out.println(p.toString());
-    		Mensagens.setMessage(1, "Criada a issue: " + msgSaida+". Chamado "+issueJira.getChamado() +" alterado para \"Pendente de terceiros\".");
-    		
-		 	System.out.println("Chamado Assyst: "+idIssue);
-    		this.geraIssue = false;
+		try{						
+			InetAddress inet = InetAddress.getByName("pje.csjt.jus.br");
+			boolean reachable = inet.isReachable(5000);
+			if(reachable){
+				System.out.println("Jira fora do AR!");
+				Mensagens.setMessage(3, "Site https://pje.csjt.jus.br/jira fora do ar! Tente novamente mais tarde!");
+			}else{	
+				System.getProperties().put("http.proxyHost", "proxy1.trt15.jus.br");
+			 	System.getProperties().put("http.proxyPort", "3128");
+			 	System.getProperties().put("http.proxyUser", "luizmoledo");
+			 	System.getProperties().put("http.proxyPassword", "frinfo3735");
+				System.getProperties().put("https.proxyHost", "proxy1.trt15.jus.br");
+			 	System.getProperties().put("https.proxyPort", "3128");
+			 	System.getProperties().put("https.proxyUser", "luizmoledo");
+			 	System.getProperties().put("https.proxyPassword", "frinfo3735");
+			 	 	
+			 	
+				String url = "https://pje.csjt.jus.br/jira/rest/api/2/issue/";
+			    URL obj = new URL(url);
+			    HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
+	
+			    conn.setRequestProperty("Content-Type", "application/json");
+			    conn.setDoOutput(true);
+	
+			    conn.setRequestMethod("POST");
+			  
+			    String userpass = "trt15" + ":" + "pje@alemanha";
+			    String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes("UTF-8"));
+			    conn.setRequestProperty ("Authorization", basicAuth);
+	
+			    String data = "{\"fields\":{\"project\": {\"id\":\""+this.issueJira.getId()+"\"}, \"summary\":\""+this.issueJira.getResumo()+
+					"\", \"issuetype\":{\"id\": \"59\"}, \"versions\":[{\"name\":\""+this.issueJira.getVersao()+"\"}], \"customfield_11940\":"+this.issueJira.getUrgencia()+",\"environment\":\""+this.issueJira.getAmbiente()+
+					"\", \"description\":\""+this.issueJira.getDescricao().trim()+"\",\"components\":[{\"name\":\""+this.issueJira.getComponente()+"\"}],\"customfield_11741\":{\"value\":\""+this.issueJira.getSubsistema()+
+					"\"}, \"customfield_12243\":{\"id\":\""+this.issueJira.getModulo()+"\",\"value\":\""+this.issueJira.getModulo()+"\"},\"customfield_11441\":\""+this.issueJira.getServidor()+
+					"\", \"customfield_12241\":\""+this.issueJira.getChamado()+"\",\"customfield_11542\":\""+this.issueJira.getProcesso()+"\"}}";
+			    OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+			    System.out.println(data.replace("\\", "\\\\").replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
+			    out.write(data.replace("\\", "\\\\").replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
+			    out.close();
+			    //System.out.println(data.replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r"));
+			    //InputStream is = conn.getInputStream();
+	            //InputStreamReader isr = new InputStreamReader(is);
+	            
+	            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("UTF-8")));
+	
+	            int numCharsRead;
+	            char[] charArray = new char[1024];
+	            StringBuffer sb = new StringBuffer();
+	            //while ((numCharsRead = isr.read(charArray)) > 0) {
+	            while ((numCharsRead = reader.read(charArray)) > 0) {
+	                sb.append(charArray, 0, numCharsRead);
+	            }
+	            String result = sb.toString();
+	
+	            System.out.println("*** BEGIN ***");
+	            System.out.println(result);
+	            System.out.println("*** END ***"); 
+	        	Gson gson = new Gson();
+	    		RetornoJIRA ret = gson.fromJson(result, RetornoJIRA.class);
+	    		String msgSaida = "https://pje.csjt.jus.br/jira/browse/"+ret.getKey();
+	    		
+	    		 Runtime rt = Runtime.getRuntime();
+				 Process p = rt.exec("curl -D- -X GET http://10.15.199.183:8989/assyst/assystEJB/Action/new?eventId="+idIssue+"&actionTypeId=3");
+				 if(!p.waitFor(30,TimeUnit.SECONDS)){
+					 Mensagens.setMessage(3, "Não foi possível dar o andamento 'Iniciar atendimento' no chamado "+issueJira.getChamado());
+					 p.destroy();
+				 }
+				 Thread.sleep(1000);
+				 System.out.println(p.toString());
+				p = rt.exec("curl -D- -X GET http://10.15.199.183:8989/assyst/assystEJB/Action/new?eventId="+idIssue+"&actionTypeId=121&remarks=\"Criada%20a%20issue%20-%20" + msgSaida +"\"");
+				if(!p.waitFor(30,TimeUnit.SECONDS)){
+					 Mensagens.setMessage(3, "Não foi possível dar o andamento 'Pendente de terceiros' no chamado "+issueJira.getChamado());
+					 p.destroy();
+				 }
+				System.out.println(p.toString());
+	    		Mensagens.setMessage(1, "Criada a issue: " + msgSaida+". Chamado "+issueJira.getChamado() +" alterado para \"Pendente de terceiros\".");
+	    		
+			 	System.out.println("Chamado Assyst: "+idIssue);
+	    		this.geraIssue = false;
+			}
 		 } catch (Exception e) {
 			 System.out.println(e.toString());
-			 Mensagens.setMessage(3, "Erro ao criar a issue para o chamado "+issueJira.getChamado()+": "+e.getMessage());
+			 Mensagens.setMessage(3, "Erro ao criar a issue para o chamado "+issueJira.getChamado()+": "+ verificaError(e.getMessage()));
 			 StringWriter stack = new StringWriter();
 				e.printStackTrace(new PrintWriter(stack));
 				logger.error("ERRO: " + stack.toString());
@@ -634,6 +626,24 @@ public class Jira2MB {
 	
 	}
 	
+	public String verificaError(String retorno){
+		if(retorno.toLowerCase().contains("response code: 400")){
+			return "<br><br>Causas prováveis: <br>1 - A descrição do chamado não segue as normas da API do JIRA (caracteres especiais, expressões irregulares, etc.)<br> 2 - Algum dos campos está preenchido incorretamente (Ex. versão errada, campos trocados, etc.) <br> 3 - Algum campo teve o nome alterado na API e o Programador do TRT15 não está sabendo<br> 4 - Os certificados do portal do JIRA foram atualizados<br> 5 - O proxy do TRT15 está barrando a conexão<br><br>Recomenda-se criar a issue manualmente.";
+		}else if(retorno.toLowerCase().contains("response code: 401")){
+			return "Usuário trt15 não permitido para executar a ação.";
+		}else if(retorno.toLowerCase().contains("response code: 403")){
+			return "Acesso proibido.";
+		}else if(retorno.toLowerCase().contains("response code: 404")){
+			return "Página não encontrada";
+		}else if(retorno.toLowerCase().contains("response code: 500")){
+			return "Parece que o servidor do JIRA/CSJT está com problemas";
+		}else if(retorno.toLowerCase().contains("response code: 502")){
+			return "Destino inacessível";
+		}else if(retorno.toLowerCase().contains("response code: 503")){
+			return "Serviço API JIRA indisponível";
+		}
+		return "Erro desconhecido. Avise o administrador do sistema";
+	}
 	public String substitui(String t){
 		//return t.replace("\"", "''").replace("&amp;", "\\&").replace("&lt;","<").replace("&gt;",">").replace("<empty>", "-");
 		return t.replace("\"", "''").replace("&amp;", "\\&").replace("&lt;empty&gt;", "-");
