@@ -130,12 +130,12 @@ public class Jira2MB {
 		try{
 			System.getProperties().put("http.proxyHost", "proxy1.trt15.jus.br");
 		 	System.getProperties().put("http.proxyPort", "3128");
-		 	System.getProperties().put("http.proxyUser", "luizmoledo");
-		 	System.getProperties().put("http.proxyPassword", "frinfo3735");
+		 	System.getProperties().put("http.proxyUser", "cauproxy");
+		 	System.getProperties().put("http.proxyPassword", "cauproxy-2017");
 			System.getProperties().put("https.proxyHost", "proxy1.trt15.jus.br");
 		 	System.getProperties().put("https.proxyPort", "3128");
-		 	System.getProperties().put("https.proxyUser", "luizmoledo");
-		 	System.getProperties().put("https.proxyPassword", "frinfo3735");
+		 	System.getProperties().put("https.proxyUser", "cauproxy");
+		 	System.getProperties().put("https.proxyPassword", "cauproxy-2017");
 		 	
 		 	/*
 		 	 * For para percorrer logins e trazer uids
@@ -449,12 +449,12 @@ public class Jira2MB {
 		
 		System.getProperties().put("http.proxyHost", "proxy1.trt15.jus.br");
 	 	System.getProperties().put("http.proxyPort", "3128");
-	 	System.getProperties().put("http.proxyUser", "luizmoledo");
-	 	System.getProperties().put("http.proxyPassword", "frinfo3735");
+	 	System.getProperties().put("http.proxyUser", "cauproxy");
+	 	System.getProperties().put("http.proxyPassword", "cauproxy-2017");
 		System.getProperties().put("https.proxyHost", "proxy1.trt15.jus.br");
 	 	System.getProperties().put("https.proxyPort", "3128");
-	 	System.getProperties().put("https.proxyUser", "luizmoledo");
-	 	System.getProperties().put("https.proxyPassword", "frinfo3735");
+	 	System.getProperties().put("https.proxyUser", "cauproxy");
+	 	System.getProperties().put("https.proxyPassword", "cauproxy-2017");
 	 
 		String url = "https://www.trt15.jus.br/assystREST/v1/events/"+idIssue;
 	    URL obj = new URL(url);
@@ -545,12 +545,12 @@ public class Jira2MB {
 			}else{	
 				System.getProperties().put("http.proxyHost", "proxy1.trt15.jus.br");
 			 	System.getProperties().put("http.proxyPort", "3128");
-			 	System.getProperties().put("http.proxyUser", "luizmoledo");
-			 	System.getProperties().put("http.proxyPassword", "frinfo3735");
+			 	System.getProperties().put("http.proxyUser", "cauproxy");
+			 	System.getProperties().put("http.proxyPassword", "cauproxy-2017");
 				System.getProperties().put("https.proxyHost", "proxy1.trt15.jus.br");
 			 	System.getProperties().put("https.proxyPort", "3128");
-			 	System.getProperties().put("https.proxyUser", "luizmoledo");
-			 	System.getProperties().put("https.proxyPassword", "frinfo3735");
+			 	System.getProperties().put("https.proxyUser", "cauproxy");
+			 	System.getProperties().put("https.proxyPassword", "cauproxy-2017");
 			 	 	
 			 	
 				String url = "https://pje.csjt.jus.br/jira/rest/api/2/issue/";
