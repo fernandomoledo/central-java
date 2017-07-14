@@ -50,17 +50,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.jsf">Base de Conhecimento</a>
+          <a class="navbar-brand" href="index.jsf" title="Ir para a página inicial">Base de Conhecimento</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-          	<li><h:link outcome="admin" value="ADMin" rendered="#{portalMB.username=='ersilva' or portalMB.username=='terciolopes' or portalMB.username=='juliomoreno' or portalMB.username=='luizmoledo' or portalMB.username=='felipecury' or portalMB.username=='rleme' or portalMB.username=='marciozuchini'}" /></li>
           	<li><h:link outcome="arvore" value="BoK" title="Base Of Knowledge - Árvore do Conhecimento" /></li>
           	<!--<li><h:outputLink value="#{portalMB.server}/ckeditor" title="FAQ casos atendidos CAU">FAQ</h:outputLink></li>-->
-            <li><h:link outcome="categorias" value="Categorias" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}"><span class="sr-only">(current)</span></h:link></li>
-            <li><h:link outcome="jira2_0" value="JIRA" title="Criação automática de issues no JIRA" /></li>       
+            <li><h:link outcome="categorias" value="Categorias"><span class="sr-only">(current)</span></h:link></li>
+            <li><h:link outcome="jira2_0" value="JIRA" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}" title="Criação automática de issues no JIRA" /></li>
+            <li><h:outputLink value="#{portalMB.server}/toolkit" title="FAQ casos atendidos CAU">Toolkit</h:outputLink></li>       
           </ul>
          <h:form class="navbar-form navbar-left" role="search">
             <div class="form-group">
@@ -71,7 +71,7 @@
              	<option value="Q" title="Criar consulta personalizada usando || (E) ou | (OU) para separar vários termos">Query</option>
               </select>
          
-         <span class="glyphicon glyphicon-question-sign" style="cursor:help; background-color:#FFF;" title="E - busca todos os termos digitados no mesmo chamado / OU - busca um ou ambos os termos digitados no mesmo chamado / QUERY - consulta personalizada utilizando os operadores || (E) ou | (OU) para expressões múltiplas ou frases. Você pode usar $$ para forçar a busca. ATENÇÃO: evite usar - pois o SQL substitui por espaço."></span>
+         <span class="glyphicon glyphicon-question-sign" style="cursor:help; background-color:#FFF;" title="E - busca todos os termos digitados no mesmo chamado / OU - busca um ou ambos os termos digitados no mesmo chamado / QUERY - consulta personalizada utilizando os operadores || (E) ou | (OU) para expressões múltiplas ou frases. Você pode usar * para coringa antes, depois ou em ambos os lados."></span>
             </div>
             &nbsp;
              <button type="button" class="btn btn-default" id="btn-busca" onclick="javascript:montaurl(txt_busca.value,slc_opcao.value);">Buscar</button>
@@ -82,7 +82,10 @@
 	              <a href="#">Bem-vindo, <b>#{portalMB.nome}</b></a>
 	             </li>
            
-                <li><h:commandLink action="#{portalMB.logout()}" value="Sair" title="Clique aqui para sair do sistema" onclick="return confirm('Deseja realmente sair?');" /></li>
+                <li>
+                	<h:commandLink action="#{portalMB.logout()}" value="" title="Clique aqui para sair do sistema" style="border:none;" onclick="return confirm('Deseja realmente sair?');">
+                	<h:graphicImage library="img" name="sair.png" width="25px" height="25px" style="border:none;" id="btnSair" />
+                </h:commandLink></li>
 
   
           </ul>
@@ -95,6 +98,7 @@
 
     <footer class="text-center">
       <p>Copyright &copy; 2016 - <h:outputText value="#{portalMB.anoAtual}" /> :: Tribunal Regional do Trabalho 15ª Região. Todos os direitos reservados.</p>
+      <p>Versão 3.2.0</p>
     </footer>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

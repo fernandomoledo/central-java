@@ -1,3 +1,8 @@
+#num_tombo{
+	width: 30% !important;
+	max-width: 30% !important;
+}
+
 .destaque{
 	background-color: #FFFF00;
 }
@@ -95,3 +100,9 @@ table tr td{
     background-color: #A9A9A9 !important;
     border-color: #A9A9A9 !important;
 }
+
+.btn-primary{
+	background-color: #009ACD !important;
+  border-color: #009ACD !important;
+}
+

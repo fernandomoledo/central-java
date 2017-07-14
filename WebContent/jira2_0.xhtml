@@ -48,7 +48,7 @@
       		<p:button outcome="jira2_0" icon="ui-icon-refresh" value="Atualizar" />
       		<br /><br />
       			 <p:dataTable var="x" value="#{jira2MB.chamadosJira}"  widgetVar="textoTable" rendered="#{fn:length(jira2MB.chamadosJira) gt 0}"
-           emptyMessage="Não foram encontrados chamados do Núcleo PJE" rows="10" 
+           emptyMessage="Não foram encontrados chamados do Núcleo PJE" rows="10"  sortBy="#{x.chamado}"
             paginator="true"
             paginatorPosition="bottom"
            paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
@@ -61,7 +61,7 @@
            >
            <!--  <p:ajax event="rowSelect" listener="#{jiraMB.getDetalhe()}" update=":detalhe" oncomplete="document.getElementById('tbl').scrollTop = 0;" />-->
           
-				<p:column headerText="Chamados do Núcleo PJE delegados para '#{portalMB.username}':" >
+				<p:column headerText="Chamados do Núcleo PJE delegados para '#{portalMB.username}':" sortBy="#{x.chamado}">
 				<h:outputLink value="detalhe-jira2.jsf" target="_blank" title="Clique aqui para abrir uma Issue no JIRA">
 					<b>Chamado #{x.chamado}</b><br />
 					<h:outputText value="#{x.dataAbertura}">

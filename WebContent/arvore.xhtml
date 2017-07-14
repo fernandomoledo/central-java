@@ -43,12 +43,16 @@
           <div class="col-md-5 separator" id="div-sidebar" style="max-height:768px; overflow:auto;">             	
 			
             <div class="push1"></div>
+            <h:form>
+            <h:outputLabel rendered="#{baseDeConhecimentoMB.termoBusca == ''}">
             <h4>Navegue pelas categorias:</h4>
             <p style="font-width:.4em; color:#FF0000">Clique nas setas</p>
+            </h:outputLabel>
+            </h:form>
            <h:form id="arvore">
 
 	<p:tree value="#{baseDeConhecimentoMB.root}" var="node" selection="#{baseDeConhecimentoMB.select}" 
-	selectionMode="single" animate="true">
+	selectionMode="single" animate="true" rendered="#{baseDeConhecimentoMB.termoBusca == ''}">
 	<p:ajax event="select" listener="#{baseDeConhecimentoMB.getSelecao()}" update=":texto :detalhe" onstart="mostra_box();" oncomplete="esconde_box();"  />
 		 <p:treeNode>
             <p:commandLink value="#{node}" ajax="true" /> 

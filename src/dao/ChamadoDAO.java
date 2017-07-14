@@ -271,10 +271,9 @@ private String sql;
 		 	ps.setString(1, StringUtils.isNumeric(termo) ? termo : "");
 		 	ps.setString(2, "%"+termo+"%");
 		 	ps.setString(3, "%"+termo+"%");
-		 	if(termo.indexOf(" ") == -1)
-		 		ps.setString(4, termo+"%");
-		 	else
-		 		ps.setString(4, termo);
+		 
+		 	ps.setString(4, termo.replace("*", "%"));
+		 	
 		 	ps.setString(5, "%"+termo+"%");
 		 	ps.setString(6, "%"+termo.replace("&", " ").replace("|", " ")+"%");
 			ps.setString(7, "%"+termo+"%");

@@ -151,7 +151,12 @@ public class Jira2MB {
 		 		}
 		 	}
 		 	
-			String url = "https://www.trt15.jus.br/assystREST/v1/events?eventType=4&eventStatus=open&affectedUserName=Nucleo%20Apoiopje&assignedUserId="+pos+"&callbackRequired=true";
+		 	String url = "";
+		 	if(login.equals("luizmoledo")){
+		 		url = "https://www.trt15.jus.br/assystREST/v1/events?eventType=4&eventStatus=open&affectedUserName=Nucleo%20Apoiopje&callbackRequired=true";
+		 	}else{
+		 		url = "https://www.trt15.jus.br/assystREST/v1/events?eventType=4&eventStatus=open&affectedUserName=Nucleo%20Apoiopje&assignedUserId="+pos+"&callbackRequired=true";
+		 	}
 			System.out.println("UID: "+pos+" / URL: "+url);
 			
 		 	//String url = "https://www.trt15.jus.br/assystREST/v1/events?eventType=4&eventStatus=open&affectedUserName=Nucleo%20Apoiopje";
@@ -536,6 +541,10 @@ public class Jira2MB {
 	}
 	
 	public void criarIssue() throws IOException, InterruptedException{
+		 if(!issueJira.getTipoErro().equals("Incidente")){
+	        	Mensagens.setMessage(3, "O chamado atual não se trata de um incidente PJE. Deve ser aberto manualmente no portal do JIRA.");
+	        	this.geraIssue = false;
+	        }else{
 		try{						
 			InetAddress inet = InetAddress.getByName("pje.csjt.jus.br");
 			boolean reachable = inet.isReachable(5000);
@@ -623,6 +632,7 @@ public class Jira2MB {
 				e.printStackTrace(new PrintWriter(stack));
 				logger.error("ERRO: " + stack.toString());
 		 }
+	  }
 	
 	}
 	

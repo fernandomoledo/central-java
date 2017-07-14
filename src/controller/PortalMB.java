@@ -272,7 +272,7 @@ public class PortalMB {
 		return new SimpleDateFormat("yyyy").format(new Date());
 	}
 	public String getServer() {
-		return "http://localhost";
+		return "http://polaris/";
 	}
 	public void setServer(String server) {
 		this.server = server;

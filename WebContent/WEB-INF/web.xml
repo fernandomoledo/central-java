@@ -19,6 +19,10 @@
     <param-value>resources.application</param-value>
   </context-param>
   <context-param>
+    <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+    <param-value>-1</param-value> <!-- habilita o cache indefinidamente -->
+</context-param>
+  <context-param>
     <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
     <param-value>true</param-value>
   </context-param>

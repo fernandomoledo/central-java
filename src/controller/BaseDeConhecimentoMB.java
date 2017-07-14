@@ -91,8 +91,8 @@ public class BaseDeConhecimentoMB {
 				this.termoBusca = params.get("termo").trim().replace("||", " & ");
 			}
 			
-			this.termo = this.termoBusca;
-			this.termoDestaque = this.termoBusca;
+			this.termo = this.termoBusca.replace("*", "%");
+			this.termoDestaque = this.termoBusca.replace("*", "");
 			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
 			this.termoBusca = this.termoBusca.replace("_", " ");
 			this.termoBusca = this.termoBusca.replace("-", " ");
@@ -270,7 +270,11 @@ public class BaseDeConhecimentoMB {
 			wiki = new ArrayList<ResultadosWiki>();
 			
 			if(!server.equals("")){
-				PrintWriter pw = new PrintWriter("/tmp/retorno.txt");
+				PrintWriter pw;
+				if(System.getProperty("os.name").toUpperCase().startsWith("WINDOWS"))
+					pw = new PrintWriter("c:\\curl\\retorno.txt");
+				else
+					pw = new PrintWriter("/tmp/retorno.txt");
 				pw.print(Charset.defaultCharset().name());
 				pw.close();
 				String buscawiki = this.termo.replace("&", "+").replace("|", "+").replace(" ", "+");
@@ -393,7 +397,7 @@ public class BaseDeConhecimentoMB {
 			System.out.println("Chamado "+c.getNumero());
 		}
 	}
-	
+		
 	public TreeNode getRoot() {
 		return root;
 	}

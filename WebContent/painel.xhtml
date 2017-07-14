@@ -27,48 +27,28 @@
       </div>
 
 		<!--  teste escolha perfil -->
+			<div class="push2"></div>
 		<div class="row">
-			<div class="col-md-12">
-			
-		<div class="col-md-1"></div>
+			<div class="col-md-12 text-center">
+				<p style="color:#0000FF;"><b>Dica: </b>Use <b>*</b> para melhorar a sua busca: Ex. certific* -> para buscar certificado, certificados, certificadora. / *cert -> para buscar certificado, cacert. / *bacen* -> para buscar bacen, sisbacen, sisbacenweb. </p>
+		<div class="col-md-4"></div>
 
-          <div class="col-md-10">					
-          <div class="col-md-1"></div>
-          <h:form id="form1" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}">
-            <div class="text-center"><h3>Avisos</h3></div>
+          <div class="col-md-4">			
+         
+          
+            <div class="text-center" style="margin-top:100px; font-weight:bold"><h5>Consulta rápida de garantia de equipamentos</h5></div>
             <div class="text-center">
-            	<h:link outcome="detalhe_chat" target="_blank">Ver avisos anteriores</h:link>
+            <h:form>
+            		<p:inputText value="#{garantiaMB.tombo}" placeholder="Digite Nº de tombo sem NT" id="num_tombo" onclick="this.value='';document.getElementsByClassName('ui-messages')[0].style.display='none';" />
+	      			<p:commandButton value="Buscar" actionListener="#{garantiaMB.verificarGarantia()}" update="@all"/>
+	      			</h:form>
             </div>
-            <div id="avisos_chat">
-            <ui:repeat var="chat" value="#{painelMB.lastChats}" >
-            	<div class="alert alert-chat  fade in">
-	              <strong>
-	              	<h:outputText value="#{chat.dataChat}">
-	              		<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-	              	</h:outputText> - #{chat.usuarioChat}
-	              </strong>
-	              <br />
-	              <p>#{chat.textoChat}</p>
-	            </div>
-	        </ui:repeat>
+             <div class="col-md-4"></div>
             </div>
-            </h:form>
-           <h:form id="form2" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}">
-            <h:inputTextarea class="form-control" pt:placeholder="Digite o texto do aviso e tecle Enter..." 
-            id="txt_aviso" rows="2" cols="20" value="#{painelMB.chat.textoChat}" 
-            onkeypress="if (event.keyCode == 13) { document.getElementById('form2:btn-aviso').click(); return false; }" />
-            
-            <div class="push1"></div>
-            <div class="text-center">
-            	<h:selectBooleanCheckbox title="Esta mensagem será vista apenas pela minha lotação" value="#{painelMB.minhaLotacao}" /> Só para a minha lotação <br />
-              <p:commandButton class="btn btn-success" id="btn-aviso" value="Avisar"
-               actionListener="#{painelMB.salvar()}" oncomplete="document.getElementById('form2:txt_aviso').value='';" />
-               
-            </div>
-            
-         </h:form>
-        
-        </div>
+    
+			<div class="col-md-12 text-center" style="margin-bottom:150px;">
+        		<h:form id="msg"><p:messages autoUpdate="true" id="mensagens" escape="false"  /></h:form></div>
+        		     
       </div>
     </div>
     </div>

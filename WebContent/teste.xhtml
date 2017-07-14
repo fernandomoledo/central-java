@@ -59,3 +59,37 @@
     </div>
 </ui:define>
 </ui:composition>
+
+   <!-- 
+        		<p:dataTable var="t" value="#{garantiaMB.tombosSMP}" emptyMessage="Não foram encontrados tombos no banco de dados." 
+        		rows="10" paginator="true" paginatorPosition="bottom" id="tbl"
+		           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
+		           currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+		           rowsPerPageTemplate="5,10,20">
+		           <f:facet name="{Exporters}">
+		            <h:commandLink>
+		                <p:graphicImage name="resources/img/pdf.png" width="24"/>
+		                <p:dataExporter type="pdf" target="tbl" fileName="tombos"/>
+		            </h:commandLink>
+		           </f:facet>
+        			<p:column headerText="NRO_TOMBO">
+        				<h:outputText value="#{t.nroTombo}" />
+        			</p:column>
+        			<p:column headerText="Descrição">
+        				<h:outputText value="#{t.descricao}" />
+        			</p:column>
+        			<p:column headerText="Série">
+        				<h:outputText value="#{t.serie}" />
+        			</p:column>
+        			<p:column headerText="Garantia">
+        				<h:outputText value="#{t.dtGarantia}">
+        						<f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
+        				</h:outputText>
+        			</p:column>
+        			<p:column headerText="Lotação">
+        				<h:outputText value="#{t.lotacao.nome}" />
+        			</p:column>
+        		</p:dataTable>
+        	
+        	</div>
+        		 -->
