@@ -60,7 +60,7 @@
           	<!--<li><h:outputLink value="#{portalMB.server}/ckeditor" title="FAQ casos atendidos CAU">FAQ</h:outputLink></li>-->
             <li><h:link outcome="categorias" value="Categorias"><span class="sr-only">(current)</span></h:link></li>
             <li><h:link outcome="jira2_0" value="JIRA" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}" title="Criação automática de issues no JIRA" /></li>
-            <li><h:outputLink value="#{portalMB.server}/toolkit" title="FAQ casos atendidos CAU">Toolkit</h:outputLink></li>       
+            <li><h:outputLink value="#{portalMB.server}/toolkit" title="Página de ferramentas úteis da CAU/SETIC">Toolkit</h:outputLink></li>       
           </ul>
          <h:form class="navbar-form navbar-left" role="search">
             <div class="form-group">
@@ -84,7 +84,7 @@
            
                 <li>
                 	<h:commandLink action="#{portalMB.logout()}" value="" title="Clique aqui para sair do sistema" style="border:none;" onclick="return confirm('Deseja realmente sair?');">
-                	<h:graphicImage library="img" name="sair.png" width="25px" height="25px" style="border:none;" id="btnSair" />
+                	<h:graphicImage library="img" name="sair.png" width="18px" height="18px" style="border:none;" id="btnSair" />
                 </h:commandLink></li>
 
   
@@ -98,7 +98,7 @@
 
     <footer class="text-center">
       <p>Copyright &copy; 2016 - <h:outputText value="#{portalMB.anoAtual}" /> :: Tribunal Regional do Trabalho 15ª Região. Todos os direitos reservados.</p>
-      <p>Versão 3.2.0</p>
+      <p>Versão 3.2.1</p>
     </footer>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

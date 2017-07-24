@@ -16,6 +16,9 @@
 		</div>
 	<div class="push2"></div>
       <div class="row">
+      		<div class="col-md-12 text-center">
+      	<p style="background-color:#FFFF00; color:#0000FF; padding:1em;"><b><u>Dica</u>:</b> Use <b>*</b> para melhorar a sua busca: Ex. certific* -> para buscar certificado, certificados, certificadora. / *cert -> para buscar certificado, cacert. / *bacen* -> para buscar bacen, sisbacen, sisbacenweb. </p>
+      	</div>
       	<h:form id="titulo">
 	        <div class="col-md-12 text-center">
 	          <h1>Base de Conhecimento - CAU</h1>
@@ -29,14 +32,16 @@
 		<!--  teste escolha perfil -->
 			<div class="push2"></div>
 		<div class="row">
-			<div class="col-md-12 text-center">
-				<p style="color:#0000FF;"><b>Dica: </b>Use <b>*</b> para melhorar a sua busca: Ex. certific* -> para buscar certificado, certificados, certificadora. / *cert -> para buscar certificado, cacert. / *bacen* -> para buscar bacen, sisbacen, sisbacenweb. </p>
+	
+			
 		<div class="col-md-4"></div>
 
           <div class="col-md-4">			
          
           
-            <div class="text-center" style="margin-top:100px; font-weight:bold"><h5>Consulta rápida de garantia de equipamentos</h5></div>
+	            <div class="text-center" style="margin-top:100px;">
+	            	<h5><b>Consulta rápida de garantia de equipamentos</b></h5>
+	            </div>
             <div class="text-center">
             <h:form>
             		<p:inputText value="#{garantiaMB.tombo}" placeholder="Digite Nº de tombo sem NT" id="num_tombo" onclick="this.value='';document.getElementsByClassName('ui-messages')[0].style.display='none';" />
@@ -51,7 +56,7 @@
         		     
       </div>
     </div>
-    </div>
+
     
 </ui:define>
 </ui:composition>
