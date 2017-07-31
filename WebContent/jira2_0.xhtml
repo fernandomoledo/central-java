@@ -64,16 +64,18 @@
 				<p:column headerText="Chamados do Núcleo PJE delegados para '#{portalMB.username}':" sortBy="#{x.chamado}">
 				<h:outputLink value="detalhe-jira2.jsf" target="_blank" title="Clique aqui para abrir uma Issue no JIRA">
 					<b>Chamado #{x.chamado}</b><br />
+					Abertura: 
 					<h:outputText value="#{x.dataAbertura}">
-	            		<f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy HH:mm" /></h:outputText>
-	            		<f:param name="id" value="#{x.id}" />
+	            			<f:convertDateTime dateStyle="full" type="date" pattern="dd/MM/yyyy HH:mm" />
+	            	</h:outputText>
+	            	<f:param name="id" value="#{x.id}" />
 				</h:outputLink>	
 				</p:column>
 			</p:dataTable> 
 			<h:outputText value="Não existem chamados do Núcleo PJE delegados para o seu usuário no momento" rendered="#{fn:length(jira2MB.chamadosJira) eq 0}" />
       	 	</h:form>
           </div>
-          <button id="teste-btn" class="btn btn-primary" style="font-weight:bold;border:none;" value="e" title="Esconder a lista de chamados"> &lt;</button>
+        
 
           <!-- Painel de chamados -->
           <div class="col-md-7" id="tbl" style="max-height:768px; overflow:auto;">

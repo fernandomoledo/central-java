@@ -18,6 +18,7 @@ import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeParseException;
@@ -198,7 +199,7 @@ public class Jira2MB {
 		      Assyst assyst = new Assyst();
 		      assyst.setId(element.getElementsByTagName("id").item(0).getTextContent());
 		      assyst.setChamado(element.getElementsByTagName("formattedReference").item(0).getTextContent());
-		      assyst.setDataAbertura(element.getElementsByTagName("dateLogged").item(0).getTextContent().replace("T", " ").replace("-03:00", ""));
+		      assyst.setDataAbertura(Timestamp.valueOf(element.getElementsByTagName("dateLogged").item(0).getTextContent().replace("T", " ").replace("-03:00", "")));
 		      lista.add(assyst);
 		      
 		    }
