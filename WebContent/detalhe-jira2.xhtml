@@ -32,10 +32,15 @@
 	   </div>
         <!-- Container dos painéis -->
         <div class="col-md-12">
-          	<h:form>
+          	<h:form id="f_jira">
           	<p:messages autoUpdate="true"  id="mensagens" escape="false"  />
   
 				<p:panelGrid columns="2">
+						<b><span>Observações:</span></b>
+   						<h:outputText value="Este ticket possui anexo(s). Lembre-se de incluí-lo(s) no JIRA!"
+   						 escape="false" style="white-space:pre-wrap; color:#FF0000;font-weight:bold;" rendered="#{jira2MB.temAnexo}" />
+   						 <h:outputText value="N/A"
+   						 escape="false" style="white-space:pre-wrap;color:#0000FF;font-weight:bold;" rendered="#{not jira2MB.temAnexo}" />
    						<b>Projeto:</b>
    						<h:outputText value="#{jira2MB.issueJira.nome}" />
    						<b>Tipo do item:</b>
@@ -68,11 +73,13 @@
    						<h:outputText value="#{jira2MB.issueJira.processo}" />
    						<b>Descrição:</b>
    						<h:outputText value="#{jira2MB.issueJira.descricao}" escape="false" style="white-space:pre-wrap;" />
+   						
    						<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
    						<p:commandButton value="Confirmar e criar Issue" actionListener="#{jira2MB.criarIssue()}" 
    						rendered="#{jira2MB.geraIssue}" icon="ui-icon-circle-check" update="@form" onstart="mostra_box();" 
    						oncomplete="esconde_box();window.scrollTo(0,0);">
-   							<p:confirm header="Confirmação" message="Tem certeza que revisou os dados e quer criar uma issue para o chamado #{jira2MB.issueJira.chamado}?" icon="ui-icon-alert" />
+   							<p:confirm header="Confirmação" message="Tem certeza que revisou os dados e quer criar uma issue para o chamado #{jira2MB.issueJira.chamado}?"
+   							 icon="ui-icon-alert" />
    						</p:commandButton>
    						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
    							<p:commandButton value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />

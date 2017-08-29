@@ -46,6 +46,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -90,6 +91,7 @@ public class Jira2MB {
 	private boolean geraIssue = true;
 	private String idIssue = "";
 	private String req = "R";
+	private boolean temAnexo = false;
 	
 
 	final static Logger logger = Logger.getLogger(JiraMB.class);
@@ -108,16 +110,8 @@ public class Jira2MB {
 	}
 	
 	public String abrir(){
-		switch(req.substring(1).length()){
-		case 1:
-			return "detalhe-jira2.jsf?id=500000"+req.substring(1)+"&faces-redirect=true"; 
-		case 2:
-			return "detalhe-jira2.jsf?id=50000"+req.substring(1)+"&faces-redirect=true"; 
-		case 3:
-			return "detalhe-jira2.jsf?id=5000"+req.substring(1)+"&faces-redirect=true"; 
-		default:
-			return "detalhe-jira2.jsf?id=500"+req.substring(1)+"&faces-redirect=true"; 
-		}
+		long numero = Long.parseLong(req.substring(1)) + 5000000;
+		return "detalhe-jira2.jsf?id="+numero+"&faces-redirect=true"; 
 	}
 	
 	public List<Assyst> listaChamados(){
@@ -532,6 +526,31 @@ public class Jira2MB {
 				 }
 				 System.out.println("Módulo - "+issueJira.getModulo()+" / " + issueJira.getComponente());
 				
+				 String urlAnexo = "http://10.15.199.183:8989/assyst/assystEJB/Event/"+idIssue+"?fields=attachments";
+				    URL objAnexo = new URL(urlAnexo);
+				    HttpURLConnection connAnexo = (HttpURLConnection) objAnexo.openConnection();
+
+				    connAnexo.setRequestProperty("Content-Type", "application/json");
+				    connAnexo.setDoOutput(true);
+
+				    connAnexo.setRequestMethod("GET");
+			
+				           
+			        BufferedReader readerAnexo = new BufferedReader(new InputStreamReader(connAnexo.getInputStream(), Charset.forName("UTF-8")));
+
+			        String xmlAnexo = "";
+			        String sAnexo = "";
+			        while(( sAnexo = readerAnexo.readLine()) != null){
+						xmlAnexo += sAnexo;
+					}
+			        //System.out.println("ANEXO: " + xmlAnexo);
+			        if(xmlAnexo.contains("\"Attachment\"")){
+			        	this.temAnexo = true;
+			        	Mensagens.setMessage(2, "Este ticket " + issueJira.getChamado()+ " possui anexo(s). Lembre-se de incluí-lo(s) no JIRA!");
+			        	RequestContext.getCurrentInstance().update("f_jira:mensagens");
+			        	System.out.println("Ticket tem anexo!!!");
+			       }
+			       // System.exit(0);
 			}catch(Exception e){
 				Mensagens.setMessage(3, "Não foi possível preparar o chamado para criação de issue. "+e.getMessage());
 				StringWriter stack = new StringWriter();
@@ -550,7 +569,7 @@ public class Jira2MB {
 			InetAddress inet = InetAddress.getByName("pje.csjt.jus.br");
 			boolean reachable = inet.isReachable(5000);
 			if(reachable){
-				System.out.println("Jira fora do AR!");
+				System.out.println("JIRA fora do AR!");
 				Mensagens.setMessage(3, "Site https://pje.csjt.jus.br/jira fora do ar! Tente novamente mais tarde!");
 			}else{	
 				System.getProperties().put("http.proxyHost", "proxy1.trt15.jus.br");
@@ -621,8 +640,10 @@ public class Jira2MB {
 					 p.destroy();
 				 }
 				System.out.println(p.toString());
-	    		Mensagens.setMessage(1, "Criada a issue: " + msgSaida+". Chamado "+issueJira.getChamado() +" alterado para \"Pendente de terceiros\".");
-	    		
+				if(this.temAnexo)
+					Mensagens.setMessage(1, "Criada a issue: " + msgSaida+". Chamado "+issueJira.getChamado() +" alterado para \"Pendente de terceiros\".<br><br>***OBS: Este ticket possui anexo(s). Lembre-se de incluí-lo(s) no JIRA!***");
+				else
+					Mensagens.setMessage(1, "Criada a issue: " + msgSaida+". Chamado "+issueJira.getChamado() +" alterado para \"Pendente de terceiros\".");
 			 	System.out.println("Chamado Assyst: "+idIssue);
 	    		this.geraIssue = false;
 			}
@@ -878,6 +899,14 @@ public class Jira2MB {
 
 	public void setReq(String req) {
 		this.req = req;
+	}
+
+	public boolean isTemAnexo() {
+		return temAnexo;
+	}
+
+	public void setTemAnexo(boolean temAnexo) {
+		this.temAnexo = temAnexo;
 	}	
 	
 }
