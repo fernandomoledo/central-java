@@ -660,7 +660,7 @@ public class Jira2MB {
 	
 	public String verificaError(String retorno){
 		if(retorno.toLowerCase().contains("response code: 400")){
-			return "<br><br>Causas prováveis: <br>1 - A descrição do chamado não segue as normas da API do JIRA (caracteres especiais, expressões irregulares, etc.)<br> 2 - Algum dos campos está preenchido incorretamente (Ex. versão errada, campos trocados, etc.) <br> 3 - Algum campo teve o nome alterado na API e o Programador do TRT15 não está sabendo<br> 4 - Os certificados do portal do JIRA foram atualizados<br> 5 - O proxy do TRT15 está barrando a conexão<br><br>Recomenda-se criar a issue manualmente.";
+			return "<br><br>Causas prováveis: <br>1 - A descrição do chamado não segue as normas da API do JIRA (caracteres especiais, expressões irregulares, etc.)<br> 2 - Algum dos campos está preenchido incorretamente (Ex. versão errada, campos trocados, etc.) <br> 3 - Algum campo teve o nome alterado na API e o Programador do TRT15 não está sabendo<br> 4 - Os certificados do portal do JIRA foram atualizados<br> 5 - O proxy do TRT15 está barrando a conexão<br>6 - Módulo e/ou componente não existe mais no JIRA.<br><br>Recomenda-se criar a issue manualmente.";
 		}else if(retorno.toLowerCase().contains("response code: 401")){
 			return "Usuário trt15 não permitido para executar a ação.";
 		}else if(retorno.toLowerCase().contains("response code: 403")){
@@ -678,7 +678,7 @@ public class Jira2MB {
 	}
 	public String substitui(String t){
 		//return t.replace("\"", "''").replace("&amp;", "\\&").replace("&lt;","<").replace("&gt;",">").replace("<empty>", "-");
-		return t.replace("\"", "''").replace("&amp;", "\\&").replace("&lt;empty&gt;", "-");
+		return t.replace("\"", "''").replace("&amp;", "\\&").replace("&lt;empty&gt;", "-").replace("“", "''").replace("”", "''");
 	}
 	
 	public String getProjeto() {
