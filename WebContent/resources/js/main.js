@@ -82,8 +82,8 @@ function montaurl(url, filtro){
 	if(url == ""){
 		alert("Informe um termo para a busca!");
 	}else{
-	
-		window.location="arvore.jsf?termo="+url.replace("&"," ").replace("%"," ").replace("?"," ").replace("="," ").replace("#"," ")+"&filtro="+filtro;
+		var busca = encodeURI(url.replace(/\\/g, "\\\\"));
+		window.location="arvore.jsf?termo="+busca+"&filtro="+filtro;
 	}
 }
 

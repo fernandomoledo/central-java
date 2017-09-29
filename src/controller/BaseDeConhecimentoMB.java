@@ -91,9 +91,10 @@ public class BaseDeConhecimentoMB {
 				this.termoBusca = params.get("termo").trim().replace("||", " & ");
 			}
 			
+			System.out.println(this.termoBusca);
 			this.termo = this.termoBusca.replace("*", "%");
-			this.termoDestaque = this.termoBusca.replace("*", "");
-			this.termoTroca = "<mark>"+this.termoDestaque+"</mark>";
+			this.termoDestaque = this.termoBusca.replace("*", "").replace("\\", "/");
+			this.termoTroca = "<mark>"+this.termoDestaque.replace("\\", "/")+"</mark>";
 			this.termoBusca = this.termoBusca.replace("_", " ");
 			this.termoBusca = this.termoBusca.replace("-", " ");
 			/*
@@ -106,6 +107,7 @@ public class BaseDeConhecimentoMB {
 			this.termoBusca = this.termoBusca.replace("$$", "%");
 
 			buscar();
+			this.termo.replace("\\","/");
 		}
 		System.out.println(params.toString());
 		 

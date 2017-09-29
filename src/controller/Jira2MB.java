@@ -550,6 +550,28 @@ public class Jira2MB {
 			        	RequestContext.getCurrentInstance().update("f_jira:mensagens");
 			        	System.out.println("Ticket tem anexo!!!");
 			       }
+			        
+			        String urlAtendido = "http://10.15.199.183:8989/assyst/assystEJB/Action?eventId="+idIssue+"&fields=actionType";
+				    URL objAtendido = new URL(urlAtendido);
+				    HttpURLConnection connAtendido = (HttpURLConnection) objAtendido.openConnection();
+
+				    connAtendido.setRequestProperty("Content-Type", "application/json");
+				    connAtendido.setDoOutput(true);
+
+				    connAtendido.setRequestMethod("GET");
+			
+				           
+			        BufferedReader readerAtend = new BufferedReader(new InputStreamReader(connAtendido.getInputStream(), Charset.forName("UTF-8")));
+
+			        String xmlAtend = "";
+			        String sAtend = "";
+			        while(( sAtend = readerAtend.readLine()) != null){
+						xmlAtend += sAtend;
+					}
+			        //System.out.println("ANEXO: " + xmlAnexo);
+			        if(xmlAtend.contains("\"USER-CALLBACK\"")){
+			        	this.geraIssue = false;
+			        }
 			       // System.exit(0);
 			}catch(Exception e){
 				Mensagens.setMessage(3, "Não foi possível preparar o chamado para criação de issue. "+e.getMessage());

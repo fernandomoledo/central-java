@@ -85,6 +85,9 @@
    							<p:commandButton value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
    							<p:commandButton value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
    						</p:confirmDialog>
+   						<h:outputText value="" rendered="#{not jira2MB.geraIssue}" />
+   						<h:outputText value="*** A issue para esse chamado já foi criada.***" style="color:#0000FF;font-weight:bold"
+   						 rendered="#{not jira2MB.geraIssue}"/>
    						</p:panelGrid>
           	</h:form>
           </div>
