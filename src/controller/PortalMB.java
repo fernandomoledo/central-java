@@ -38,11 +38,13 @@ import org.jsoup.Jsoup;
 import util.ConexaoLDAP;
 import util.ConexaoOracle;
 import util.Mensagens;
+import model.Atendente;
 import model.Lotacao;
 import model.Portal;
 import net.haxx.curl.CurlGlue;
 import dao.LotacaoDAO;
 import dao.PortalDAO;
+import dao.VisitaPrevDAO;
 
 @ManagedBean
 @SessionScoped
@@ -59,8 +61,9 @@ public class PortalMB {
 	//armazena a lotação verdadeira do usuário, pois se ele for coordenador, pode alterar sua lotação para ver os chamados
 	private Lotacao original = new Lotacao();
 	private String url = "";
+	private Atendente atendente = new Atendente();
 	
-	public PortalMB(){
+	public PortalMB() throws ClassNotFoundException, SQLException, NamingException{
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
 		if(!params.isEmpty()){
@@ -88,6 +91,9 @@ public class PortalMB {
 				this.senha = "";
 				this.confSenha = "";
 				this.senhaAtual = "";
+				VisitaPrevDAO dao = new VisitaPrevDAO();		
+				this.atendente = dao.buscaAtendente(this.username);
+				
 				if(!url.equals(""))
 					return this.url+"?faces-redirect=true";
 				return "/painel.xhtml?faces-redirect=true";
@@ -203,6 +209,19 @@ public class PortalMB {
 			nav.performNavigation("acesso-negado");
 		}		
 	}
+	
+public void isAdmVisita(ComponentSystemEvent event) throws ClassNotFoundException, SQLException, NamingException{
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		if (!(this.atendente.isAdm())){
+			ConfigurableNavigationHandler nav 
+			   = (ConfigurableNavigationHandler) 
+				fc.getApplication().getNavigationHandler();
+			
+			nav.performNavigation("acesso-negado");
+		}		
+	}
 	/*
 	 * getters and setters
 	 */
@@ -276,6 +295,12 @@ public class PortalMB {
 	}
 	public void setServer(String server) {
 		this.server = server;
+	}
+	public Atendente getAtendente() {
+		return atendente;
+	}
+	public void setAtendente(Atendente atendente) {
+		this.atendente = atendente;
 	}
 	
 	

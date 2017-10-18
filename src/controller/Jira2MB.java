@@ -193,7 +193,7 @@ public class Jira2MB {
 		      Assyst assyst = new Assyst();
 		      assyst.setId(element.getElementsByTagName("id").item(0).getTextContent());
 		      assyst.setChamado(element.getElementsByTagName("formattedReference").item(0).getTextContent());
-		      assyst.setDataAbertura(Timestamp.valueOf(element.getElementsByTagName("dateLogged").item(0).getTextContent().replace("T", " ").replace("-03:00", "")));
+		      assyst.setDataAbertura(Timestamp.valueOf(element.getElementsByTagName("dateLogged").item(0).getTextContent().replace("T", " ").replace("-03:00", "").replace("-02:00", "")));
 		      lista.add(assyst);
 		      
 		    }

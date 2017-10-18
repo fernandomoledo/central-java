@@ -56,9 +56,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-          	<li><h:link outcome="arvore" value="BoK" title="Base Of Knowledge - Árvore do Conhecimento" /></li>
-          	<!--<li><h:outputLink value="#{portalMB.server}/ckeditor" title="FAQ casos atendidos CAU">FAQ</h:outputLink></li>-->
-            <li><h:link outcome="categorias" value="Categorias"><span class="sr-only">(current)</span></h:link></li>
+          	<li><h:link outcome="relvisita" value="Visitas Preventivas" title="Gestão de visitas preventivas" rendered="#{portalMB.original.id == 647 or portalMB.original.id == 639}" /></li>
             <li><h:link outcome="jira2_0" value="JIRA" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}" title="Criação automática de issues no JIRA" /></li>
             <li><h:outputLink value="#{portalMB.server}/toolkit" title="Página de ferramentas úteis da CAU/SETIC">Toolkit</h:outputLink></li>       
           </ul>
@@ -98,7 +96,7 @@
 
     <footer class="text-center">
       <p>Copyright &copy; 2016 - <h:outputText value="#{portalMB.anoAtual}" /> :: Tribunal Regional do Trabalho 15ª Região. Todos os direitos reservados.</p>
-      <p>Versão 3.5.2</p>
+      <p>Versão 4.0.0</p>
     </footer>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

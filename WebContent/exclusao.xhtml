@@ -1,0 +1,110 @@
+<ui:composition  template="template.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+<ui:define name="conteudo">
+<f:event listener="#{portalMB.isAdmVisita}" type="preRenderView" />
+ <!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título -->
+       <div class="push3"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Visitas preventivas - Exclusão</h1>
+        </div>
+      </div>
+      <div class="row">
+      	<div class="col-md-12 text-center">
+      	    		<h:link outcome="atendente" value="Atendentes" /> |
+      	    		<h:link outcome="exclusao" value="Exclusão de visita (Vetos)" /> | 
+	      			<h:link outcome="geravisita" value="Geração de visitas" /> |
+	      			<h:link outcome="lotacaovp" value="Lotações - VP" /> |     				      			
+	      			<h:link outcome="relvisita" value="Relatório de visitas" />
+	   </div>
+	      <div class="push3"></div>
+        <div class="col-md-12 text-center">
+          <div class="col-md-12">
+                	  <div class="push3"></div>
+        <p:messages autoUpdate="true" closable="true" id="mensagens"  />
+          <h:form id="fcad">    
+		        <p:panelGrid columns="2" style="width:100%" styleClass="pequena,grande">
+				       
+				         <h:outputLabel value="Atendente: " />
+				        <h:selectOneMenu id="atendente" value="#{visitaPreventivaMB.atendente.id}" 
+				        required="true" requiredMessage="- Informe o atendente">
+				        	<f:selectItem itemLabel="--Escolha o atendente--" itemValue="" />
+				        	<f:selectItems value="#{visitaPreventivaMB.atendentes}" var="at" itemLabel="#{at.nome}" itemValue="#{at.id}" />
+				        </h:selectOneMenu>
+				        
+				         <h:outputLabel value="Lotação: " />
+				        <h:selectOneMenu id="lotacao" value="#{visitaPreventivaMB.lotacaoVP.id}" 
+				        required="true" requiredMessage="- A lotação é obrigatória">
+				        	<f:selectItem itemLabel="--Escolha a lotação--" itemValue="" />
+				        	<f:selectItems value="#{visitaPreventivaMB.lotacoesVP}" var="lot" itemLabel="#{lot.lotacao}" itemValue="#{lot.id}" />
+				        </h:selectOneMenu>
+				        
+				       	<h:outputLabel value="" />
+				       	<h:outputLabel value="*** O atendente escolhido não fará visitas ao gabinete informado. ***" style="font-weight:bold;color:#FF0000;" />
+				     	<h:outputLabel value="" />
+                <p:commandButton value="Salvar" actionListener="#{visitaPreventivaMB.salvarExclusao()}" update="@all" />
+                </p:panelGrid>            	
+           </h:form>
+            <div class="push3"></div>     
+             <h:form id="tabela">       
+            <p:dataTable var="e" value="#{visitaPreventivaMB.exclusoes}"  id="exclucoes"
+            emptyMessage="Não existem vetos/exclusões informadas" rowHover="true"
+            rows="5" 
+            paginator="true"
+            widgetVar="vp-table"
+            paginatorPosition="bottom"
+             currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown} Exportar: {Exporters}"
+           rowsPerPageTemplate="5,10,20,30"
+           >
+	           <f:facet name="header">
+	            <p:outputPanel>
+	                <h:outputText value="Buscar em todos os campos: " />
+	                <p:inputText id="globalFilter" onkeyup="PF('vp-table').filter()" style="max-width:220px" placeholder="Digite o termo"/>
+	                <p:button value="Limpar busca" icon="ui-icon-trash" outcome="exclusao" style="margin-left:10px;" />
+	            </p:outputPanel>
+	        </f:facet>
+	         <f:facet name="{Exporters}">
+			            <h:commandLink value="XLS">
+			                <p:dataExporter type="xls" target="exclusoes" fileName="rel_exclusoes" />
+			            </h:commandLink>
+			 			|
+			            <h:commandLink value="PDF">
+			                <p:dataExporter type="pdf" target="exclusoes" fileName="rel_exclusoes"/>
+			            </h:commandLink>
+			        </f:facet>
+              	<p:column headerText="Atendente" style="width:40%" filterBy="#{e.atendente.nome}" 
+              	filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{e.atendente.nome}" />
+              	</p:column>
+			     <p:column headerText="Lotacao" style="width:52%" filterBy="#{e.lotacao.lotacao}" 
+              	filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{e.lotacao.lotacao}" />
+              	</p:column>
+			  	<p:column headerText="Opcoes" priority="3" exportable="false">
+			  			       	
+			       <p:commandButton icon="ui-icon-trash" 
+			       title="Excluir o veto de '#{e.atendente.nome}' para '#{e.lotacao.lotacao}'" 
+				       	update="@form" actionListener="#{visitaPreventivaMB.excluirExclusao(e.id)}"
+				       		onclick="return confirm('Deseja realmente excluir o veto de \'#{e.atendente.nome}\' para \'#{e.lotacao.lotacao}\'?');" />
+				       
+		      </p:column>
+            </p:dataTable>    
+             </h:form>	                
+          </div>
+        </div>
+      </div>           
+    </div>
+    
+    <!-- Fim Conteúdo da página -->
+    </ui:define>
+</ui:composition>

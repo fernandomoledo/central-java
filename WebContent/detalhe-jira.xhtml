@@ -65,7 +65,8 @@
    						<b>Descrição:</b>
    						<h:outputText value="#{jiraMB.issue.descricao}" />
    						<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
-   						<p:commandButton value="Confirmar e criar Issue" actionListener="#{jiraMB.criarIssue()}" rendered="#{jiraMB.geraIssue}" icon="ui-icon-circle-check" update="@form" onstart="mostra_box();" oncomplete="esconde_box();">
+   						<p:commandButton value="Confirmar e criar Issue" actionListener="#{jiraMB.criarIssue()}" 
+   						rendered="#{jiraMB.geraIssue}" icon="ui-icon-circle-check" update="@form" onstart="mostra_box();" oncomplete="esconde_box();">
    							<p:confirm header="Confirmação" message="Tem certeza que revisou os dados e quer criar uma issue para o chamado #{jiraMB.issue.chamado}?" icon="ui-icon-alert" />
    						</p:commandButton>
    						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">

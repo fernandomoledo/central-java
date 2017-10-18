@@ -1,0 +1,129 @@
+<ui:composition  template="template.xhtml" 
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"> 
+<ui:define name="conteudo">
+	<f:event listener="#{portalMB.isAdmVisita}" type="preRenderView" />
+	<!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título da Página -->
+       <div class="push3"></div>
+       	<div class="push2"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Geração de visitas preventivas</h1>
+        </div>
+      </div>
+      <!-- Pula 10px -->
+      <div class="push1"></div>
+       <div class="row">
+	      	<div class="col-md-12 text-center">
+	      		<h:form>
+	      			<h:link outcome="atendente" value="Atendentes" /> |
+	      			<h:link outcome="exclusao" value="Exclusão de visita (Vetos)" /> | 
+	      			<h:link outcome="geravisita" value="Geração de visitas" /> |
+	      			<h:link outcome="lotacaovp" value="Lotações - VP" /> |     				      			
+	      			<h:link outcome="relvisita" value="Relatório de visitas" />
+	      			<br /><br />
+	      			
+	      			<h:outputLabel>Período: </h:outputLabel><br />
+	      			<h:outputLabel value="#{visitaPreventivaMB.periodo}" style="font-weight:bold;color:#0000FF;" />
+	      			
+	      		</h:form>
+	      	</div>
+      	</div>
+      	     <div class="push2"></div>
+      <div class="row">
+      	
+        <!-- Container dos painéis -->
+        <div class="col-md-12">
+         			<p:messages id="msg" closable="true" autoUpdate="true" />
+           <div class="col-md-4" id="tbl" style="max-height:768px; overflow:auto;">
+        		<h:form id="atendente">
+        			 
+        			<h:outputLabel value="Usuário atendente: "/>
+        			<br />
+        			<h:selectOneMenu value="#{visitaPreventivaMB.atendente.id}"  required="true" 
+        			requiredMessage="- A escolha de um atendente é obrigatória.">
+        				<f:selectItem  itemLabel="--Escolha o atendente--" itemValue="" />
+        				<f:selectItems value="#{visitaPreventivaMB.atendentes}" var="atend" itemLabel="#{atend.nome}" itemValue="#{atend.id}" />
+        			</h:selectOneMenu>
+        			<p:commandButton value="OK" update=":texto" style="margin-left:10px;" />
+        			<br /><br />
+        			
+        			<p:outputPanel id="multiLotDetail" style="text-align:left;">
+        			 	<p:outputLabel value="Lotações selecionadas" style="font-weight:bold;color:#0000FF;" rendered="#{fn:length(visitaPreventivaMB.selectedLotVP) > 0}" />
+			            <ui:repeat value="#{visitaPreventivaMB.selectedLotVP}" var="l">
+			                <h:outputText value="#{l.andar}º andar / #{l.predio} - #{l.lotacao}" style="display:block"/>
+			            </ui:repeat>
+			            <h:outputLabel rendered="#{fn:length(visitaPreventivaMB.selectedLotVP) > 0}">
+			                <br />
+			            	<b>Total: </b>#{fn:length(visitaPreventivaMB.selectedLotVP)}
+			            </h:outputLabel>
+			        </p:outputPanel>
+			        <br />
+			        
+        			
+        		</h:form>
+          </div>
+          
+           <!-- Painel de busca e categorias -->
+          <div class="col-md-6">             	
+            <div class="push1"></div>
+      		<h:form id="texto">
+      	
+      			 <p:dataTable id="checkboxDT" var="lot" value="#{visitaPreventivaMB.lotacoesVPAtrib}" 
+      			 selection="#{visitaPreventivaMB.selectedLotVP}" rowKey="#{lot.id}" style="margin-bottom:0"
+      			  emptyMessage="Não existem lotações para visita preventiva disponíveis para o período" rowHover="true"
+	            	rows="10" 
+	            paginator="true"
+	            widgetVar="vp-table"
+	            paginatorPosition="bottom"
+	            rendered="#{visitaPreventivaMB.atendente.id ne 0}"
+	                    currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+	           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
+	           rowsPerPageTemplate="5,10,20,30"
+      			 >
+			        <f:facet name="header">
+			            Lotações disponíveis para atribuição
+			        </f:facet>
+			        <p:column selectionMode="multiple" style="width:7%; text-align:center" />
+			        <p:column headerText="Lotação" style="width:75%">
+			            <h:outputText value="#{lot.lotacao}" />
+			        </p:column>
+			        <p:column headerText="Andar / Prédio" style="width:18%">
+			            <h:outputText value="#{lot.andar}º / #{lot.predio}" />
+			        </p:column>
+			        <f:facet name="footer">
+			            <p:commandButton process="checkboxDT" update=":atendente:multiLotDetail :btn" icon="ui-icon-check" value="
+			            Confirmar seleção" />
+			        </f:facet>
+			    </p:dataTable>
+			    
+      	 	</h:form>
+          </div>
+        	
+        	 <div class="col-md-2" id="btn" style="text-align:center;">
+        		<h:form id="btn">
+        			 
+        			<p:commandButton value="Atribuir" actionListener="#{visitaPreventivaMB.verificaSelecao}" update="@all"  style="margin-top:150px;margin-left:30px;"
+        			onstart="mostra_box();" oncomplete="esconde_box();" rendered="#{fn:length(visitaPreventivaMB.selectedLotVP) > 0}" />
+        			
+   						<br /><br />
+   						<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />
+        			
+        		</h:form>
+          </div>
+        </div>
+        <!-- Fim Container dos painéis -->
+    </div>
+</div>
+    <!-- Fim Conteúdo da página -->
+</ui:define>
+</ui:composition>

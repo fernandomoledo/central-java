@@ -1,0 +1,146 @@
+<ui:composition  template="template.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+<ui:define name="conteudo">
+<f:event listener="#{portalMB.isAdmVisita}" type="preRenderView" />
+ <!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título -->
+       <div class="push3"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Visitas preventivas - Lotações</h1>
+        </div>
+      </div>
+      <div class="row">
+      	<div class="col-md-12 text-center">
+      	    			<h:link outcome="atendente" value="Atendentes" /> |
+      	    				<h:link outcome="exclusao" value="Exclusão de visita (Vetos)" /> | 
+	      			<h:link outcome="geravisita" value="Geração de visitas" /> |
+	      			<h:link outcome="lotacaovp" value="Lotações - VP" /> |     				      			
+	      			<h:link outcome="relvisita" value="Relatório de visitas" />
+	   </div>
+	      <div class="push3"></div>
+        <div class="col-md-12 text-center">
+          <div class="col-md-12">
+                	  <div class="push3"></div>
+        <p:messages autoUpdate="true" closable="true" id="mensagens"  />
+          <h:form id="fcad">    
+         
+          		<h:inputHidden id="id_lotacao" value="#{visitaPreventivaMB.lotacaoVP.id}" />
+		        <p:panelGrid columns="2" style="width:100%" styleClass="pequena,grande">
+				        <h:outputLabel value="Lotação:" />
+				        <h:inputText id="lotacao" value="#{visitaPreventivaMB.lotacaoVP.lotacao}" pt:placeholder="Digite o nome da lotação"
+				        required="true" requiredMessage="- O nome da lotação é obrigatório" style="width:100%"/>
+				         <h:outputLabel value="Prédio: " />
+				         <h:selectOneMenu  required="true" requiredMessage="- O prédio é obrigatório" 
+				         value="#{visitaPreventivaMB.lotacaoVP.predio}">
+				         	<f:selectItem itemLabel="--Escolha--" itemValue="" />
+				         	<f:selectItem itemLabel="Administrativo" itemValue="ADM" />
+				         	<f:selectItem itemLabel="Judicial" itemValue="JUD" />
+				         </h:selectOneMenu>
+				         <h:outputLabel value="Andar:" />
+				        <h:selectOneMenu  required="true" requiredMessage="- O andar é obrigatório"
+				        value="#{visitaPreventivaMB.lotacaoVP.andar}">
+				        	<f:selectItem itemLabel="--Escolha--" itemValue="" />
+				        	<f:selectItem itemLabel="2º SS" itemValue="-2" />
+				        	<f:selectItem itemLabel="1º SS" itemValue="-1" />
+				        	<f:selectItem itemLabel="Térreo" itemValue="0" />
+				        	<f:selectItem itemLabel="1º Andar" itemValue="1" />
+				        	<f:selectItem itemLabel="2º Andar" itemValue="2" />
+				        	<f:selectItem itemLabel="3º Andar" itemValue="3" />
+				        	<f:selectItem itemLabel="4º Andar" itemValue="4" />
+				        	<f:selectItem itemLabel="5º Andar" itemValue="5" />
+				        	<f:selectItem itemLabel="6º Andar" itemValue="6" />
+				        	<f:selectItem itemLabel="7º Andar" itemValue="7" />
+				        	<f:selectItem itemLabel="8º Andar" itemValue="8" />
+				        	<f:selectItem itemLabel="9º Andar" itemValue="9" />
+				        	<f:selectItem itemLabel="10º Andar" itemValue="10" />
+				        	<f:selectItem itemLabel="11º Andar" itemValue="11" />
+				        	<f:selectItem itemLabel="12º Andar" itemValue="12" />
+				        	<f:selectItem itemLabel="13º Andar" itemValue="13" />
+				        	<f:selectItem itemLabel="14º Andar" itemValue="14" />
+				        	<f:selectItem itemLabel="15º Andar" itemValue="15" />
+				        	<f:selectItem itemLabel="16º Andar" itemValue="16" />
+				        	<f:selectItem itemLabel="17º Andar" itemValue="17" />
+				        </h:selectOneMenu>
+				       	<h:outputLabel value="Ativo?" />
+				       	<h:selectOneMenu value="#{visitaPreventivaMB.lotacaoVP.ativo}">
+				       		<f:selectItem itemLabel="Sim" itemValue="S" />
+				       		<f:selectItem itemLabel="Não" itemValue="N" />
+				       	</h:selectOneMenu>
+				       	
+				     	<h:outputLabel value="" />
+                <p:commandButton value="Salvar" actionListener="#{visitaPreventivaMB.salvar()}" update="@all" />
+                </p:panelGrid>            	
+           </h:form>
+            <div class="push3"></div>     
+             <h:form id="tabela">       
+            <p:dataTable var="lotacao" value="#{visitaPreventivaMB.lotacoesVP}"  id="lotacoes"
+            emptyMessage="Não existem lotações para visita preventiva cadastradas" rowHover="true"
+            rows="5" 
+            paginator="true"
+            widgetVar="vp-table"
+            paginatorPosition="bottom"
+            filteredValue="#{visitaPreventivaMB.filteredLotVP}"
+             currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown} Exportar: {Exporters}"
+           rowsPerPageTemplate="5,10,20,30"
+           >
+	           <f:facet name="header">
+	            <p:outputPanel>
+	                <h:outputText value="Buscar em todos os campos: " />
+	                <p:inputText id="globalFilter" onkeyup="PF('vp-table').filter()" style="max-width:220px" placeholder="Digite o termo"/>
+	                <p:button value="Limpar busca" icon="ui-icon-trash" outcome="lotacaovp" style="margin-left:10px;" />
+	            </p:outputPanel>
+	        </f:facet>
+	         <f:facet name="{Exporters}">
+			            <h:commandLink value="XLS">
+			                <p:dataExporter type="xls" target="lotacoes" fileName="rel_lotacoes" />
+			            </h:commandLink>
+			 			|
+			            <h:commandLink value="PDF">
+			                <p:dataExporter type="pdf" target="lotacoes" fileName="rel_lotacoes"/>
+			            </h:commandLink>
+			        </f:facet>
+              	<p:column headerText="Lotacao" style="width:55%" filterBy="#{lotacao.lotacao}" 
+              	filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{lotacao.lotacao}" />
+              	</p:column>
+              	   	  <p:column headerText="Andar" filterBy="#{lotacao.andar}" filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{lotacao.andar}" />
+              	</p:column>
+			     <p:column headerText="Predio" filterBy="#{lotacao.predio}" filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{lotacao.predio}" />
+              	</p:column>
+           
+              	  <p:column headerText="Ativo?" filterBy="#{lotacao.ativo}" filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{lotacao.ativo}" />
+              	</p:column>
+			  <p:column headerText="Opcoes" priority="3" exportable="false">
+			  	<p:commandButton icon="ui-icon-gear" 
+			       title="Alterar lotação '#{lotacao.lotacao}'" actionListener="#{visitaPreventivaMB.buscarLotacao(lotacao.id)}"
+				       	update="@all" />
+				       	
+			       <p:commandButton icon="ui-icon-trash" 
+			       title="Inativar lotação '#{lotacao.lotacao}'" 
+				       	update="@form" actionListener="#{visitaPreventivaMB.excluir(lotacao)}"
+				       		onclick="return confirm('Deseja realmente inativar a lotação \'#{lotacao.lotacao}\'?');" />
+				       
+		      </p:column>
+            </p:dataTable>    
+             </h:form>	                
+          </div>
+        </div>
+      </div>           
+    </div>
+    
+    <!-- Fim Conteúdo da página -->
+    </ui:define>
+</ui:composition>

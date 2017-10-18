@@ -1,0 +1,124 @@
+<ui:composition  template="template.xhtml" 
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"> 
+<ui:define name="conteudo">
+	<!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título da Página -->
+       <div class="push3"></div>
+       	<div class="push2"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Relatório de visitas preventivas</h1>
+        </div>
+      </div>
+      <!-- Pula 10px -->
+      <div class="push1"></div>
+       <div class="row">
+	      	<div class="col-md-12 text-center">
+	      	
+	      		<h:form>
+	      			<h:link outcome="atendente" value="Atendentes" /> |
+	      				<h:link outcome="exclusao" value="Exclusão de visita (Vetos)" /> | 
+	      			<h:link outcome="geravisita" value="Geração de visitas" /> |
+	      			<h:link outcome="lotacaovp" value="Lotações - VP" /> |     				      			
+	      			<h:link outcome="relvisita" value="Relatório de visitas" />
+	      				<br /><br />
+	      				
+	      			<h:outputLabel value="Usuário atendente: "/>
+        			<br />
+        			<h:selectOneMenu value="#{visitaPreventivaMB.atendente.id}" rendered="#{portalMB.atendente.adm}">
+        				<f:selectItem  itemLabel="TODOS" itemValue="-1" />
+        				<f:selectItems value="#{visitaPreventivaMB.atendentes}" var="atend" itemLabel="#{atend.nome}" itemValue="#{atend.id}" />
+        			</h:selectOneMenu>
+        			
+        			<h:selectOneMenu value="#{visitaPreventivaMB.atendente.id}" rendered="#{not portalMB.atendente.adm}" required="true"
+        			requiredMessage="Escolha um atendente para o relatório!">
+        				<f:selectItem itemLabel="--Escolha--" itemValue="" />
+        				<f:selectItem  itemLabel="#{portalMB.atendente.nome}" itemValue="#{portalMB.atendente.id}"  />
+        			</h:selectOneMenu>
+        		
+        			<p:commandButton icon="ui-icon-search" style="margin-left:10px;"  value="Buscar" update=":lista" />
+        		
+        		
+	      		</h:form>
+	      	</div>
+      	</div>
+      	     <div class="push2"></div>
+      <div class="row">
+      	
+        <!-- Container dos painéis -->
+        <div class="col-md-12">
+         
+          <!-- Painel de chamados -->
+         
+          <!-- Fim Painel de chamados -->
+           <!-- Painel de busca e categorias -->
+          <div class="col-md-12 separator">             	
+            <div class="push1"></div>
+      		<h:form id="lista">
+      			<p:messages id="msg" closable="true" autoUpdate="true" />
+      			 <p:dataTable id="visitas" var="v" value="#{visitaPreventivaMB.relatorio}" 
+      			 filteredValue="#{visitaPreventivaMB.filteredVisita}" style="margin-bottom:0"
+      			  emptyMessage="Não existem visitas preventivas atribuídas." rowHover="true"
+	            	rows="10" 
+	            paginator="true"
+	            widgetVar="vp-table"
+	            paginatorPosition="bottom"
+	                    currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+	           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown} Exportar: {Exporters}"
+	           rowsPerPageTemplate="5,10,20,30"
+      			 >
+			       <f:facet name="header">
+			            <p:outputPanel>
+			                <h:outputText value="Buscar em todos os campos: " />
+			                <p:inputText id="globalFilter" onkeyup="PF('vp-table').filter()" style="max-width:220px" placeholder="Digite o termo"/>
+			                <p:button value="Limpar busca" icon="ui-icon-trash" outcome="relvisita" style="margin-left:10px;" />
+			            </p:outputPanel>
+			        </f:facet>
+			        <f:facet name="{Exporters}">
+			            <h:commandLink value="XLS">
+			                <p:dataExporter type="xls" target="visitas" fileName="rel_visitas" />
+			            </h:commandLink>
+			 			|
+			            <h:commandLink value="PDF">
+			                <p:dataExporter type="pdf" target="visitas" fileName="rel_visitas"/>
+			            </h:commandLink>
+			        </f:facet>
+			        <p:column headerText="Usuario" style="width:30%"  filterBy="#{v.atendente.nome}" filterMatchMode="contains">
+			            <h:outputText value="#{v.atendente.nome}"  />
+			        </p:column>
+			        <p:column headerText="Lotacao" style="width:36%"  filterBy="#{v.lotacao.lotacao}" filterMatchMode="contains">
+			            <h:outputText value="#{v.lotacao.lotacao}"  />
+			        </p:column>
+			        <p:column headerText="Andar" style="width:7%"  filterBy="#{v.lotacao.andar}" filterMatchMode="contains">
+			            <h:outputText value="#{v.lotacao.andar}" />
+			        </p:column>
+			        <p:column headerText="Predio" style="width:7%"  filterBy="#{v.lotacao.predio}" filterMatchMode="contains">
+			            <h:outputText value="#{v.lotacao.predio}" />
+			        </p:column>
+			        <p:column headerText="Periodo" style="width:10%"  filterBy="#{v.periodo}" filterMatchMode="contains"> 
+			            <h:outputText value="#{v.periodo}" />
+			        </p:column>
+			        <p:column headerText="Chamado" style="width:10%"  filterBy="#{v.chamado}" filterMatchMode="contains">
+			            <h:commandLink value="#{v.chamado}" action="#{visitaPreventivaMB.redirect(v.chamado)}" target="_blank" title="Clique para abrir o chamado #{v.chamado} no Assyst" />
+			        </p:column>
+			    </p:dataTable>
+			    
+      	 	</h:form>
+          </div>
+        	
+        </div>
+        <!-- Fim Container dos painéis -->
+    </div>
+</div>
+    <!-- Fim Conteúdo da página -->
+</ui:define>
+</ui:composition>

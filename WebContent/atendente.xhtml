@@ -1,0 +1,125 @@
+<ui:composition  template="template.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+<ui:define name="conteudo">
+<f:event listener="#{portalMB.isAdmVisita}" type="preRenderView" />
+ <!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título -->
+       <div class="push3"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Visitas preventivas - Lotações</h1>
+        </div>
+      </div>
+      <div class="row">
+      	<div class="col-md-12 text-center">
+      	    		<h:link outcome="atendente" value="Atendentes" /> |
+      	    			<h:link outcome="exclusao" value="Exclusão de visita (Vetos)" /> | 
+	      			<h:link outcome="geravisita" value="Geração de visitas" /> |
+	      			<h:link outcome="lotacaovp" value="Lotações - VP" /> |     				      			
+	      			<h:link outcome="relvisita" value="Relatório de visitas" />
+	   </div>
+	      <div class="push3"></div>
+        <div class="col-md-12 text-center">
+          <div class="col-md-12">
+                	  <div class="push3"></div>
+        <p:messages autoUpdate="true" closable="true" id="mensagens"  />
+          <h:form id="fcad">    
+         
+          		<h:inputHidden id="id_atendente" value="#{visitaPreventivaMB.atendente.id}" />
+		        <p:panelGrid columns="2" style="width:100%" styleClass="pequena,grande">
+				        <h:outputLabel value="Nome:" />
+				        <h:inputText id="nome" value="#{visitaPreventivaMB.atendente.nome}" pt:placeholder="Digite o nome do atendente"
+				        required="true" requiredMessage="- O nome da atendente é obrigatório" style="width:100%"/>
+				         <h:outputLabel value="Affected user id: (Obtido no Assyst. Ver com o Akira)" />
+				         <h:inputText  required="true" requiredMessage="- O affected user id é obrigatório" 
+				         value="#{visitaPreventivaMB.atendente.affectedUserId}" pt:placeholder="O affected user id é obtido no Assyst" />
+				          <h:outputLabel value="Assigned user id: (Obtido no Assyst. Ver com o Akira)" />
+				         <h:inputText  required="true" requiredMessage="- O assigned user id é obrigatório" 
+				         value="#{visitaPreventivaMB.atendente.assignedUserId}" pt:placeholder="O assigned user id é obtido no Assyst" />
+				         <h:outputLabel value="Username extranet:" />
+				         <h:inputText  required="true" requiredMessage="- O username é obrigatório" 
+				         value="#{visitaPreventivaMB.atendente.username}" pt:placeholder="Informe o username" />
+				        <h:outputLabel value="Administrador?" />
+				       	<h:selectOneMenu value="#{visitaPreventivaMB.atendente.adm}">
+				       		<f:selectItem itemLabel="Não" itemValue="false" />
+				       		<f:selectItem itemLabel="Sim" itemValue="true" />
+				       	</h:selectOneMenu>
+				       	
+				     	<h:outputLabel value="" />
+                <p:commandButton value="Salvar" actionListener="#{visitaPreventivaMB.salvarAtendente()}" update="@all" />
+                </p:panelGrid>            	
+           </h:form>
+            <div class="push3"></div>     
+             <h:form id="tabela">       
+            <p:dataTable var="atend" value="#{visitaPreventivaMB.atendentes}"  id="atendentes"
+            emptyMessage="Não existem atendentes cadastrados" rowHover="true"
+            rows="5" 
+            paginator="true"
+            widgetVar="vp-table"
+            paginatorPosition="bottom"
+           	filteredValue="#{visitaPreventivaMB.filteredAtendente}"
+             currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown} Exportar: {Exporters}"
+           rowsPerPageTemplate="5,10,20,30"
+           >
+	           <f:facet name="header">
+	            <p:outputPanel>
+	                <h:outputText value="Buscar em todos os campos: " />
+	                <p:inputText id="globalFilter" onkeyup="PF('vp-table').filter()" style="max-width:220px" placeholder="Digite o termo"/>
+	                <p:button value="Limpar busca" icon="ui-icon-trash" outcome="atendente" style="margin-left:10px;" />
+	            </p:outputPanel>
+	        </f:facet>
+	         <f:facet name="{Exporters}">
+			            <h:commandLink value="XLS">
+			                <p:dataExporter type="xls" target="atendentes" fileName="rel_atendentes" />
+			            </h:commandLink>
+			 			|
+			            <h:commandLink value="PDF">
+			                <p:dataExporter type="pdf" target="atendentes" fileName="rel_atendentes"/>
+			            </h:commandLink>
+			        </f:facet>
+              	<p:column headerText="Nome" style="width:55%" filterBy="#{atend.nome}" 
+              	filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{atend.nome}" />
+              	</p:column>
+			     <p:column headerText="Affected UID" filterBy="#{atend.affectedUserId}" filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{atend.affectedUserId}" />
+              	</p:column>
+              	  <p:column headerText="Assigned UID" filterBy="#{atend.assignedUserId}" filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{atend.assignedUserId}" />
+              	</p:column>
+              	  <p:column headerText="Username" filterBy="#{atend.username}" filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{atend.username}" />
+              	</p:column>
+              	 <p:column headerText="Adm?" filterBy="#{atend.adm}" filterMatchMode="contains" filterStyle="display:none;">
+              		<h:outputText value="#{atend.adm == true ? 'S' : '-'}" />
+              	</p:column>
+			  	<p:column headerText="Opcoes" priority="3" exportable="false">
+			  	<p:commandButton icon="ui-icon-gear" 
+			       title="Alterar atendente '#{atend.nome}'" actionListener="#{visitaPreventivaMB.buscarAtendente(atend.id)}"
+				       	update="@all" />
+				       	
+			       <p:commandButton icon="ui-icon-trash" 
+			       title="Excluir atendente '#{atend.nome}'" 
+				       	update="@form" actionListener="#{visitaPreventivaMB.excluirAtendente(atend.id)}"
+				       		onclick="return confirm('Deseja realmente excluir o atendente \'#{atend.nome}\'?');" />
+				       
+		      </p:column>
+            </p:dataTable>    
+             </h:form>	                
+          </div>
+        </div>
+      </div>           
+    </div>
+    
+    <!-- Fim Conteúdo da página -->
+    </ui:define>
+</ui:composition>
