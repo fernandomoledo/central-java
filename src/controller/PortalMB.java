@@ -291,7 +291,7 @@ public void isAdmVisita(ComponentSystemEvent event) throws ClassNotFoundExceptio
 		return new SimpleDateFormat("yyyy").format(new Date());
 	}
 	public String getServer() {
-		return "http://polaris/";
+		return "http://polaris";
 	}
 	public void setServer(String server) {
 		this.server = server;

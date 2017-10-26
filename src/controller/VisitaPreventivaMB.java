@@ -62,18 +62,19 @@ public class VisitaPreventivaMB {
 	private Exclusao exclusao = new Exclusao();
 	
 	//***PRODUÇÃO ***
-	//private String servidor = "https://www.trt15.jus.br/assystREST/v1/events"; 
-	//private String oferta = "1221";
-	//private String servidor2 = "http://10.15.199.183:8989"; 
+	private String servidor = "https://www.trt15.jus.br/assystREST/v1/events"; 
+	private String oferta = "1221";
+	private String servidor2 = "http://10.15.199.183:8989"; 
 	
 	//***HOMOLOGAÇÃO ***
-	private String servidor = "https://www-hm.trt15.jus.br/assystREST/v1/events";
-	private String servidor2 = "http://10.15.228.141:8989";
+	//private String servidor = "https://www-hm.trt15.jus.br/assystREST/v1/events";
+	//private String oferta = "1171";
+	//private String servidor2 = "http://10.15.228.141:8989";
 	
 	//prod e hm
 	private String credenciais = "assyst:axios";
 
-	private String oferta = "1171";
+	
 	private String curlW = "C:\\curl\\curl\\bin\\curl.exe ", curlL = "curl ";
 	
 	public void redirect(String chamado) throws IOException{
@@ -332,7 +333,8 @@ public class VisitaPreventivaMB {
 				        	p = rt.exec(curlW + " -D- -X  GET " + servidor2 + "/assyst/assystEJB/Action/new?eventId="+id+"&actionTypeId=1&assignedServDeptId=42&assignedUserId="+this.atendente.getAssignedUserId());
 				        else
 				        	p = rt.exec(curlL +" -D- -X  GET "  + servidor2 + "/assyst/assystEJB/Action/new?eventId="+id+"&actionTypeId=1&assignedServDeptId=42&assignedUserId="+this.atendente.getAssignedUserId());
-						p.waitFor(5,TimeUnit.SECONDS);
+						
+				        p.waitFor(1,TimeUnit.SECONDS);
 			        
 					
 					if(dao.salvarVP(this.visita)){

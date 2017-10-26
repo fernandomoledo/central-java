@@ -112,8 +112,10 @@
         	 <div class="col-md-2" id="btn" style="text-align:center;">
         		<h:form id="btn">
         			 
-        			<p:commandButton value="Atribuir" actionListener="#{visitaPreventivaMB.verificaSelecao}" update="@all"  style="margin-top:150px;margin-left:30px;"
-        			onstart="mostra_box();" oncomplete="esconde_box();" rendered="#{fn:length(visitaPreventivaMB.selectedLotVP) > 0}" />
+        			<p:commandButton value="Atribuir" actionListener="#{visitaPreventivaMB.verificaSelecao}" 
+        			update="@all"  style="margin-top:150px;margin-left:30px;"
+        			onstart="mostra_box();" oncomplete="esconde_box();" 
+        			rendered="#{fn:length(visitaPreventivaMB.selectedLotVP) > 0}" />
         			
    						<br /><br />
    						<h:graphicImage value="/resources/img/aguarde.gif" styleClass="ibox" />

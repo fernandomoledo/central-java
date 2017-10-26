@@ -49,14 +49,14 @@
 				        </h:selectOneMenu>
 				        
 				       	<h:outputLabel value="" />
-				       	<h:outputLabel value="*** O atendente escolhido não fará visitas ao gabinete informado. ***" style="font-weight:bold;color:#FF0000;" />
+				       	<h:outputLabel value="*** O atendente escolhido não fará visitas no local informado. ***" style="font-weight:bold;color:#FF0000;" />
 				     	<h:outputLabel value="" />
                 <p:commandButton value="Salvar" actionListener="#{visitaPreventivaMB.salvarExclusao()}" update="@all" />
                 </p:panelGrid>            	
            </h:form>
             <div class="push3"></div>     
              <h:form id="tabela">       
-            <p:dataTable var="e" value="#{visitaPreventivaMB.exclusoes}"  id="exclucoes"
+            <p:dataTable var="e" value="#{visitaPreventivaMB.exclusoes}"  id="exclusoes"
             emptyMessage="Não existem vetos/exclusões informadas" rowHover="true"
             rows="5" 
             paginator="true"

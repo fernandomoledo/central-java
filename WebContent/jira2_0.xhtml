@@ -48,12 +48,12 @@
       		<p:button outcome="jira2_0" icon="ui-icon-refresh" value="Atualizar" />
       		<br /><br />
       			 <p:dataTable var="x" value="#{jira2MB.chamadosJira}"  widgetVar="textoTable" rendered="#{fn:length(jira2MB.chamadosJira) gt 0}"
-           emptyMessage="Não foram encontrados chamados do Núcleo PJE" rows="10"  sortBy="#{x.chamado}"
+           emptyMessage="Não foram encontrados chamados do Núcleo PJE" rows="5"  sortBy="#{x.chamado}"
             paginator="true"
             paginatorPosition="bottom"
            paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
            currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
-           rowsPerPageTemplate="5,10,20"
+           rowsPerPageTemplate="5,10,20,30"
       
            
          

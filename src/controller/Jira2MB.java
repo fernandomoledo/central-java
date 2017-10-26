@@ -481,7 +481,26 @@ public class Jira2MB {
         	ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         	ec.redirect("erro-issue.html");
         }else{
-        
+        	String procs =  xml.substring(xml.indexOf("** Número dos processos")+23,xml.indexOf("#==")).trim();
+        	
+        	if(procs.trim().equals("&lt;empty&gt;")) {
+        		procs = " - ";
+        		
+        	}else {
+	        	String[] vProcs = procs.split("\n");
+	        	
+	        	procs = "";
+	        	
+	        	for(int i = 0; i < vProcs.length; i++) {
+	        		if(!vProcs[i].equals("")) {
+	        			if(i == vProcs.length -1)
+	        				procs += vProcs[i];
+	        			else
+	        				procs += vProcs[i] + ", ";
+	        		}
+	        	}
+        	}
+        	
 	        String descrOriginal = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("&lt;=="));     
 	        String issue = xml.substring(xml.indexOf("<remarks>")+9,xml.indexOf("</remarks>")-1).replace("\n", "");
 	        
@@ -493,6 +512,10 @@ public class Jira2MB {
 	        // ends here
 			
 			try{
+					
+					
+					//System.out.println("Processos: " + this.substitui(descrOriginal.substring(descrOriginal.indexOf("** Número dos processos")+23,descrOriginal.indexOf("#=="))));
+					
 					issueJira.setId("10311");
 					issueJira.setNome("PJE-JT");
 					
@@ -510,7 +533,7 @@ public class Jira2MB {
 			        issueJira.setAmbiente(issue.substring(issue.indexOf("Ambiente?")+9,issue.indexOf("** *P")));
 			        issueJira.setVersao(issue.substring(issue.indexOf("*Versão do PJE")+14,issue.indexOf("** *U"))+ " - "+issueJira.getAmbiente());
 			        issueJira.setServidor(this.substitui(issue.substring(issue.indexOf("*Perfil do usuário")+18,issue.indexOf("** N"))));
-			        issueJira.setProcesso(this.substitui(issue.substring(issue.indexOf("** Número dos processos")+23,issue.indexOf("#=="))));
+			        issueJira.setProcesso(procs);
 			        issueJira.setChamado(xml.substring(xml.indexOf("<formattedReference>")+20,xml.indexOf("</formattedReference>")));
 			        
 			       
