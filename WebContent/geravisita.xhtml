@@ -51,10 +51,11 @@
         			<br />
         			<h:selectOneMenu value="#{visitaPreventivaMB.atendente.id}"  required="true" 
         			requiredMessage="- A escolha de um atendente é obrigatória.">
+        				
         				<f:selectItem  itemLabel="--Escolha o atendente--" itemValue="" />
         				<f:selectItems value="#{visitaPreventivaMB.atendentes}" var="atend" itemLabel="#{atend.nome}" itemValue="#{atend.id}" />
         			</h:selectOneMenu>
-        			<p:commandButton value="OK" update=":texto" style="margin-left:10px;" />
+        			<p:commandButton value="OK" update=":texto" style="margin-left:10px;"   />
         			<br /><br />
         			
         			<p:outputPanel id="multiLotDetail" style="text-align:left;">

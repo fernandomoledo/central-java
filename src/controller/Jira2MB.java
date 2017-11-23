@@ -595,6 +595,11 @@ public class Jira2MB {
 			        if(xmlAtend.contains("\"USER-CALLBACK\"")){
 			        	this.geraIssue = false;
 			        }
+			        
+			  if(!issueJira.getTipoErro().equals("Incidente")){
+			       this.geraIssue = false;
+			       this.issueJira.setTipoErro("<span style='color:#FF0000';>"+this.issueJira.getTipoErro()+" - NÃO É PERMITIDA A GERAÇÃO DE ISSUE POR ESTA FERRAMENTA.</span>");
+			  }
 			       // System.exit(0);
 			}catch(Exception e){
 				Mensagens.setMessage(3, "Não foi possível preparar o chamado para criação de issue. "+e.getMessage());

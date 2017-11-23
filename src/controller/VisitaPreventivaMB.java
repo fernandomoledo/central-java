@@ -29,8 +29,10 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.naming.NamingException;
 import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -81,6 +83,8 @@ public class VisitaPreventivaMB {
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		ec.redirect("https://centraldetic.trt15.jus.br/assystweb/application.do#eventsearch/EventSearchDelegatingDispatchAction.do?dispatch=monitorInit&ajaxMonitor=false&eventSearchContext&queryProfileForm.columnProfileId=0&queryProfileForm.queryProfileId=0&event.lookup.eventRefRange="+chamado);
 	}
+	
+	
 	
 	public List<Visita> getRelatorio() throws NamingException{
 		VisitaPrevDAO dao = new VisitaPrevDAO();
@@ -366,8 +370,15 @@ public class VisitaPreventivaMB {
 	
 	public List<LotacaoVisitaPrev> getLotacoesVP() throws NamingException{
 		VisitaPrevDAO dao = new VisitaPrevDAO();
+		
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String uri = request.getRequestURI();
+		
 		try{
-			return dao.listarLotacoesVP();
+			if(uri.endsWith("exclusao.jsf"))
+				return dao.listarLotacoes();
+			else
+				return dao.listarLotacoesVP();
 		}catch(ClassNotFoundException | SQLException e){
 			Mensagens.setMessage(3, "Problemas ao listar lotações de visita preventiva: "+e.getMessage());
 			StringWriter stack = new StringWriter();
@@ -392,8 +403,15 @@ public class VisitaPreventivaMB {
 	
 	public List<Atendente> getAtendentes() throws NamingException{
 		VisitaPrevDAO dao = new VisitaPrevDAO();
+		
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String uri = request.getRequestURI();
+		
 		try{
-			return dao.listarAtendentes();
+			if(uri.endsWith("atendente.jsf"))
+				return dao.listarTodosAtendentes();
+			else
+				return dao.listarAtendentes();
 		}catch(ClassNotFoundException | SQLException e){
 			Mensagens.setMessage(3, "Problemas ao listar atendentes de visita preventiva: "+e.getMessage());
 			StringWriter stack = new StringWriter();

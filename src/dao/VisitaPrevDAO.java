@@ -190,6 +190,33 @@ public class VisitaPrevDAO {
 		return lotacoesVP;
 	}
 	
+	public List<LotacaoVisitaPrev> listarLotacoes() throws SQLException, ClassNotFoundException, NamingException{
+		List<LotacaoVisitaPrev> lotacoesVP = new ArrayList<LotacaoVisitaPrev>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		sql = "SELECT * FROM lotacao_visita ORDER BY lotacao ASC";
+		try{
+			con = ConexaoMySQL.abreConexao();
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				LotacaoVisitaPrev l = new LotacaoVisitaPrev();
+				l.setId(rs.getInt("id"));
+				l.setLotacao(rs.getString("lotacao"));
+				l.setAndar(rs.getInt("andar"));
+				l.setPredio(rs.getString("predio"));
+				l.setAtivo(rs.getString("ativo"));
+				lotacoesVP.add(l);
+			}
+		}finally{
+			rs.close();
+			ps.close();
+			con.close();
+		}
+		return lotacoesVP;
+	}
+	
 	public List<Visita> listarVisitas(int id) throws SQLException, ClassNotFoundException, NamingException{
 		List<Visita> visitas = new ArrayList<Visita>();
 		Connection con = null;
@@ -351,6 +378,33 @@ public class VisitaPrevDAO {
 		return atendentes;
 	}
 	
+	public List<Atendente> listarTodosAtendentes() throws SQLException, ClassNotFoundException, NamingException{
+		List<Atendente> atendentes = new ArrayList<Atendente>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		sql = "SELECT * FROM atendente ORDER BY nome";
+		try{
+			con = ConexaoMySQL.abreConexao();
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				Atendente a = new Atendente();
+				a.setId(rs.getInt("id"));
+				a.setNome(rs.getString("nome"));
+				a.setAffectedUserId(rs.getInt("affected_user_id"));
+				a.setAssignedUserId(rs.getInt("assigned_user_id"));
+				a.setUsername(rs.getString("username"));
+				a.setAdm(rs.getBoolean("isAdm"));
+				atendentes.add(a);
+			}
+		}finally{
+			rs.close();
+			ps.close();
+			con.close();
+		}
+		return atendentes;
+	}
 	public Atendente buscaAtendente(int id) throws SQLException, ClassNotFoundException, NamingException{
 		Atendente a = new Atendente();
 		Connection con = null;
