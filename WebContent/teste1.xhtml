@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+  	<meta charset="utf-8" /> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link href="http://portal.trt15.jus.br/trt15-intranet-theme/images/favicon.ico" rel="Shortcut Icon" />
+    <title>Base de Conhecimento</title>
+
+    <!-- Bootstrap -->
+    
+    
+       
+    
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</h:head>
+    <body>
+   				 <h:form id="atendente">
+        			 
+        			<p:outputLabel id="label" value="Usuário atendente: " for="menu" />
+        			<br />
+        			<p:selectOneMenu value="#{visitaPreventivaMB.atendente.id}"  required="true" id="menu"
+        			requiredMessage="- A escolha de um atendente é obrigatória." style="width:300px;">
+        				
+        				<f:selectItem  itemLabel="--Escolha o atendente--" itemValue="" />
+        				<f:selectItems value="#{visitaPreventivaMB.atendentes}" var="atend" itemLabel="#{atend.nome}" itemValue="#{atend.id}" />
+        			</p:selectOneMenu>
+        			<p:commandButton value="OK" style="margin-left:10px;" />
+        			<br /><br />
+        			</h:form>
+  </body>
+</html>

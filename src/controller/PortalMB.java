@@ -29,6 +29,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.naming.NamingException;
 import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -64,6 +66,12 @@ public class PortalMB {
 	private Atendente atendente = new Atendente();
 	
 	public PortalMB() throws ClassNotFoundException, SQLException, NamingException{
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse(); 
+		response.setHeader("Cache-Control", "no-cache"); // Prevents HTTP 1.1 caching.
+		response.setHeader("Pragma", "no-cache"); // Prevents HTTP 1.0 caching.
+		response.setDateHeader("Expires", -1); // Prevents proxy caching.
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
 		if(!params.isEmpty()){
@@ -135,7 +143,18 @@ public class PortalMB {
 		session.removeAttribute("usuarioLogado");
 		session.removeAttribute("secao");
 		session.removeAttribute("codUsuario");
+		session.removeAttribute("portalMB");
+		session.removeAttribute("javax.faces.request.charset");
 		session.invalidate();
+		
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest(); 
+		
+		session = request.getSession();				
+		
+		ec.invalidateSession();
+		ec.getSession(true);
+		
 		return "/index.xhtml?faces-redirect=true";
 	}
 

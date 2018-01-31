@@ -57,6 +57,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
+          	<li><h:link outcome="faq" value="FAQ" title="Histórico de resolução de chamados de sistemas atendidos pela SAE-CAU" /></li>
           	<li><h:link outcome="relvisita" value="Visitas Preventivas" title="Gestão de visitas preventivas" rendered="#{portalMB.original.id == 647 or portalMB.original.id == 639}" /></li>
             <li><h:link outcome="jira2_0" value="JIRA" rendered="#{portalMB.original.id == 639 or portalMB.original.id == 641 or portalMB.original.id == 646 or portalMB.original.id == 647 or portalMB.original.id == 1302}" title="Criação automática de issues no JIRA" /></li>
             <li><h:outputLink value="#{portalMB.server}/toolkit" title="Página de ferramentas úteis da CAU/SETIC">Toolkit</h:outputLink></li>
@@ -98,7 +99,7 @@
 
     <footer class="text-center">
       <p>Copyright &copy; 2016 - <h:outputText value="#{portalMB.anoAtual}" /> :: Tribunal Regional do Trabalho 15ª Região. Todos os direitos reservados.</p>
-      <p>Versão 4.1.0</p>
+      <p>Versão 4.2.1</p>
     </footer>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -122,19 +123,15 @@
         $('#example').DataTable({
 				"order" : [[ 0, 'desc' ]]
          });
-
       
-
         $('.example2').DataTable({
 			"order" : [[ 0, 'asc' ]]
      });
     
-
       $( ".termo" ).focus(function() {
         
         $("#termo_helper").css("display", "block");
       });
-
       $(".termo" ).blur(function() {
         
         $("#termo_helper").css("display", "none");

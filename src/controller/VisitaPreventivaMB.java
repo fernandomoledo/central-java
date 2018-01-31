@@ -52,7 +52,7 @@ import util.Mensagens;
 @ManagedBean
 @ViewScoped
 public class VisitaPreventivaMB {
-	final static Logger logger = Logger.getLogger(AdminMB.class);
+	final static Logger logger = Logger.getLogger(VisitaPreventivaMB.class);
 	private String periodo = new SimpleDateFormat("MMMMM/yyyy").format(new Date());
 	private LotacaoVisitaPrev lotacaoVP = new LotacaoVisitaPrev();
 	private List<LotacaoVisitaPrev> selectedLotVP = new ArrayList<LotacaoVisitaPrev>();
@@ -408,7 +408,7 @@ public class VisitaPreventivaMB {
 		String uri = request.getRequestURI();
 		
 		try{
-			if(uri.endsWith("atendente.jsf"))
+			if(uri.endsWith("atendente.jsf") || uri.endsWith("atendimento.jsf"))
 				return dao.listarTodosAtendentes();
 			else
 				return dao.listarAtendentes();
@@ -434,6 +434,15 @@ public class VisitaPreventivaMB {
 		}
 	}
 		
+	public void reset() {
+		this.selectedLotVP = null;
+		this.selectedLotVP = new ArrayList<LotacaoVisitaPrev>();
+		this.selectedLotVP.clear();
+		this.selectedLotVP = new ArrayList<LotacaoVisitaPrev>();
+		this.atendente = new Atendente();
+		//System.out.println(this.selectedLotVP.size());
+	}
+	
 	public String getPeriodo() {
 		return periodo;
 	}

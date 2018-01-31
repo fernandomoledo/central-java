@@ -77,6 +77,14 @@ function esconde_box4(){
 	$(".ibox4").hide();
 }
 
+function mostra_box_lento(){
+	$(".ibox4").show("slow");
+}
+
+function esconde_box_lento(){
+	$(".ibox4").hide("slow");
+}
+
 function montaurl(url, filtro){
 	//alert(url + " - " +  filtro);
 	if(url == ""){

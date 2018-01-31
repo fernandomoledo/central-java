@@ -1,0 +1,185 @@
+<ui:composition  template="template.xhtml" 
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"> 
+<ui:define name="conteudo">
+	
+	<!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título da Página -->
+            <div class="row">
+      <!-- 
+		<div class="alert alert-danger">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
+			  <strong>Aviso:</strong> Devido as constantes mudanças do servidor da Wiki, a integração foi desativada.
+		</div>
+		 -->
+		</div>
+		   <div class="push2"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Histórico de chamados de sistemas atendidos - SAE/CAU</h1>
+        </div>
+      </div>
+      <!-- Pula 30px -->
+      <div class="push3"></div>
+      <div class="row">
+        <!-- Container dos painéis -->
+        <div class="col-md-12">
+        	<div class="row">
+        	</div>
+          <!-- Painel de busca e categorias -->
+          <div class="col-md-5 separator" id="div-sidebar" style="max-height:768px; overflow:auto;">             	
+			
+            <div class="push1"></div>
+           
+      		<h:form id="texto">
+      		<h:outputText value="Não foram encontrados chamados para #{baseDeConhecimentoMB.select}/#{baseDeConhecimentoMB.termoBusca}#{baseDeConhecimentoMB.select.parent}" rendered="#{((baseDeConhecimentoMB.select.toString() == '' || baseDeConhecimentoMB.termoBusca != '') &amp;&amp; (not baseDeConhecimentoMB.mostra))}" />
+           <p:dataTable var="chamado" value="#{baseDeConhecimentoMB.chamados}"  widgetVar="textoTable" 
+           emptyMessage="Não foram encontrados chamados com os parâmetros informados..." rows="5" 
+            paginator="true"
+            paginatorPosition="bottom"
+           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
+           currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+           rowsPerPageTemplate="5,10,20"
+           selectionMode="single"
+           selection="#{baseDeConhecimentoMB.selecionado}"
+           rowKey="#{chamado.id}"
+           
+           >
+           <p:ajax event="rowSelect" listener="#{baseDeConhecimentoMB.getDetalhe()}" update=":detalhe" oncomplete="document.getElementById('tbl').scrollTop = 0;" />
+          
+				<p:column headerText="Chamados encontrados para ''#{baseDeConhecimentoMB.select}/#{baseDeConhecimentoMB.termoBusca}#{baseDeConhecimentoMB.select.parent}'':" >
+				
+					<b>#{chamado.numero}</b><br />
+					#{chamado.lotacaoSolicitante.nome}
+					
+				</p:column>
+			</p:dataTable> 
+			<br /><br />
+			<h:outputText value="#{baseDeConhecimentoMB.statusWiki}" rendered="#{fn:length(baseDeConhecimentoMB.wiki) eq 0}" />
+			<p:dataTable var="wiki" value="#{baseDeConhecimentoMB.wiki}"  widgetVar="wikiTable" rendered="#{baseDeConhecimentoMB.mostrawiki}"
+           emptyMessage="Não foram encontrados artigos na Wiki com o termo informado" rows="5" 
+            paginator="true"
+            paginatorPosition="bottom"
+           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
+           currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+           rowsPerPageTemplate="5,10,20" rowHover="true"   >
+          
+          
+				<p:column headerText="Artigos encontrados na Wiki para '#{baseDeConhecimentoMB.termoBusca}':" >
+				
+					<h:outputLink value="#{wiki.url}" target="_blank" title="Clique para abrir na Wiki" > 
+					<b>#{wiki.titulo}</b><br />
+					#{wiki.url}<br />
+					<small><b><i>#{wiki.encontradoEm}</i></b></small>
+					</h:outputLink>
+				</p:column>
+			</p:dataTable> 
+</h:form>
+             
+          </div>
+          <button id="teste-btn" class="btn btn-primary" style="font-weight:bold;border:none;" value="e" title="Esconder a lista de chamados"> &lt;</button>
+
+          <!-- Painel de chamados -->
+          <div class="col-md-7" id="tbl" style="max-height:768px; overflow:auto;">
+         <h:form id="detalhe">
+         <p:panelGrid rendered="#{baseDeConhecimentoMB.mostraDetalhe}">
+            	<h3>Chamado 
+	            	#{baseDeConhecimentoMB.chamadoDetalhe.chamado.numero}/<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.dtAndamento}">
+	            		<f:convertDateTime dateStyle="date" pattern="yyyy" />
+	            	</h:outputText>
+            	</h3>
+            	<h:outputLink value="https://www.trt15.jus.br/centralChamados/chamado.do" target="_blank" title="Clique aqui para abrir o chamado na Central">
+          				<f:param name="acao" value="editarChamado" />
+<f:param name="idChamado" value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.id}" />Ver na central de chamados</h:outputLink>
+          
+            	<div class="push1"></div>
+            <h4>Data de Abertura</h4>
+            <p>
+            <h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.dtAndamento}">
+	            		<f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy HH:mm" />
+	            </h:outputText>
+            </p>
+            <div class="push05"></div>
+            <h4>Lotação</h4>
+            <p><h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.lotacaoSolicitante.nome}" escape="false" /></p>
+            <div class="push05"></div>
+             <h4>Assunto</h4>
+            
+            	<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.chamado.assunto.descricao.replace(baseDeConhecimentoMB.termoDestaque,baseDeConhecimentoMB.termoTroca)}" escape="false" style="white-space:pre-wrap;" />
+           
+            <div class="push05"></div>
+            <h4>Problema relatado</h4>
+            
+            	<h:outputText value="#{baseDeConhecimentoMB.chamadoDetalhe.texto.replace(baseDeConhecimentoMB.termoDestaque,baseDeConhecimentoMB.termoTroca)}" escape="false" style="white-space:pre-wrap;" />
+           
+            <div class="push05"></div>
+            <h4>Equipamentos</h4>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Nº Tombo</th><th>Nº Série</th><th>Garantia</th><th>Descrição</th>
+                </tr>
+              </thead>
+              <tbody>
+              <ui:repeat var="tombo" value="#{baseDeConhecimentoMB.tombosDetalhe}">
+                <tr>
+                  <td>#{tombo.nroTombo}</td>
+                  <td>#{tombo.serie}</td>
+                  <td>
+                  	<h:outputText value="#{tombo.dtGarantia}">
+                  		<f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy" />
+                  	</h:outputText>
+                  </td>
+                  <td><h:outputText value="#{tombo.descricao}" escape="false" style="white-space:pre-wrap;" /></td>
+                  
+                </tr>
+              </ui:repeat>  
+                                            
+              </tbody>
+            </table>
+            <h4>Último atendimento</h4>
+            <p>
+            <h:outputText value="#{baseDeConhecimentoMB.ultimoAndamento.dtAndamento}">
+                  <f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy HH:mm" />
+            </h:outputText> - <h:outputText value="#{baseDeConhecimentoMB.ultimoAndamento.usuario.nome}" escape="false" /></p><div class="push05"></div>
+            <h4>Andamentos do Chamado</h4>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Data/Hora</th><th>Status</th><th>Andamento por</th><th>Descrição</th>
+                </tr>
+              </thead>
+              <tbody>
+              <ui:repeat var="andamento" value="#{baseDeConhecimentoMB.andamentosDetalhe}">
+                <tr>
+                 <td>
+                  	<h:outputText value="#{andamento.dtAndamento}">
+		                  <f:convertDateTime dateStyle="date" pattern="dd/MM/yyyy HH:mm" />
+		            </h:outputText>
+           		</td>
+           		<td>#{andamento.classificacao}</td>
+           		<td><h:outputText value="#{andamento.usuario.nome}" escape="false" style="white-space:pre-wrap;" /></td>
+           		<td><h:outputText value="#{andamento.texto.replaceAll(baseDeConhecimentoMB.termoDestaque,baseDeConhecimentoMB.termoTroca)}" escape="false" style="white-space:pre-wrap;" /></td>
+                </tr>
+               </ui:repeat>                           
+              </tbody>
+            </table>
+   </p:panelGrid>
+            </h:form>
+          </div>
+          <!-- Fim Painel de chamados -->
+        </div>
+        <!-- Fim Container dos painéis -->
+    </div>
+</div>
+    <!-- Fim Conteúdo da página -->
+</ui:define>
+</ui:composition>

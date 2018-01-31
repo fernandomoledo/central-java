@@ -549,7 +549,7 @@ public class Jira2MB {
 				 }
 				 System.out.println("Módulo - "+issueJira.getModulo()+" / " + issueJira.getComponente());
 				
-				 String urlAnexo = "http://10.15.199.183:8989/assyst/assystEJB/Event/"+idIssue+"?fields=attachments";
+				 String urlAnexo = "http://10.15.199.183:8989/assyst/assystEJB/Event/"+idIssue+"?fields=totalAttachmentCount";
 				    URL objAnexo = new URL(urlAnexo);
 				    HttpURLConnection connAnexo = (HttpURLConnection) objAnexo.openConnection();
 
@@ -567,7 +567,7 @@ public class Jira2MB {
 						xmlAnexo += sAnexo;
 					}
 			        //System.out.println("ANEXO: " + xmlAnexo);
-			        if(xmlAnexo.contains("\"Attachment\"")){
+			        if(!xmlAnexo.contains("[\"totalAttachmentCount\"] = 0")){
 			        	this.temAnexo = true;
 			        	Mensagens.setMessage(2, "Este ticket " + issueJira.getChamado()+ " possui anexo(s). Lembre-se de incluí-lo(s) no JIRA!");
 			        	RequestContext.getCurrentInstance().update("f_jira:mensagens");
@@ -594,12 +594,10 @@ public class Jira2MB {
 			        //System.out.println("ANEXO: " + xmlAnexo);
 			        if(xmlAtend.contains("\"USER-CALLBACK\"")){
 			        	this.geraIssue = false;
+			        	
 			        }
 			        
-			  if(!issueJira.getTipoErro().equals("Incidente")){
-			       this.geraIssue = false;
-			       this.issueJira.setTipoErro("<span style='color:#FF0000';>"+this.issueJira.getTipoErro()+" - NÃO É PERMITIDA A GERAÇÃO DE ISSUE POR ESTA FERRAMENTA.</span>");
-			  }
+			 
 			       // System.exit(0);
 			}catch(Exception e){
 				Mensagens.setMessage(3, "Não foi possível preparar o chamado para criação de issue. "+e.getMessage());

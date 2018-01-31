@@ -1,0 +1,90 @@
+<ui:composition  template="template.xhtml" 
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"> 
+<ui:define name="conteudo">
+	<!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título da Página -->
+       <div class="push3"></div>
+      <div class="row">
+        <div class="col-md-12 text-center" id="topo">
+          <h1>Histórico de chamados de sistemas atendidos - SAE/CAU</h1>
+          <h2>Visualizar atendimento do ticket #{atendimentoMB.atendimento.chamado}</h2>
+        </div>
+      </div>
+      <!-- Pula 10px -->
+      <div class="push1"></div>
+       <div class="row">
+	      	<div class="col-md-12 text-center">
+	      	
+	      		<h:form>
+	      				
+	      				<h:link outcome="atendente" value="Atendentes" /> |
+	      				<h:link outcome="faq" value="Histórico de Atendimentos" /> |
+	      				<h:link outcome="sistemas" value="Sistemas" /> |
+	      				<br /><br />
+	      				
+	      		      		
+	      		</h:form>
+	      	</div>
+      	</div>
+      	     <div class="push2"></div>
+      <div class="row">
+      	
+        <!-- Container dos painéis -->
+        <div class="col-md-12">
+         <p:messages autoUpdate="true" closable="true" id="mensagens"  />
+          <h:form id="fcad">    
+         
+          		<h:inputHidden id="id_atendimento" value="#{atendimentoMB.atendimento.id}" />
+          		
+          			         		 		
+		        		<p:commandButton icon="ui-icon-gear" value="Editar" ajax="false" action="atendimento">
+		        			<f:param name="id" value="#{atendimentoMB.atendimento.id}" />
+		        		</p:commandButton>
+		        		   <div class="push2"></div>
+		        <p:panelGrid columns="2" style="width:100%" styleClass="pequena,grande">
+		        		
+		        		
+				        <h:outputLabel value="Data:" />
+				        <h:outputText id="data" value="#{atendimentoMB.atendimento.dtCadastro}" style="width:20%"/>
+				         <h:outputLabel value="Ticket(s):" />
+				        <h:outputLink value="#{atendimentoMB.linkAssyst}" target="_blank" title="Clique aqui para abrir o(s) ticket(s) no Assyst">
+			          	<f:param name="event.lookup.eventRefRange" value="#{atendimentoMB.atendimento.chamado}" />
+          					<h:outputText value="#{atendimentoMB.formataTickets(atendimentoMB.atendimento.chamado)}" style="word-wrap:break-word;" />
+			            </h:outputLink>
+				        <h:outputLabel value="Sistema:" />
+				       	<h:outputText value="#{atendimentoMB.sistema.nome}" escape="false" style="word-wrap:break-word;white-space:pre-wrap;" />
+				       	<h:outputLabel value="Usuário atendente: "/>
+				       	<h:outputText value="#{atendimentoMB.atendente.nome}" escape="false" style="word-wrap:break-word;white-space:pre-wrap;" />
+        				<h:outputLabel value="Problema:" />
+        				<h:outputText value="#{atendimentoMB.atendimento.problema}" escape="false" style="word-wrap:break-word;white-space:pre-wrap;" />
+        				<h:outputLabel value="Solução:" />
+        				<h:outputText value="#{atendimentoMB.atendimento.solucao}" escape="false" style="word-wrap:break-word;white-space:pre-wrap;" />
+        				<h:outputLabel value="Encaminhamento:" />
+        				<h:outputText value="#{atendimentoMB.atendimento.encaminhamento}" escape="false" style="word-wrap:break-word;white-space:pre-wrap;"/>
+        				<h:outputLabel value="Observação:" />
+        				  <h:outputLink value="#{atendimentoMB.atendimento.wiki}" target="_blank" title="Clique aqui para abrir o link da Wiki" rendered="#{fn:startsWith(atendimentoMB.atendimento.wiki,'http')}">
+          					Ver documentação
+			            </h:outputLink>
+			            <h:outputText value="#{atendimentoMB.atendimento.wiki}"  rendered="#{not fn:startsWith(atendimentoMB.atendimento.wiki,'http')}" escape="false" style="word-wrap:break-word;" />
+				     	
+                
+                </p:panelGrid>            	
+           </h:form>
+     
+        	
+        </div>
+        <!-- Fim Container dos painéis -->
+    </div>
+</div>
+    <!-- Fim Conteúdo da página -->
+</ui:define>
+</ui:composition>

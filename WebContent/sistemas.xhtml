@@ -1,0 +1,123 @@
+<ui:composition  template="template.xhtml" 
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"> 
+<ui:define name="conteudo">
+	<!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título da Página -->
+       <div class="push3"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h1>Histórico de chamados de sistemas atendidos - SAE/CAU</h1>
+          <h2>Cadastro de Sistemas</h2>
+        </div>
+      </div>
+      <!-- Pula 10px -->
+      <div class="push1"></div>
+       <div class="row">
+	      	<div class="col-md-12 text-center">
+	      	
+	      		<h:form>
+	      				
+	      				<h:link outcome="atendente" value="Atendentes" /> |
+	      				<h:link outcome="atendimento" value="Cadastro de atendimento" /> |
+	      				<h:link outcome="faq" value="Histórico de Atendimentos" /> |
+	      				<h:link outcome="sistemas" value="Sistemas" /> |
+	      				<br /><br />
+	      				
+	      		      		
+	      		</h:form>
+	      	</div>
+      	</div>
+      	     <div class="push2"></div>
+      <div class="row">
+      	
+        <!-- Container dos painéis -->
+        <div class="col-md-12">
+         <p:messages autoUpdate="true" closable="true" id="mensagens"  />
+          <h:form id="fcad">    
+         
+          		<h:inputHidden id="id_sistema" value="#{sistemaMB.sistema.id}" />
+		        <p:panelGrid columns="2" style="width:100%" styleClass="pequena,grande">
+				        <h:outputLabel value="Nome:" />
+				        <h:inputText id="nome" value="#{sistemaMB.sistema.nome}" pt:placeholder="Digite o nome do sistema"
+				        required="true" requiredMessage="- O nome do sistema é obrigatório" style="width:100%"/>
+				        <h:outputLabel value="Ativo?" />
+				       	<h:selectOneMenu value="#{sistemaMB.sistema.ativo}">
+				       		<f:selectItem itemLabel="Sim" itemValue="S"/>
+				       		<f:selectItem itemLabel="Não" itemValue="N" />
+				       	</h:selectOneMenu>
+				       	
+				     	<h:outputLabel value="" />
+                <p:commandButton value="Salvar" actionListener="#{sistemaMB.salvar()}" update="@all" />
+                </p:panelGrid>            	
+           </h:form>
+          <!-- Painel de chamados -->
+         <br /><br />
+          <!-- Fim Painel de chamados -->
+           <!-- Painel de busca e categorias -->
+          <div class="col-md-12 separator">             	
+            <div class="push1"></div>
+      		<h:form id="lista">
+      			 <p:dataTable id="sistemas" var="s" value="#{sistemaMB.sistemas}" 
+      			  style="margin-bottom:0"
+      			  emptyMessage="Não existem sistemas cadastrados." rowHover="true"
+	            	rows="10"  filteredValue="#{sistemaMB.filteredSistema}"
+	            paginator="true"
+	            widgetVar="sistemas-table"
+	            paginatorPosition="bottom"
+	                    currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+	           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown} Exportar: {Exporters}"
+	           rowsPerPageTemplate="5,10,20,30"
+      			 >
+			       <f:facet name="header">
+			            <p:outputPanel>
+			                <h:outputText value="Buscar em todos os campos: " />
+			                <p:inputText id="globalFilter" onkeyup="PF('sistemas-table').filter()" style="max-width:220px" placeholder="Digite o termo"/>
+			                <p:button value="Limpar busca" icon="ui-icon-trash" outcome="sistemas" style="margin-left:10px;" />
+			            </p:outputPanel>
+			        </f:facet>
+			        <f:facet name="{Exporters}">
+			            <h:commandLink value="XLS">
+			                <p:dataExporter type="xls" target="sistemas" fileName="rel_sistemas" />
+			            </h:commandLink>
+			 			|
+			            <h:commandLink value="PDF">
+			                <p:dataExporter type="pdf" target="sistemas" fileName="rel_sistemas"/>
+			            </h:commandLink>
+			        </f:facet>
+			        <p:column headerText="Nome" style="width:80%"  filterBy="#{s.nome}" filterMatchMode="contains">
+			            <h:outputText value="#{s.nome}"  />
+			        </p:column>
+			        <p:column headerText="Ativo" style="width:10%" filterBy="#{s.ativo}" filterMatchMode="contains">
+			        	<h:outputText value="#{s.ativo}"  />
+			        </p:column>
+			        <p:column headerText="Opcoes" style="width:10%">
+			        	<p:commandButton icon="ui-icon-gear" 
+			       title="Alterar sistema '#{s.nome}'" actionListener="#{sistemaMB.buscar(s.id)}"
+				       	update="@all" />
+				       	
+			       <p:commandButton icon="ui-icon-trash" 
+			       title="Inativar sistema '#{s.nome}'" 
+				       	update="@form" actionListener="#{sistemaMB.excluir(s)}"
+				       		onclick="return confirm('Deseja realmente inativar o sistema \'#{s.nome}\'?');" />   
+			        </p:column>
+			    </p:dataTable>
+			    
+      	 	</h:form>
+          </div>
+        	
+        </div>
+        <!-- Fim Container dos painéis -->
+    </div>
+</div>
+    <!-- Fim Conteúdo da página -->
+</ui:define>
+</ui:composition>

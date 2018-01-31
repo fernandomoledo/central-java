@@ -39,7 +39,7 @@
 						<b><span>Observações:</span></b>
    						<h:outputText value="Este ticket possui anexo(s). Lembre-se de incluí-lo(s) no JIRA!"
    						 escape="false" style="white-space:pre-wrap; color:#FF0000;font-weight:bold;" rendered="#{jira2MB.temAnexo}" />
-   						 <h:outputText value="N/A"
+   						 <h:outputText value="---"
    						 escape="false" style="white-space:pre-wrap;color:#0000FF;font-weight:bold;" rendered="#{not jira2MB.temAnexo}" />
    						<b>Projeto:</b>
    						<h:outputText value="#{jira2MB.issueJira.nome}" />
@@ -86,7 +86,7 @@
    							<p:commandButton value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
    						</p:confirmDialog>
    						<h:outputText value="" rendered="#{not jira2MB.geraIssue}" />
-   						<h:outputText value="*** A issue para esse chamado já foi criada.***" style="color:#0000FF;font-weight:bold"
+   						<h:outputText value="" style="color:#0000FF;font-weight:bold"
    						 rendered="#{not jira2MB.geraIssue}"/>
    						</p:panelGrid>
           	</h:form>

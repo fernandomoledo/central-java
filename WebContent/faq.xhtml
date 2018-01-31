@@ -1,0 +1,112 @@
+<ui:composition  template="template.xhtml" 
+		xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"> 
+<ui:define name="conteudo">
+	
+	<!-- Conteúdo da página -->
+    <div class="container-fluid">
+      <!-- Título da Página -->
+            <div class="row">
+      <!-- 
+		<div class="alert alert-danger">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
+			  <strong>Aviso:</strong> Devido as constantes mudanças do servidor da Wiki, a integração foi desativada.
+		</div>
+		 -->
+		</div>
+		   <div class="push2"></div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Histórico de chamados de sistemas atendidos - SAE/CAU</h1>
+            	<br />
+            	<h:form>
+	      				
+	      				<h:link outcome="atendente" value="Atendentes" /> |
+	      				<h:link outcome="atendimento" value="Cadastro de atendimento" /> |
+	      				<h:link outcome="sistemas" value="Sistemas" /> 
+	      							
+	      		      		<br /><br />
+	      		</h:form>
+        </div>
+      </div>
+      <!-- Pula 30px -->
+      <div class="push1"></div>
+      <div class="row">
+        <!-- Container dos painéis -->
+        <div class="col-md-12">
+        <p:messages autoUpdate="true" closable="true" id="mensagens"  />
+        		<h:form>
+        			<p:dataTable id="atend" var="a" value="#{atendimentoMB.atendimentos}" 
+      			  style="margin-bottom:0"
+      			  emptyMessage="Não foram encontrados resultados para a busca solicitada"
+	            	rows="10"  filteredValue="#{atendimentoMB.filteredAtendimentos}"
+	            paginator="true"
+	            widgetVar="atend-table"
+	            paginatorPosition="bottom"
+	                    currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+	           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
+	           rowsPerPageTemplate="5,10,20,30"
+      			 >
+			       <f:facet name="header">
+			            <p:outputPanel>
+			                <h:outputText value="Buscar em todos os campos: " />
+			                <p:inputText id="globalFilter" onkeyup="PF('atend-table').filter()" style="max-width:220px" placeholder="Digite o termo"/>
+			                <p:button value="Limpar busca" icon="ui-icon-trash" outcome="faq" style="margin-left:10px;" />
+			            </p:outputPanel>
+			        </f:facet>
+			       
+			        <p:column headerText="Data" filterBy="#{a.dtCadastro}" filterMatchMode="contains" style="width:7%">
+			            <h:outputText value="#{a.dtCadastro}"  />
+			        </p:column>
+			         <p:column headerText="Ticket" filterBy="#{a.chamado}" filterMatchMode="contains" style="width:7%">
+			          	<h:outputLink value="#{atendimentoMB.linkAssyst}" target="_blank" title="Clique aqui para abrir o(s) ticket(s) no Assyst">
+			          	<f:param name="event.lookup.eventRefRange" value="#{a.chamado}" />
+          					<h:outputText value="#{atendimentoMB.formataTickets(a.chamado)}" style="word-wrap:break-word;" />
+			            </h:outputLink>
+			            
+			        </p:column>
+			          <p:column headerText="Sistema" filterBy="#{a.sistema.nome}" filterMatchMode="contains" style="width:8%">
+			            <h:outputText value="#{a.sistema.nome}"  />
+			        </p:column>
+			         <p:column headerText="Atendente" filterBy="#{a.atendente.nome}" filterMatchMode="contains" style="width:7%">
+			            <h:outputText value="#{a.atendente.nome}"  />
+			        </p:column>
+			        <p:column headerText="Problema" filterBy="#{a.problema}" filterMatchMode="contains" style="width:20%">
+			            <h:outputText value="#{fn:substring(a.problema,0,255)}..." escape="false" style="word-wrap:break-word;white-space:pre-wrap;" />
+			        </p:column>
+			        <p:column headerText="Solução" filterBy="#{a.solucao}" filterMatchMode="contains" style="width:8%">
+			            <h:outputText value="#{a.solucao}"  />
+			        </p:column>
+			        <p:column headerText="Encaminhamento" filterBy="#{a.encaminhamento}" filterMatchMode="contains" style="width:20%">
+			            <h:outputText value="#{fn:substring(a.encaminhamento,0,255)}..." escape="false" style="word-wrap:break-word;white-space:pre-wrap;"  />
+			        </p:column>
+			        <p:column headerText="Obs.:" filterBy="#{a.wiki}" filterMatchMode="contains" style="width:15%;text-align:justify;">
+			            <h:outputLink value="#{fn:substring(a.wiki,0,255)}..." target="_blank" title="Clique aqui para abrir o link da Wiki" rendered="#{fn:startsWith(a.wiki,'http')}">
+          					Ver documentação
+			            </h:outputLink>
+			            <h:outputText value="#{fn:substring(a.wiki,0,255)}..."  rendered="#{not fn:startsWith(a.wiki,'http')}" escape="false" style="word-wrap:break-word;" />
+			        </p:column>
+			        <p:column headerText="Opcoes" style="width:8%">
+			        	<a href="ver_atendimento.jsf?id=#{a.id}" class="btn btn-default glyphicon glyphicon-eye-open"  style="margin-right:5px;" 
+				       	title="Visualizar detalhe do atendimento do ticket '#{a.chamado}'" target="_blank" />
+			       <p:commandButton icon="ui-icon-trash" 
+			       title="Excluir o atendimento do ticket '#{a.chamado}'" 
+				       	update="@form" actionListener="#{atendimentoMB.excluir(a)}"
+				       		onclick="return confirm('Deseja realmente excluir o atendimento do ticket \'#{a.chamado}\'?');" />   
+			        </p:column>
+			    </p:dataTable>
+        		</h:form>                   
+        </div>
+        <!-- Fim Container dos painéis -->
+    </div>
+</div>
+    <!-- Fim Conteúdo da página -->
+</ui:define>
+</ui:composition>
