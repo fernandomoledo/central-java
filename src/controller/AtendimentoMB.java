@@ -62,10 +62,15 @@ public class AtendimentoMB {
 	public String getData() {
 		return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 	}
-	public void salvar() throws ClassNotFoundException, NamingException{
+	public void salvar() throws ClassNotFoundException, NamingException, SQLException{
 		AtendimentoDAO dao = new AtendimentoDAO();
-		this.atendimento.setAtendente(this.atendente);
+		SistemaDAO daoSist = new SistemaDAO();
+		VisitaPrevDAO daoVP = new VisitaPrevDAO();
+		
+		//this.sistema = daoSist.buscarPorNome(this.sistema.getNome());
+		//this.atendente = daoVP.buscaAtendente(this.atendente.getNome());
 		this.atendimento.setSistema(this.sistema);
+		this.atendimento.setAtendente(this.atendente);
 		try{
 			if(this.atendimento.getId() > 0){
 				if(dao.atualizar(this.atendimento)){
@@ -144,6 +149,49 @@ public class AtendimentoMB {
 		}
 	}
 	
+	public List<String> completeSistemas(String query) throws ClassNotFoundException, SQLException, NamingException{
+		SistemaDAO dao = new SistemaDAO();
+		List<Sistema> sistemas = dao.listarSistemas(1);
+		List<String> sistemasEncontrados = new ArrayList<String>();
+		for(int i=0; i < sistemas.size(); i++) {
+			Sistema s = sistemas.get(i);
+			if(s.getNome().toLowerCase().contains(query)) {
+				sistemasEncontrados.add(s.getNome());
+			}
+		}
+		return sistemasEncontrados;
+	}
+	
+	public List<String> completeAtend(String query) throws ClassNotFoundException, SQLException, NamingException{
+		VisitaPrevDAO dao = new VisitaPrevDAO();
+		List<Atendente> atendentes = dao.listarTodosAtendentes();
+		List<String> atendEncontrados = new ArrayList<String>();
+		for(int i=0; i < atendentes.size(); i++) {
+			Atendente a = atendentes.get(i);
+			if(a.getNome().toLowerCase().startsWith(query)) {
+				atendEncontrados.add(a.getNome());
+			}
+		}
+		return atendEncontrados;
+	}
+	
+	public List<String> completeSolucao(String query) throws ClassNotFoundException, SQLException, NamingException{
+		List<String> solucoes = new ArrayList<String>();
+		solucoes.add("Repassado CDS");
+		solucoes.add("Repassado CITIC");
+		solucoes.add("Repassado Gabinete SETIC");
+		solucoes.add("Repassado SA");
+		solucoes.add("Repassado Zuchini");
+		solucoes.add("Resolvido SA");
+		solucoes.add("Resolvido SAE");
+		List<String> solucoesEncontradas = new ArrayList<String>();
+		for(int i=0; i < solucoes.size(); i++) {
+			if(solucoes.get(i).toLowerCase().contains(query)) {
+				solucoesEncontradas.add(solucoes.get(i));
+			}
+		}
+		return solucoesEncontradas;
+	}
 	
 	public void setAtendimentos(List<Atendimento> atendimentos) {
 		this.atendimentos = atendimentos;

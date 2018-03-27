@@ -437,11 +437,12 @@ public class VisitaPrevDAO {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		sql = "SELECT * FROM atendente WHERE username = ?";
+		sql = "SELECT * FROM atendente WHERE username = ? or nome = ?";
 		try{
 			con = ConexaoMySQL.abreConexao();
 			ps = con.prepareStatement(sql);
 			ps.setString(1, username);
+			ps.setString(2, username);
 			rs = ps.executeQuery();
 			while(rs.next()){
 				a.setId(rs.getInt("id"));

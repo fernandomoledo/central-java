@@ -131,4 +131,29 @@ public class SistemaDAO {
 		return s;
 	}
 	
+	public Sistema buscarPorNome(String nome) throws SQLException, ClassNotFoundException, NamingException{
+		Sistema s = new Sistema();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		sql = "SELECT * FROM sistema WHERE nome = ?";
+		try{
+			con = ConexaoMySQL.abreConexao();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, nome);
+			rs = ps.executeQuery();
+			while(rs.next()){				
+				s.setId(rs.getInt("id"));
+				s.setNome(rs.getString("nome"));
+				s.setAtivo(rs.getString("ativo"));
+			}
+		}finally{
+			rs.close();
+			ps.close();
+			con.close();
+		}
+		return s;
+	}
+	
+	
 }

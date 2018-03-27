@@ -51,7 +51,7 @@
 		        <p:panelGrid columns="2" style="width:100%" styleClass="pequena,grande">
 				        <h:outputLabel value="Data:" />
 				        <h:inputText id="data" value="#{atendimentoMB.atendimento.dtCadastro}" pt:placeholder="Digite a data do atendimento"
-				        required="true" requiredMessage="- A data do atendimento é obrigatória" style="width:20%"/>
+				        required="true" requiredMessage="- A data do atendimento é obrigatória" style="width:10%"/>
 				         <h:outputLabel value="Ticket(s):" />
 				        <h:inputText id="ticket" value="#{atendimentoMB.atendimento.chamado}" pt:placeholder="Informe o(s) tickets(s). Se for mais de um, separar por vírgula, sem espaços"
 				        required="true" requiredMessage="- Ao menos 1 ticket é obrigatório" style="width:100%"/>
@@ -67,7 +67,9 @@
         				
         				<f:selectItem  itemLabel="--------" itemValue="" />
         				<f:selectItems value="#{visitaPreventivaMB.atendentes}" var="atend" itemLabel="#{atend.nome}" itemValue="#{atend.id}" />
-        			</h:selectOneMenu>
+        			</h:selectOneMenu>	        
+				        			       
+				        				        
         				<h:outputLabel value="Problema:" />
         				<pe:ckEditor id="problema" value="#{atendimentoMB.atendimento.problema}" width="100%" escape="false"
         				toolbar="[['Cut','Copy','Paste','PasteText','PasteFromWord','-', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript','-','SpellChecker', 'Scayt','-', 'TextColor', 'BGColor',

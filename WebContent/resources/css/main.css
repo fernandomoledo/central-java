@@ -106,3 +106,21 @@ table tr td{
   border-color: #009ACD !important;
 }
 
+.ui-datatable .ui-datatable-data td {
+    vertical-align : top;
+    font-size: 10pt;
+}
+
+.tbl_atend .ui-datatable-even {
+background: none repeat scroll 0 0 #e6f2ff !important;
+}
+
+.tbl_atend .ui-datatable-odd {
+background: none repeat scroll 0 0 #FFFFFF !important;
+}
+
+
+
+
+
+

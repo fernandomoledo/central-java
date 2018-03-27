@@ -44,12 +44,13 @@
         <p:messages autoUpdate="true" closable="true" id="mensagens"  />
         		<h:form>
         			<p:dataTable id="atend" var="a" value="#{atendimentoMB.atendimentos}" 
-      			  style="margin-bottom:0"
+      			  style="margin-bottom:0;"
+		  			styleClass="tbl_atend"
       			  emptyMessage="Não foram encontrados resultados para a busca solicitada"
 	            	rows="10"  filteredValue="#{atendimentoMB.filteredAtendimentos}"
 	            paginator="true"
 	            widgetVar="atend-table"
-	            paginatorPosition="bottom"
+	            paginatorPosition="both"
 	                    currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
 	           paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {RowsPerPageDropdown}"
 	           rowsPerPageTemplate="5,10,20,30"
@@ -79,23 +80,23 @@
 			            <h:outputText value="#{a.atendente.nome}"  />
 			        </p:column>
 			        <p:column headerText="Problema" filterBy="#{a.problema}" filterMatchMode="contains" style="width:20%">
-			            <h:outputText value="#{fn:substring(a.problema,0,255)}..." escape="false" style="word-wrap:break-word;white-space:pre-wrap;" />
+			            <h:outputText value="#{a.problema}" escape="false" style="word-wrap:break-word;" />
 			        </p:column>
 			        <p:column headerText="Solução" filterBy="#{a.solucao}" filterMatchMode="contains" style="width:8%">
 			            <h:outputText value="#{a.solucao}"  />
 			        </p:column>
 			        <p:column headerText="Encaminhamento" filterBy="#{a.encaminhamento}" filterMatchMode="contains" style="width:20%">
-			            <h:outputText value="#{fn:substring(a.encaminhamento,0,255)}..." escape="false" style="word-wrap:break-word;white-space:pre-wrap;"  />
+			            <h:outputText value="#{a.encaminhamento}" escape="false" style="word-wrap:break-word;"  />
 			        </p:column>
 			        <p:column headerText="Obs.:" filterBy="#{a.wiki}" filterMatchMode="contains" style="width:15%;text-align:justify;">
-			            <h:outputLink value="#{fn:substring(a.wiki,0,255)}..." target="_blank" title="Clique aqui para abrir o link da Wiki" rendered="#{fn:startsWith(a.wiki,'http')}">
+			            <h:outputLink value="#{a.wiki}" target="_blank" title="Clique aqui para abrir o link da Wiki" rendered="#{fn:startsWith(a.wiki,'http')}">
           					Ver documentação
 			            </h:outputLink>
-			            <h:outputText value="#{fn:substring(a.wiki,0,255)}..."  rendered="#{not fn:startsWith(a.wiki,'http')}" escape="false" style="word-wrap:break-word;" />
+			            <h:outputText value='#{a.wiki}'  rendered="#{not fn:startsWith(a.wiki,'http')}" escape="false" style="word-wrap:break-word;" />
 			        </p:column>
 			        <p:column headerText="Opcoes" style="width:8%">
 			        	<a href="ver_atendimento.jsf?id=#{a.id}" class="btn btn-default glyphicon glyphicon-eye-open"  style="margin-right:5px;" 
-				       	title="Visualizar detalhe do atendimento do ticket '#{a.chamado}'" target="_blank" />
+				       	title="Visualizar o atendimento do ticket '#{a.chamado}'" target="_blank" />
 			       <p:commandButton icon="ui-icon-trash" 
 			       title="Excluir o atendimento do ticket '#{a.chamado}'" 
 				       	update="@form" actionListener="#{atendimentoMB.excluir(a)}"

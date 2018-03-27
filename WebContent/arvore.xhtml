@@ -86,6 +86,7 @@
 				</p:column>
 			</p:dataTable> 
 			<br /><br />
+			<h:outputText rendered="#{fn:length(baseDeConhecimentoMB.wiki) eq 0}" value="Integração com a Wiki suspensa por conta do upgrade de versão da ferramenta." style="font-weight:bold;color:#FF0000;" />
 			<h:outputText value="#{baseDeConhecimentoMB.statusWiki}" rendered="#{fn:length(baseDeConhecimentoMB.wiki) eq 0}" />
 			<p:dataTable var="wiki" value="#{baseDeConhecimentoMB.wiki}"  widgetVar="wikiTable" rendered="#{baseDeConhecimentoMB.mostrawiki}"
            emptyMessage="Não foram encontrados artigos na Wiki com o termo informado" rows="5" 
